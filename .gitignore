@@ -1,0 +1,73 @@
+# Dependencies
+/code/frontend/tms-frontend/node_modules
+/code/backend/node_modules
+/code/ia_services/*/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/code/frontend/tms-frontend/build
+/code/frontend/tms-frontend/dist
+/code/backend/dist
+/code/backend/build
+
+# Misc
+.DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+
+# Database
+*.sqlite3
+*.db
+
+# Temporary files
+.tmp/
+.temp/
