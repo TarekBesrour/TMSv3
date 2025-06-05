@@ -13,7 +13,9 @@ describe('AppLayout Component', () => {
   test('renders the navigation menu', () => {
     render(
       <BrowserRouter>
-        <AppLayout />
+        <AppLayout>
+      <div>Test Child</div>
+    </AppLayout>
       </BrowserRouter>
     );
     
@@ -30,7 +32,9 @@ describe('AppLayout Component', () => {
   test('toggles mobile menu when hamburger button is clicked', () => {
     render(
       <BrowserRouter>
-        <AppLayout />
+        <AppLayout>
+      <div>Test Child</div>
+    </AppLayout>
       </BrowserRouter>
     );
     
@@ -55,7 +59,9 @@ describe('AppLayout Component', () => {
   test('renders user profile section', () => {
     render(
       <BrowserRouter>
-        <AppLayout />
+        <AppLayout>
+      <div>Test Child</div>
+    </AppLayout>
       </BrowserRouter>
     );
     
@@ -66,7 +72,9 @@ describe('AppLayout Component', () => {
   test('renders the main content area', () => {
     render(
       <BrowserRouter>
-        <AppLayout />
+        <AppLayout>
+      <div>Test Child</div>
+    </AppLayout>
       </BrowserRouter>
     );
     

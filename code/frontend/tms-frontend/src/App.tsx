@@ -14,8 +14,8 @@ import KPIs from './pages/KPIs';
 import Forecasting from './pages/Forecasting';
 import Billing from './pages/Billing';
 import Settings from './pages/Settings';
-import References from './pages/References';
-import NotFound from './pages/NotFound';
+ import References from './pages/References';
+import NotFound2 from './pages/NotFound';
 
 function App() {
   return (
@@ -36,7 +36,7 @@ function App() {
         <Route path="/billing" element={<Billing />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/references" element={<References />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<NotFound2 />} />
       </Routes>
     </AppLayout>
   );

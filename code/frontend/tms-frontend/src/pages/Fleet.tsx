@@ -23,7 +23,7 @@ const Fleet: React.FC = () => {
   ];
 
   // Filter insights by vehicle
-  const getVehicleInsights = (vehicleId) => {
+  const getVehicleInsights = (vehicleId: string) => {
     return insights.filter(insight => insight.vehicleId === vehicleId);
   };
 

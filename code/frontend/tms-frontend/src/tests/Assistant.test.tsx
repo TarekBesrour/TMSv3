@@ -51,7 +51,7 @@ describe('Assistant Component', () => {
     expect(aiResponse).toBeInTheDocument();
     
     // Vérifier que le champ de saisie est vidé après l'envoi
-    expect(input.value).toBe('');
+    expect((input as HTMLInputElement).value).toBe('');
   });
 
   test('displays suggested questions and allows clicking them', async () => {
@@ -70,7 +70,7 @@ describe('Assistant Component', () => {
     
     // Vérifier que la suggestion est envoyée comme message
     const suggestionText = suggestions[0].textContent;
-    expect(screen.getByText(suggestionText)).toBeInTheDocument();
+    expect(screen.getByText(suggestionText || '')).toBeInTheDocument();
     
     // Vérifier que la réponse de l'IA est affichée (asynchrone)
     const aiResponse = await screen.findByText(new RegExp(`Réponse à: ${suggestionText}`, 'i'));

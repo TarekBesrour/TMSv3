@@ -29,7 +29,7 @@ const Assistant: React.FC = () => {
     
     // Simulate assistant response (in a real app, this would call the backend IA service)
     setTimeout(() => {
-      let response;
+      let response : string;;
       
       // Simple pattern matching for demo purposes
       if (message.toLowerCase().includes('retard') || message.toLowerCase().includes('en retard')) {
