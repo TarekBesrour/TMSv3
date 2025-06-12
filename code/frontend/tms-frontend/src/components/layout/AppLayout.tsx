@@ -11,7 +11,8 @@ import {
   ClipboardDocumentListIcon,
   BanknotesIcon,
   ChatBubbleLeftRightIcon,
-  WrenchScrewdriverIcon
+  WrenchScrewdriverIcon,
+  UserIcon
 } from '@heroicons/react/24/outline';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 
@@ -73,6 +74,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       items: [
         { name: 'Paramètres', href: '/settings', icon: CogIcon, current: false },
         { name: 'Référentiels', href: '/references', icon: CubeIcon, current: false },
+        { name: 'Utilisateurs', href: '/usermanagement', icon: UserIcon, current: false },        
       ]
     },
   ];

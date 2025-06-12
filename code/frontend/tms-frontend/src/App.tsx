@@ -14,6 +14,7 @@ import KPIs from './pages/KPIs';
 import Forecasting from './pages/Forecasting';
 import Billing from './pages/Billing';
 import Settings from './pages/Settings';
+import UserManagement from './pages/UserManagement';
  import References from './pages/References';
 import NotFound2 from './pages/NotFound';
 
@@ -36,6 +37,7 @@ function App() {
         <Route path="/billing" element={<Billing />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/references" element={<References />} />
+        <Route path="/usermanagement" element={<UserManagement />} />
         <Route path="*" element={<NotFound2 />} />
       </Routes>
     </AppLayout>
