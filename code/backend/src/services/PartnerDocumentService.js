@@ -167,6 +167,21 @@ class PartnerDocumentService {
    * @returns {Promise<Object>} Created document
    */
   async uploadDocument(documentData, file, userId) {
+     // Validation des champs obligatoires
+  if (!documentData.partner_id) {
+    throw new ValidationError({
+      message: 'Le champ partner_id est obligatoire.',
+      type: 'ModelValidation',
+      data: { partner_id: 'required' }
+    });
+  }
+  if (!file || !file.originalname || !file.buffer) {
+    throw new ValidationError({
+      message: 'Aucun fichier valide fourni.',
+      type: 'ModelValidation',
+      data: { file: 'required' }
+    });
+  }
     // Set audit fields
     documentData.created_by = userId;
     documentData.updated_by = userId;
@@ -206,6 +221,11 @@ class PartnerDocumentService {
    * @throws {NotFoundError} If document not found
    */
   async updateDocument(id, documentData, userId) {
+     // Basic validation for required fields if they are being updated
+    if (documentData.type === '' || documentData.name === '') {
+      throw new ValidationError('Document type and name cannot be empty');
+    }
+    
     // Set audit fields
     documentData.updated_by = userId;
 
