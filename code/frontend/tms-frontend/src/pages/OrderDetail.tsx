@@ -3,16 +3,16 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeftIcon,
   DocumentTextIcon,
-  LocationMarkerIcon,
+  MapPinIcon,
   CalendarIcon,
   TruckIcon,
-  GlobeIcon,
+  GlobeAltIcon,
   PencilIcon,
   TrashIcon,
   DocumentDuplicateIcon,
-  ExclamationIcon,
-  ClipboardCheckIcon
-} from '@heroicons/react/outline';
+  ExclamationCircleIcon,
+  ClipboardDocumentCheckIcon
+} from '@heroicons/react/24/outline';
 
 // Types
 interface Order {
@@ -389,7 +389,7 @@ const OrderDetail: React.FC = () => {
         <div className="rounded-md bg-red-50 p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <ExclamationIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+              <ExclamationCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-red-800">
@@ -569,9 +569,9 @@ const OrderDetail: React.FC = () => {
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   <div className="flex items-center">
                     {order.shipment_type === 'international' ? (
-                      <GlobeIcon className="h-5 w-5 text-green-500 mr-2" />
+                      <GlobeAltIcon className="h-5 w-5 text-green-500 mr-2" />
                     ) : (
-                      <LocationMarkerIcon className="h-5 w-5 text-blue-500 mr-2" />
+                      <MapPinIcon className="h-5 w-5 text-blue-500 mr-2" />
                     )}
                     {getShipmentTypeName(order.shipment_type)}
                   </div>
@@ -839,7 +839,7 @@ const OrderDetail: React.FC = () => {
                       <div className="relative flex space-x-3">
                         <div>
                           <span className="h-8 w-8 rounded-full bg-green-500 flex items-center justify-center ring-8 ring-white">
-                            <ClipboardCheckIcon className="h-5 w-5 text-white" aria-hidden="true" />
+                            <ClipboardDocumentCheckIcon className="h-5 w-5 text-white" aria-hidden="true" />
                           </span>
                         </div>
                         <div className="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">

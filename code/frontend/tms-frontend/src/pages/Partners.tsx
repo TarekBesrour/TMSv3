@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { 
   UserGroupIcon, 
   TruckIcon, 
-  OfficeBuildingIcon, 
-  SearchIcon,
-  FilterIcon,
+  BuildingOfficeIcon, 
+  MagnifyingGlassIcon,
+  FunnelIcon,
   PlusIcon,
-  DotsVerticalIcon
+  EllipsisVerticalIcon
 } from '@heroicons/react/24/outline';
 import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
@@ -135,7 +135,7 @@ const Partners: React.FC = () => {
       case 'CARRIER':
         return <TruckIcon className="h-5 w-5 text-green-500" />;
       case 'SUPPLIER':
-        return <OfficeBuildingIcon className="h-5 w-5 text-purple-500" />;
+        return <BuildingOfficeIcon className="h-5 w-5 text-purple-500" />;
       default:
         return <UserGroupIcon className="h-5 w-5 text-gray-500" />;
     }
@@ -229,7 +229,7 @@ const Partners: React.FC = () => {
                 </label>
                 <div className="relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                   </div>
                   <input
                     type="text"
@@ -286,7 +286,7 @@ const Partners: React.FC = () => {
                   type="submit"
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  <FilterIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                  <FunnelIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                   Filtrer
                 </button>
                 
@@ -367,7 +367,7 @@ const Partners: React.FC = () => {
                     <Menu as="div" className="relative inline-block text-left">
                       <div onClick={(e) => e.stopPropagation()}>
                         <Menu.Button className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-2 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                          <DotsVerticalIcon className="h-5 w-5" aria-hidden="true" />
+                          <EllipsisVerticalIcon className="h-5 w-5" aria-hidden="true" />
                         </Menu.Button>
                       </div>
 
@@ -492,7 +492,7 @@ const Partners: React.FC = () => {
                 
                 {/* Page numbers */}
                 {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                  let pageNum;
+                  let pageNum: number;
                   if (pagination.totalPages <= 5) {
                     pageNum = i + 1;
                   } else if (pagination.page <= 3) {

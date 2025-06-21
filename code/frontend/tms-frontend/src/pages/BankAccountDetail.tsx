@@ -7,13 +7,14 @@ import {
   BanknotesIcon,
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
+import { BankAccount } from '../types/bankAccount';
 
-const BankAccountDetail = () => {
+const BankAccountDetail: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [bankAccount, setBankAccount] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [bankAccount, setBankAccount] = useState<BankAccount | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchBankAccount();
@@ -56,7 +57,7 @@ const BankAccountDetail = () => {
     }
   };
 
-  const formatAmount = (amount, currency) => {
+  const formatAmount = (amount: number = 0, currency: string = 'EUR') => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
       currency: currency || 'EUR'

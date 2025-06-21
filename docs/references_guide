@@ -1,0 +1,403 @@
+# Guide d'Utilisation Frontend - Module de Gestion des Référentiels
+
+## Vue d'ensemble
+
+Le module frontend de gestion des référentiels fournit une interface utilisateur complète pour gérer les données de référence du système TMS. Il est développé en React avec TypeScript et utilise Tailwind CSS pour le styling.
+
+## Architecture
+
+### Structure des composants
+
+```
+frontend/
+├── pages/
+│   ├── References.tsx          # Page principale des types de référentiels
+│   └── ReferenceEntries.tsx    # Page de gestion des entrées
+├── components/
+│   ├── ReferenceTypeList.tsx   # Liste des types de référentiels
+│   ├── ReferenceEntryTable.tsx # Tableau des entrées avec fonctionnalités
+│   └── ReferenceEntryForm.tsx  # Formulaire de création/modification
+├── types/
+│   └── referenceData.ts        # Types TypeScript stricts
+├── services/
+│   └── referenceDataApi.ts     # Service API
+└── hooks/
+    └── useReferenceData.ts     # Hook personnalisé pour la gestion d'état
+```
+
+## Pages principales
+
+### 1. Page des Référentiels (/admin/references)
+
+**Composant :** `References.tsx`
+
+Cette page affiche la liste de tous les types de référentiels disponibles sous forme de grille de cartes.
+
+**Fonctionnalités :**
+- Affichage en grille responsive
+- Recherche par nom ou description
+- Navigation vers les entrées de chaque type
+- Gestion des états de chargement et d'erreur
+
+**Utilisation :**
+```typescript
+import References from './pages/References';
+
+// Dans votre router
+<Route path="/admin/references" element={<References />} />
+```
+
+### 2. Page des Entrées (/admin/references/:typeId)
+
+**Composant :** `ReferenceEntries.tsx`
+
+Cette page affiche et gère les entrées d'un type de référentiel spécifique.
+
+**Fonctionnalités :**
+- Tableau paginé avec tri et recherche
+- Filtrage par statut (actif/inactif)
+- Actions CRUD (Créer, Lire, Modifier, Supprimer)
+- Import/Export de données
+- Navigation breadcrumb
+
+## Composants principaux
+
+### 1. ReferenceTypeList
+
+Affiche la liste des types de référentiels sous forme de cartes.
+
+```typescript
+import ReferenceTypeList from './components/ReferenceTypeList';
+
+<ReferenceTypeList className="mt-6" />
+```
+
+**Props :**
+- `className?` : Classes CSS additionnelles
+
+### 2. ReferenceEntryTable
+
+Tableau complet avec toutes les fonctionnalités de gestion des entrées.
+
+```typescript
+import ReferenceEntryTable from './components/ReferenceEntryTable';
+
+<ReferenceEntryTable
+  entries={entries}
+  total={total}
+  page={page}
+  totalPages={totalPages}
+  loading={loading}
+  onFiltersChange={handleFiltersChange}
+  onCreateClick={handleCreate}
+  onEditClick={handleEdit}
+  onViewClick={handleView}
+  onDeleteClick={handleDelete}
+  onActivateClick={handleActivate}
+  onDeactivateClick={handleDeactivate}
+  onImportClick={handleImport}
+  onExportClick={handleExport}
+/>
+```
+
+**Props :**
+- `entries` : Tableau des entrées à afficher
+- `total` : Nombre total d'entrées
+- `page` : Page actuelle
+- `totalPages` : Nombre total de pages
+- `loading` : État de chargement
+- `onFiltersChange` : Callback pour les changements de filtres
+- `onCreateClick` : Callback pour créer une nouvelle entrée
+- `onEditClick` : Callback pour modifier une entrée
+- `onViewClick` : Callback pour voir une entrée
+- `onDeleteClick` : Callback pour supprimer une entrée
+- `onActivateClick` : Callback pour activer une entrée
+- `onDeactivateClick` : Callback pour désactiver une entrée
+- `onImportClick` : Callback pour importer des données
+- `onExportClick` : Callback pour exporter des données
+
+### 3. ReferenceEntryForm
+
+Formulaire de création et modification des entrées.
+
+```typescript
+import ReferenceEntryForm from './components/ReferenceEntryForm';
+
+<ReferenceEntryForm
+  mode="create"
+  typeId="transport_modes"
+  onSuccess={handleSuccess}
+  onCancel={handleCancel}
+/>
+```
+
+**Props :**
+- `mode` : Mode du formulaire ('create' | 'edit')
+- `typeId` : ID du type de référentiel
+- `entryId?` : ID de l'entrée (requis en mode edit)
+- `onSuccess?` : Callback de succès
+- `onCancel?` : Callback d'annulation
+
+## Hook personnalisé
+
+### useReferenceData
+
+Hook personnalisé qui encapsule toute la logique de gestion des référentiels.
+
+```typescript
+import { useReferenceData } from './hooks/useReferenceData';
+
+const MyComponent = () => {
+  const {
+    // État
+    types,
+    entries,
+    currentEntry,
+    total,
+    page,
+    totalPages,
+    loading,
+    error,
+    
+    // Actions
+    loadTypes,
+    loadEntries,
+    loadEntry,
+    createEntry,
+    updateEntry,
+    deactivateEntry,
+    activateEntry,
+    importData,
+    exportData,
+    clearError,
+    clearCurrentEntry
+  } = useReferenceData();
+
+  // Utilisation...
+};
+```
+
+**État disponible :**
+- `types` : Liste des types de référentiels
+- `entries` : Liste des entrées actuelles
+- `currentEntry` : Entrée actuellement sélectionnée
+- `total` : Nombre total d'entrées
+- `page` : Page actuelle
+- `totalPages` : Nombre total de pages
+- `loading` : État de chargement
+- `error` : Message d'erreur éventuel
+
+**Actions disponibles :**
+- `loadTypes()` : Charger les types de référentiels
+- `loadEntries(typeId, filters)` : Charger les entrées avec filtres
+- `loadEntry(typeId, id)` : Charger une entrée spécifique
+- `createEntry(typeId, data)` : Créer une nouvelle entrée
+- `updateEntry(typeId, id, data)` : Mettre à jour une entrée
+- `deactivateEntry(typeId, id)` : Désactiver une entrée
+- `activateEntry(typeId, id)` : Activer une entrée
+- `importData(typeId, file)` : Importer des données
+- `exportData(typeId, format)` : Exporter des données
+- `clearError()` : Effacer les erreurs
+- `clearCurrentEntry()` : Effacer l'entrée courante
+
+## Service API
+
+### ReferenceDataApiService
+
+Service qui encapsule tous les appels API.
+
+```typescript
+import ReferenceDataApiService from './services/referenceDataApi';
+
+// Récupérer les types
+const response = await ReferenceDataApiService.getReferenceTypes();
+if (response.data) {
+  console.log(response.data);
+} else if (response.error) {
+  console.error(response.error);
+}
+
+// Créer une entrée
+const createResponse = await ReferenceDataApiService.createReferenceEntry(
+  'transport_modes',
+  {
+    code: 'AIR',
+    label: 'Transport aérien',
+    is_active: true,
+    language_code: 'fr'
+  }
+);
+```
+
+## Types TypeScript
+
+### Interfaces principales
+
+```typescript
+// Type de référentiel
+interface ReferenceType {
+  id: string;
+  name: string;
+  description: string;
+}
+
+// Entrée de référentiel
+interface ReferenceEntry {
+  id: number;
+  tenant_id: number;
+  category: string;
+  code: string;
+  label: string;
+  description: string | null;
+  value: string | null;
+  metadata: ReferenceEntryMetadata | null;
+  parent_id: number | null;
+  sort_order: number;
+  level: number;
+  is_active: boolean;
+  is_system: boolean;
+  is_editable: boolean;
+  language_code: string;
+  created_by: number;
+  updated_by: number;
+  created_at: string;
+  updated_at: string;
+  parent?: ReferenceEntry;
+  children?: ReferenceEntry[];
+}
+
+// Données de formulaire
+interface ReferenceEntryFormData {
+  code: string;
+  label: string;
+  description?: string;
+  value?: string;
+  metadata?: ReferenceEntryMetadata;
+  parent_id?: number;
+  sort_order?: number;
+  is_active?: boolean;
+  language_code?: string;
+}
+```
+
+## Fonctionnalités avancées
+
+### 1. Recherche et filtrage
+
+Le tableau des entrées supporte :
+- Recherche textuelle dans code, libellé et description
+- Filtrage par statut (actif/inactif)
+- Tri par colonnes
+- Pagination configurable
+
+### 2. Import/Export
+
+**Formats supportés :**
+- CSV avec colonnes : code, label, description, value, is_active
+- JSON avec tableau d'objets
+
+**Utilisation :**
+```typescript
+// Import
+const file = event.target.files[0];
+const result = await importData('transport_modes', file);
+
+// Export
+await exportData('transport_modes', 'csv'); // Télécharge automatiquement
+```
+
+### 3. Gestion des erreurs
+
+Toutes les erreurs sont gérées de manière centralisée :
+- Affichage des messages d'erreur
+- Possibilité de réessayer les opérations
+- Validation côté client et serveur
+
+### 4. États de chargement
+
+Interface responsive avec indicateurs de chargement :
+- Spinners pendant les requêtes
+- États de chargement différenciés
+- Désactivation des boutons pendant les opérations
+
+## Personnalisation
+
+### Styling
+
+Le module utilise Tailwind CSS. Vous pouvez personnaliser l'apparence en :
+- Modifiant les classes Tailwind dans les composants
+- Ajoutant des classes CSS personnalisées
+- Utilisant la prop `className` des composants
+
+### Traduction
+
+Les libellés sont en français par défaut. Pour ajouter d'autres langues :
+1. Créer un système de traduction (react-i18next)
+2. Remplacer les chaînes hardcodées par des clés de traduction
+3. Ajouter les fichiers de traduction
+
+### Validation
+
+La validation est gérée à deux niveaux :
+- Côté client dans les formulaires
+- Côté serveur via l'API
+
+Pour personnaliser la validation :
+1. Modifier les règles dans `ReferenceEntryForm.tsx`
+2. Adapter la validation serveur dans le backend
+
+## Exemples d'intégration
+
+### Intégration dans une application existante
+
+```typescript
+// App.tsx
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import References from './pages/References';
+import ReferenceEntries from './pages/ReferenceEntries';
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/admin/references" element={<References />} />
+        <Route path="/admin/references/:typeId" element={<ReferenceEntries />} />
+      </Routes>
+    </Router>
+  );
+}
+```
+
+### Utilisation dans un composant personnalisé
+
+```typescript
+import { useReferenceData } from './hooks/useReferenceData';
+
+const CustomReferenceSelector = ({ typeId, onSelect }) => {
+  const { entries, loadEntries } = useReferenceData();
+
+  useEffect(() => {
+    loadEntries(typeId, { limit: 100 });
+  }, [typeId]);
+
+  return (
+    <select onChange={(e) => onSelect(e.target.value)}>
+      {entries.map(entry => (
+        <option key={entry.id} value={entry.code}>
+          {entry.label}
+        </option>
+      ))}
+    </select>
+  );
+};
+```
+
+## Bonnes pratiques
+
+1. **Gestion d'état** : Utilisez le hook `useReferenceData` pour une gestion centralisée
+2. **Types** : Respectez le typage TypeScript strict
+3. **Erreurs** : Gérez toujours les cas d'erreur
+4. **Performance** : Utilisez la pagination pour les grandes listes
+5. **UX** : Affichez des indicateurs de chargement
+6. **Accessibilité** : Utilisez les attributs ARIA appropriés
+

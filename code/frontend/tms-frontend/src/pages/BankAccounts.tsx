@@ -6,17 +6,19 @@ import {
   FunnelIcon,
   BanknotesIcon
 } from '@heroicons/react/24/outline';
+import { BankAccount } from '../types/bankAccount';
+import { Pagination } from '../types/pagination';
 
-const BankAccounts = () => {
+const BankAccounts: React.FC = () => {
   const navigate = useNavigate();
-  const [bankAccounts, setBankAccounts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filters, setFilters] = useState<{ account_type: string; currency: string }>({
     account_type: '',
     currency: ''
   });
-  const [pagination, setPagination] = useState({
+  const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     pageSize: 20,
     total: 0,
@@ -31,8 +33,8 @@ const BankAccounts = () => {
     try {
       setLoading(true);
       const queryParams = new URLSearchParams({
-        page: pagination.page,
-        pageSize: pagination.pageSize,
+        page: String(pagination.page),
+        pageSize: String(pagination.pageSize),
         search_term: searchTerm,
         ...filters
       });
@@ -42,7 +44,7 @@ const BankAccounts = () => {
 
       if (data.success) {
         setBankAccounts(data.data);
-        setPagination(prev => ({
+        setPagination((prev) => ({
           ...prev,
           total: data.pagination.total,
           totalPages: data.pagination.totalPages
@@ -55,14 +57,14 @@ const BankAccounts = () => {
     }
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setPagination(prev => ({ ...prev, page: 1 }));
+    setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-    setPagination(prev => ({ ...prev, page: 1 }));
+  const handleFilterChange = (key: keyof typeof filters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
   const clearFilters = () => {
@@ -71,10 +73,10 @@ const BankAccounts = () => {
       currency: ''
     });
     setSearchTerm('');
-    setPagination(prev => ({ ...prev, page: 1 }));
+    setPagination((prev) => ({ ...prev, page: 1 }));
   };
 
-  const formatAmount = (amount, currency) => {
+  const formatAmount = (amount: number = 0, currency: string = 'EUR') => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
       currency: currency || 'EUR'

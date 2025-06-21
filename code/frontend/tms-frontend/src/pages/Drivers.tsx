@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   PlusIcon, 
-  SearchIcon, 
+  MagnifyingGlassIcon, 
   UserIcon,
   IdentificationIcon,
   CalendarIcon,
-  ExclamationIcon,
+  ExclamationCircleIcon,
   TruckIcon
-} from '@heroicons/react/outline';
+} from '@heroicons/react/24/outline';
 
 // Types
 interface Driver {
@@ -276,7 +276,7 @@ const Drivers: React.FC = () => {
         <div className="rounded-md bg-red-50 p-4 mb-6">
           <div className="flex">
             <div className="flex-shrink-0">
-              <ExclamationIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+              <ExclamationCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-red-800">{error}</p>
@@ -291,7 +291,7 @@ const Drivers: React.FC = () => {
           {/* Search */}
           <div className="relative rounded-md shadow-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </div>
             <input
               type="text"

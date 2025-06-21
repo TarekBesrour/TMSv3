@@ -10,13 +10,14 @@ import {
   CheckCircleIcon,
   XCircleIcon
 } from '@heroicons/react/24/outline';
+import { ResourceAvailability, ResourceType, ResourceAvailabilityStatus } from '../types/resourceAvailability';
 
 const ResourceAvailabilityDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [availability, setAvailability] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [availability, setAvailability] = useState<ResourceAvailability | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -24,7 +25,7 @@ const ResourceAvailabilityDetail = () => {
     }
   }, [id]);
 
-  const fetchAvailability = async (availabilityId) => {
+  const fetchAvailability = async (availabilityId: string) => {
     try {
       setLoading(true);
       const response = await fetch(`/api/availabilities/${availabilityId}`);
@@ -32,7 +33,7 @@ const ResourceAvailabilityDetail = () => {
       if (data.success) {
         setAvailability(data.data);
       } else {
-        setError(data.message);
+        setError(data.message || 'Erreur lors de la récupération.');
       }
     } catch (err) {
       setError('Failed to fetch availability details.');
@@ -45,14 +46,14 @@ const ResourceAvailabilityDetail = () => {
   const handleDelete = async () => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cette disponibilité ?')) {
       try {
-        const response = await fetch(`/api/availabilities/${id}`, {
+        const response = await fetch(`/api/availabilities/${id}` as string, {
           method: 'DELETE',
         });
         const data = await response.json();
         if (data.success) {
           navigate('/resource-availability');
         } else {
-          setError(data.message);
+          setError(data.message || 'Erreur lors de la suppression.');
         }
       } catch (err) {
         setError('Failed to delete availability.');
@@ -61,7 +62,7 @@ const ResourceAvailabilityDetail = () => {
     }
   };
 
-  const getStatusBadgeClass = (status) => {
+  const getStatusBadgeClass = (status: ResourceAvailabilityStatus) => {
     switch (status) {
       case 'available':
         return 'bg-green-100 text-green-800';
@@ -76,7 +77,7 @@ const ResourceAvailabilityDetail = () => {
     }
   };
 
-  const getStatusName = (status) => {
+  const getStatusName = (status: ResourceAvailabilityStatus) => {
     switch (status) {
       case 'available':
         return 'Disponible';
@@ -91,7 +92,7 @@ const ResourceAvailabilityDetail = () => {
     }
   };
 
-  const getResourceTypeName = (type) => {
+  const getResourceTypeName = (type: ResourceType) => {
     switch (type) {
       case 'vehicle':
         return 'Véhicule';
@@ -102,12 +103,12 @@ const ResourceAvailabilityDetail = () => {
     }
   };
 
-  const formatDateTime = (dateTimeString) => {
+  const formatDateTime = (dateTimeString: string | undefined) => {
     if (!dateTimeString) return 'N/A';
     return new Date(dateTimeString).toLocaleString('fr-FR');
   };
 
-  const getResourceIcon = (type) => {
+  const getResourceIcon = (type: ResourceType) => {
     return type === 'vehicle' ? TruckIcon : UserIcon;
   };
 

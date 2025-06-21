@@ -6,18 +6,19 @@ import {
   TruckIcon,
   UserIcon,
   CalendarIcon,
-  ClockIcon,
-  CheckCircleIcon,
-  XCircleIcon
+  ClockIcon
+ // CheckCircleIcon,
+  //XCircleIcon
 } from '@heroicons/react/24/outline';
+import type { ResourceAvailability, ResourceType, ResourceAvailabilityStatus } from '../types/resourceAvailability';
 
-const ResourceAvailability = () => {
+const ResourceAvailabilityV1 = () => {
   const navigate = useNavigate();
-  const [availabilities, setAvailabilities] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [resourceTypeFilter, setResourceTypeFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [availabilities, setAvailabilities] = useState<ResourceAvailability[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [resourceTypeFilter, setResourceTypeFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('');
   const [pagination, setPagination] = useState({
     page: 1,
     pageSize: 10,
@@ -58,22 +59,22 @@ const ResourceAvailability = () => {
     }
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const handleResourceTypeFilter = (e) => {
+  const handleResourceTypeFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setResourceTypeFilter(e.target.value);
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const handleStatusFilter = (e) => {
+  const handleStatusFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStatusFilter(e.target.value);
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const getStatusBadgeClass = (status) => {
+  const getStatusBadgeClass = (status: ResourceAvailabilityStatus) => {
     switch (status) {
       case 'available':
         return 'bg-green-100 text-green-800';
@@ -88,7 +89,7 @@ const ResourceAvailability = () => {
     }
   };
 
-  const getStatusName = (status) => {
+  const getStatusName = (status: ResourceAvailabilityStatus) => {
     switch (status) {
       case 'available':
         return 'Disponible';
@@ -103,7 +104,7 @@ const ResourceAvailability = () => {
     }
   };
 
-  const getResourceTypeName = (type) => {
+  const getResourceTypeName = (type: ResourceType) => {
     switch (type) {
       case 'vehicle':
         return 'Véhicule';
@@ -114,12 +115,12 @@ const ResourceAvailability = () => {
     }
   };
 
-  const formatDateTime = (dateTimeString) => {
+  const formatDateTime = (dateTimeString: string | undefined) => {
     if (!dateTimeString) return 'N/A';
     return new Date(dateTimeString).toLocaleString('fr-FR');
   };
 
-  const getResourceIcon = (type) => {
+  const getResourceIcon = (type: ResourceType) => {
     return type === 'vehicle' ? TruckIcon : UserIcon;
   };
 
@@ -361,5 +362,5 @@ const ResourceAvailability = () => {
   );
 };
 
-export default ResourceAvailability;
+export default ResourceAvailabilityV1;
 

@@ -11,13 +11,29 @@ import {
   CreditCardIcon,
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
+import type { Payment } from '../types/payment';
+import type { Partner } from '../types/partner';
+import type { Invoice } from '../types/invoice';
+import type { BankAccount } from '../types/bankAccount';
+
+// Extension du type Payment pour les détails
+interface PaymentDetailType extends Payment {
+  due_date?: string;
+  transaction_reference?: string;
+  description?: string;
+  partner?: Partner;
+  invoice?: Invoice;
+  carrierInvoice?: Invoice;
+  bankAccount?: BankAccount;
+  getPaymentMethodLabel?: () => string;
+}
 
 const PaymentDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [payment, setPayment] = useState(null);
+  const [payment, setPayment] = useState<PaymentDetailType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [showProcessModal, setShowProcessModal] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [processData, setProcessData] = useState({
@@ -113,8 +129,8 @@ const PaymentDetail = () => {
     }
   };
 
-  const getStatusBadgeClass = (status) => {
-    const statusClasses = {
+  const getStatusBadgeClass = (status: Payment['status']) => {
+    const statusClasses: Record<Payment['status'], string> = {
       pending: 'bg-yellow-100 text-yellow-800',
       processing: 'bg-blue-100 text-blue-800',
       completed: 'bg-green-100 text-green-800',
@@ -125,8 +141,8 @@ const PaymentDetail = () => {
     return statusClasses[status] || 'bg-gray-100 text-gray-800';
   };
 
-  const getStatusName = (status) => {
-    const statusNames = {
+  const getStatusName = (status: Payment['status']) => {
+    const statusNames: Record<Payment['status'], string> = {
       pending: 'En attente',
       processing: 'En cours',
       completed: 'Terminé',
@@ -137,7 +153,7 @@ const PaymentDetail = () => {
     return statusNames[status] || status;
   };
 
-  const getPaymentMethodIcon = (method) => {
+  const getPaymentMethodIcon = (method: Payment['payment_method']) => {
     switch (method) {
       case 'credit_card':
         return <CreditCardIcon className="h-5 w-5 text-blue-500" />;
@@ -148,19 +164,19 @@ const PaymentDetail = () => {
     }
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string | undefined) => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('fr-FR');
   };
 
-  const formatAmount = (amount, currency) => {
+  const formatAmount = (amount: number, currency: string) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
       currency: currency || 'EUR'
     }).format(amount);
   };
 
-  const isOverdue = (payment) => {
+  const isOverdue = (payment: PaymentDetailType) => {
     if (!payment.due_date || payment.status === 'completed') return false;
     return new Date(payment.due_date) < new Date();
   };
@@ -262,7 +278,7 @@ const PaymentDetail = () => {
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 <div className="flex items-center">
                   {getPaymentMethodIcon(payment.payment_method)}
-                  <span className="ml-2">{payment.getPaymentMethodLabel()}</span>
+                  <span className="ml-2">{payment.getPaymentMethodLabel ? payment.getPaymentMethodLabel() : ''}</span>
                 </div>
               </dd>
             </div>
@@ -395,7 +411,7 @@ const PaymentDetail = () => {
                         <textarea
                           id="process_notes"
                           name="process_notes"
-                          rows="3"
+                          rows={3}
                           value={processData.notes}
                           onChange={(e) => setProcessData({ ...processData, notes: e.target.value })}
                           className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
@@ -453,7 +469,7 @@ const PaymentDetail = () => {
                         <textarea
                           id="cancel_reason"
                           name="cancel_reason"
-                          rows="3"
+                          rows={3}
                           value={cancelReason}
                           onChange={(e) => setCancelReason(e.target.value)}
                           className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"

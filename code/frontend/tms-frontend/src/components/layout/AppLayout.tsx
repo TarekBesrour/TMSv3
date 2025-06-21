@@ -21,7 +21,7 @@ interface NavItem {
   name: string;
   href: string;
   icon: React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement>>;
-  current: boolean;
+  current?: boolean;
   badge?: string;
   aiPowered?: boolean;
 }
@@ -32,52 +32,78 @@ interface NavSection {
   items: NavItem[];
 }
 
+// New navigation structure based on functional modules of the TMS
+const navigation: NavSection[] = [
+  {
+    title: "Partenaires & Entités",
+    items: [
+      { name: 'Clients', href: '/partners', icon: UserGroupIcon },
+      { name: 'Contacts', href: '/contacts', icon: UserIcon },
+      { name: 'Sites', href: '/sites', icon: CubeIcon },
+    ]
+  },
+  {
+    title: "Commandes & Expéditions",
+    items: [
+      { name: 'Commandes', href: '/orders', icon: ClipboardDocumentListIcon },
+      { name: 'Expéditions', href: '/shipments', icon: TruckIcon },
+      { name: 'Planification', href: '/planning', icon: CalendarIcon, aiPowered: true, badge: 'IA' },
+      { name: 'Tournées', href: '/tours', icon: CalendarIcon },
+      { name: 'Disponibilité ressources', href: '/resource-availability', icon: CalendarIcon },
+    ]
+  },
+  {
+    title: "Coûts & Facturation",
+    items: [
+      { name: 'Facturation', href: '/billing', icon: BanknotesIcon },
+      { name: 'Paiements', href: '/payments', icon: BanknotesIcon },
+      { name: 'Comptes bancaires', href: '/bankaccounts', icon: BanknotesIcon },
+      { name: 'Tarifs', href: '/rates', icon: DocumentTextIcon },
+      { name: 'Surcharges', href: '/surcharges', icon: DocumentTextIcon },
+      { name: 'Contrats', href: '/contracts', icon: DocumentTextIcon },
+    ]
+  },
+  {
+    title: "Flotte & Ressources",
+    items: [
+      { name: 'Flotte', href: '/fleet', icon: TruckIcon },
+      { name: 'Véhicules', href: '/vehicles', icon: TruckIcon },
+      { name: 'Conducteurs', href: '/drivers', icon: UserIcon },
+      { name: 'Maintenance', href: '/maintenance', icon: WrenchScrewdriverIcon, aiPowered: true, badge: 'IA' },
+      { name: 'Équipements', href: '/equipments', icon: CubeIcon },
+    ]
+  },
+  {
+    title: "Analyse & Reporting",
+    items: [
+      { name: 'Tableau de bord', href: '/dashboard', icon: HomeIcon },
+      { name: 'KPIs', href: '/kpis', icon: ChartBarIcon, aiPowered: true, badge: 'IA' },
+      { name: 'Prévisions', href: '/forecasting', icon: ChartBarIcon, aiPowered: true, badge: 'IA' },
+      { name: 'Rapports', href: '/reports', icon: DocumentTextIcon },
+    ]
+  },
+  {
+    title: "Intégration & Connectivité",
+    items: [
+      { name: 'Référentiels', href: '/admin/references', icon: CubeIcon },
+      { name: 'Documents', href: '/documents', icon: DocumentTextIcon, aiPowered: true, badge: 'IA' },
+      { name: 'Assistant IA', href: '/assistant', icon: ChatBubbleLeftRightIcon, aiPowered: true },
+    ]
+  },
+  {
+    title: "Administration & Sécurité",
+    items: [
+      { name: 'Paramètres', href: '/settings', icon: CogIcon },
+      { name: 'Utilisateurs', href: '/usermanagement', icon: UserIcon },
+      { name: 'Rôles', href: '/rolemanagement', icon: UserGroupIcon },
+      { name: 'Administration', href: '/administration', icon: CogIcon },
+      { name: 'Profil', href: '/profile', icon: UserIcon },
+    ]
+  }
+];
+
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
-  // Navigation structure with AI-powered features highlighted
-  const navigation: NavSection[] = [
-    {
-      title: "Général",
-      items: [
-        { name: 'Tableau de bord', href: '/dashboard', icon: HomeIcon, current: true },
-        { name: 'Assistant IA', href: '/assistant', icon: ChatBubbleLeftRightIcon, current: false, aiPowered: true },
-      ]
-    },
-    {
-      title: "Opérations",
-      items: [
-        { name: 'Commandes', href: '/orders', icon: ClipboardDocumentListIcon, current: false },
-        { name: 'Planification', href: '/planning', icon: CalendarIcon, current: false, aiPowered: true, badge: 'IA' },
-        { name: 'Expéditions', href: '/shipments', icon: TruckIcon, current: false },
-        { name: 'Documents', href: '/documents', icon: DocumentTextIcon, current: false, aiPowered: true, badge: 'IA' },
-      ]
-    },
-    {
-      title: "Ressources",
-      items: [
-        { name: 'Flotte', href: '/fleet', icon: TruckIcon, current: false },
-        { name: 'Maintenance', href: '/maintenance', icon: WrenchScrewdriverIcon, current: false, aiPowered: true, badge: 'IA' },
-        { name: 'Partenaires', href: '/partners', icon: UserGroupIcon, current: false },
-      ]
-    },
-    {
-      title: "Analyse",
-      items: [
-        { name: 'KPIs', href: '/kpis', icon: ChartBarIcon, current: false, aiPowered: true, badge: 'IA' },
-        { name: 'Prévisions', href: '/forecasting', icon: ChartBarIcon, current: false, aiPowered: true, badge: 'IA' },
-        { name: 'Facturation', href: '/billing', icon: BanknotesIcon, current: false },
-      ]
-    },
-    {
-      title: "Administration",
-      items: [
-        { name: 'Paramètres', href: '/settings', icon: CogIcon, current: false },
-        { name: 'Référentiels', href: '/references', icon: CubeIcon, current: false },
-        { name: 'Utilisateurs', href: '/usermanagement', icon: UserIcon, current: false },        
-      ]
-    },
-  ];
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100">

@@ -10,13 +10,14 @@ import {
   CalendarIcon,
   ChartBarIcon
 } from '@heroicons/react/24/outline';
+import { Tour, TourStatus } from '../types/tour';
 
 const Tours = () => {
   const navigate = useNavigate();
-  const [tours, setTours] = useState([]);
+  const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState<TourStatus | ''>('');
   const [dateFilter, setDateFilter] = useState('');
   const [pagination, setPagination] = useState({
     page: 1,
@@ -58,22 +59,23 @@ const Tours = () => {
     }
   };
 
-  const handleSearch = (e) => {
+  // Correction des types pour les paramètres de fonctions
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const handleStatusFilter = (e) => {
-    setStatusFilter(e.target.value);
+  const handleStatusFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatusFilter(e.target.value as TourStatus | '');
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const handleDateFilter = (e) => {
+  const handleDateFilter = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDateFilter(e.target.value);
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const getStatusBadgeClass = (status) => {
+  const getStatusBadgeClass = (status: TourStatus) => {
     switch (status) {
       case 'planned':
         return 'bg-blue-100 text-blue-800';
@@ -88,7 +90,7 @@ const Tours = () => {
     }
   };
 
-  const getStatusName = (status) => {
+  const getStatusName = (status: TourStatus) => {
     switch (status) {
       case 'planned':
         return 'Planifiée';
@@ -103,11 +105,11 @@ const Tours = () => {
     }
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR');
   };
 
-  const formatTime = (timeString) => {
+  const formatTime = (timeString: string) => {
     if (!timeString) return 'N/A';
     return new Date(`1970-01-01T${timeString}`).toLocaleTimeString('fr-FR', {
       hour: '2-digit',
@@ -115,12 +117,12 @@ const Tours = () => {
     });
   };
 
-  const formatDistance = (distance) => {
+  const formatDistance = (distance: number | undefined) => {
     if (!distance) return 'N/A';
     return `${Math.round(distance * 100) / 100} km`;
   };
 
-  const formatDuration = (duration) => {
+  const formatDuration = (duration: number | undefined) => {
     if (!duration) return 'N/A';
     const hours = Math.floor(duration / 60);
     const minutes = duration % 60;
@@ -267,7 +269,7 @@ const Tours = () => {
                   {tour.vehicle && (
                     <div className="flex items-center text-sm text-gray-500">
                       <TruckIcon className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
-                      <span>{tour.vehicle.license_plate}</span>
+                      <span>{tour.vehicle.registration_number}</span>
                     </div>
                   )}
                   

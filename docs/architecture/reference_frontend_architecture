@@ -1,0 +1,42 @@
+### Architecture des Composants React.js pour le Frontend
+
+Le frontend React.js sera structuré de manière modulaire pour la gestion des référentiels, en s'appuyant sur les bonnes pratiques déjà établies dans le projet (organisation par modules, typage strict, composants réutilisables).
+
+**1. Pages (Routes):**
+   - `/admin/references`: Page principale affichant la liste des types de référentiels disponibles (ex: Pays, Unités de Mesure, Types de Véhicules).
+   - `/admin/references/:typeId`: Page affichant la liste des entrées pour un type de référentiel spécifique (ex: liste des pays).
+   - `/admin/references/:typeId/new`: Page pour la création d'une nouvelle entrée de référentiel.
+   - `/admin/references/:typeId/:id/edit`: Page pour la modification d'une entrée de référentiel existante.
+
+**2. Composants Réutilisables (dossier `components`):**
+   - **`ReferenceTypeList`**: Affiche la liste des types de référentiels (ex: une table ou une liste de cartes).
+   - **`ReferenceEntryTable`**: Composant générique pour afficher les entrées d'un référentiel donné. Il inclura:
+     - Fonctionnalités de recherche, filtrage, tri et pagination.
+     - Affichage dynamique des colonnes en fonction du type de référentiel.
+     - Boutons d'action (Consulter, Modifier, Désactiver/Activer, Supprimer).
+   - **`ReferenceEntryForm`**: Composant générique pour la création et la modification d'une entrée de référentiel.
+     - Génération dynamique des champs de formulaire en fonction des attributs du référentiel.
+     - Validation des champs en temps réel.
+     - Gestion des états du formulaire (chargement, erreur, succès).
+   - **`ImportExportButtons`**: Composant pour déclencher les opérations d'import/export.
+   - **`SynchronizationConfig`**: Composant pour configurer et déclencher les synchronisations externes.
+
+**3. Hooks Personnalisés (dossier `hooks`):**
+   - **`useReferenceData`**: Hook pour la récupération, la mise à jour et la gestion du cache des données de référentiels via les APIs backend.
+   - **`useReferenceForm`**: Hook pour gérer la logique des formulaires de référentiels (validation, soumission).
+
+**4. Services/API Clients (dossier `services` ou `api`):**
+   - **`referenceApi.ts`**: Module regroupant les fonctions d'appel aux APIs RESTful définies précédemment (GET types, GET entries, POST, PUT, PATCH, IMPORT, EXPORT, SYNC).
+
+**5. Typage (dossier `types`):**
+   - Définition des interfaces TypeScript pour les types de référentiels, les entrées de référentiels (avec leurs attributs spécifiques), les requêtes et réponses API.
+
+**Flux d'Interaction:**
+- L'utilisateur navigue vers `/admin/references`.
+- `ReferenceTypeList` utilise `useReferenceData` pour récupérer les types de référentiels via `referenceApi.ts`.
+- L'utilisateur sélectionne un type de référentiel, naviguant vers `/admin/references/:typeId`.
+- `ReferenceEntryTable` utilise `useReferenceData` pour récupérer les entrées du référentiel, gère la pagination, le tri et le filtrage.
+- Pour créer/modifier, l'utilisateur est redirigé vers le formulaire correspondant, qui utilise `useReferenceForm` et `referenceApi.ts` pour soumettre les données.
+
+Cette architecture permettra une grande réutilisabilité des composants et une adaptation facile aux différents types de référentiels, tout en respectant la structure existante du projet.
+

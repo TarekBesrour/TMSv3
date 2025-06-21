@@ -1,6 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeftIcon, SaveIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ArrowDownTrayIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import type { PaymentStatus, PaymentType, PaymentMethod } from '../types/payment';
+import type { Partner } from '../types/partner';
+import type { Invoice } from '../types/invoice';
+import type { BankAccount } from '../types/bankAccount';
+
+interface PaymentFormErrors {
+  general?: string;
+  payment_type?: string;
+  reference?: string;
+  amount?: string;
+  currency?: string;
+  payment_date?: string;
+  due_date?: string;
+  status?: string;
+  payment_method?: string;
+  partner_id?: string;
+  invoice_id?: string;
+  carrier_invoice_id?: string;
+  bank_account_id?: string;
+  transaction_reference?: string;
+  description?: string;
+  notes?: string;
+}
 
 const PaymentForm = () => {
   const { id } = useParams();
@@ -24,11 +47,11 @@ const PaymentForm = () => {
     description: '',
     notes: ''
   });
-  const [partners, setPartners] = useState([]);
-  const [invoices, setInvoices] = useState([]);
-  const [carrierInvoices, setCarrierInvoices] = useState([]);
-  const [bankAccounts, setBankAccounts] = useState([]);
-  const [errors, setErrors] = useState({});
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [carrierInvoices, setCarrierInvoices] = useState<Invoice[]>([]);
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
+  const [errors, setErrors] = useState<PaymentFormErrors>({});
 
   useEffect(() => {
     if (id) {
@@ -38,7 +61,7 @@ const PaymentForm = () => {
     fetchRelatedData();
   }, [id]);
 
-  const fetchPayment = async (paymentId) => {
+  const fetchPayment = async (paymentId: string) => {
     try {
       setLoading(true);
       const response = await fetch(`/api/payments/${paymentId}`);
@@ -95,7 +118,7 @@ const PaymentForm = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -104,7 +127,7 @@ const PaymentForm = () => {
     setErrors(prev => ({ ...prev, [name]: undefined })); // Clear error on change
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrors({}); // Clear previous errors
 
@@ -126,10 +149,8 @@ const PaymentForm = () => {
         navigate('/payments');
       } else {
         if (data.errors) {
-          const newErrors = {};
-          data.errors.forEach(err => {
-            // Assuming backend errors are like { path: 'fieldName', msg: 'message' }
-            // Or just a general message
+          const newErrors: PaymentFormErrors = {};
+          data.errors.forEach((err: { path?: keyof PaymentFormErrors; msg: string }) => {
             if (err.path) {
               newErrors[err.path] = err.msg;
             } else {
@@ -261,7 +282,7 @@ const PaymentForm = () => {
                     id="currency"
                     value={formData.currency}
                     onChange={handleChange}
-                    maxLength="3"
+                    maxLength={3}
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
@@ -467,7 +488,7 @@ const PaymentForm = () => {
                   <textarea
                     id="description"
                     name="description"
-                    rows="3"
+                    rows={3}
                     value={formData.description}
                     onChange={handleChange}
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
@@ -485,7 +506,7 @@ const PaymentForm = () => {
                   <textarea
                     id="notes"
                     name="notes"
-                    rows="3"
+                    rows={3}
                     value={formData.notes}
                     onChange={handleChange}
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
@@ -501,7 +522,7 @@ const PaymentForm = () => {
                   type="submit"
                   className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  <SaveIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                  <ArrowDownTrayIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                   {isEditMode ? 'Mettre à jour' : 'Créer'}
                 </button>
               </div>

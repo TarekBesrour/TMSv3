@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   PlusIcon, 
-  SearchIcon, 
-  FilterIcon,
-  SortAscendingIcon,
-  ExclamationIcon,
-  LocationMarkerIcon,
-  OfficeBuildingIcon
-} from '@heroicons/react/outline';
+  MagnifyingGlassIcon, 
+  FunnelIcon,
+  BarsArrowUpIcon,
+  ExclamationCircleIcon,
+  MapPinIcon,
+  BuildingOfficeIcon,
+  GlobeAltIcon,
+  EnvelopeIcon,
+  PencilSquareIcon
+} from '@heroicons/react/24/outline';
 
 // Types
 interface Site {
@@ -177,17 +180,17 @@ const Sites: React.FC = () => {
   const getSiteTypeIcon = (type: string) => {
     switch (type) {
       case 'warehouse':
-        return <OfficeBuildingIcon className="h-5 w-5 text-blue-500" title="Entrepôt" />;
+        return <BuildingOfficeIcon className="h-5 w-5 text-blue-500" title="Entrepôt" />;
       case 'distribution_center':
-        return <OfficeBuildingIcon className="h-5 w-5 text-green-500" title="Centre de distribution" />;
+        return <BuildingOfficeIcon className="h-5 w-5 text-green-500" title="Centre de distribution" />;
       case 'port':
-        return <LocationMarkerIcon className="h-5 w-5 text-purple-500" title="Port" />;
+        return <MapPinIcon className="h-5 w-5 text-purple-500" title="Port" />;
       case 'hub':
-        return <LocationMarkerIcon className="h-5 w-5 text-orange-500" title="Hub" />;
+        return <MapPinIcon className="h-5 w-5 text-orange-500" title="Hub" />;
       case 'factory':
-        return <OfficeBuildingIcon className="h-5 w-5 text-red-500" title="Usine" />;
+        return <BuildingOfficeIcon className="h-5 w-5 text-red-500" title="Usine" />;
       default:
-        return <LocationMarkerIcon className="h-5 w-5 text-gray-500" title="Site" />;
+        return <MapPinIcon className="h-5 w-5 text-gray-500" title="Site" />;
     }
   };
   
@@ -257,7 +260,7 @@ const Sites: React.FC = () => {
         <div className="rounded-md bg-red-50 p-4 mb-6">
           <div className="flex">
             <div className="flex-shrink-0">
-              <ExclamationIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+              <ExclamationCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-red-800">{error}</p>
@@ -272,7 +275,7 @@ const Sites: React.FC = () => {
           {/* Search */}
           <div className="relative rounded-md shadow-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </div>
             <input
               type="text"
@@ -341,7 +344,7 @@ const Sites: React.FC = () => {
                       <div className="flex items-center">
                         Nom
                         {sortField === 'name' && (
-                          <SortAscendingIcon 
+                          <BarsArrowUpIcon 
                             className={`ml-1 h-4 w-4 ${sortDirection === 'asc' ? 'text-indigo-500' : 'text-gray-400'}`} 
                             aria-hidden="true" 
                           />
@@ -362,7 +365,7 @@ const Sites: React.FC = () => {
                       <div className="flex items-center">
                         Adresse
                         {sortField === 'city' && (
-                          <SortAscendingIcon 
+                          <BarsArrowUpIcon 
                             className={`ml-1 h-4 w-4 ${sortDirection === 'asc' ? 'text-indigo-500' : 'text-gray-400'}`} 
                             aria-hidden="true" 
                           />
@@ -377,7 +380,7 @@ const Sites: React.FC = () => {
                       <div className="flex items-center">
                         Partenaire
                         {sortField === 'partner_name' && (
-                          <SortAscendingIcon 
+                          <BarsArrowUpIcon 
                             className={`ml-1 h-4 w-4 ${sortDirection === 'asc' ? 'text-indigo-500' : 'text-gray-400'}`} 
                             aria-hidden="true" 
                           />

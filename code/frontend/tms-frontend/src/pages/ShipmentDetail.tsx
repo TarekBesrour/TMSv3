@@ -3,17 +3,18 @@ import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeftIcon,
   DocumentTextIcon,
-  LocationMarkerIcon,
+  MapPinIcon,
   CalendarIcon,
   TruckIcon,
-  GlobeIcon,
+  GlobeAltIcon,
   PencilIcon,
   TrashIcon,
-  ExclamationIcon,
+  ExclamationCircleIcon,
   ClockIcon,
   CheckCircleIcon,
   XCircleIcon,
-  ChevronRightIcon
+  ChevronRightIcon,
+  PlusIcon
 } from '@heroicons/react/24/outline';
 
 // Types
@@ -425,13 +426,13 @@ const ShipmentDetail: React.FC = () => {
   const getShipmentTypeIcon = (type: string) => {
     switch (type) {
       case 'domestic':
-        return <LocationMarkerIcon className="h-5 w-5 text-blue-500" title="Transport national" />;
+        return <MapPinIcon className="h-5 w-5 text-blue-500" title="Transport national" />;
       case 'international':
-        return <GlobeIcon className="h-5 w-5 text-green-500" title="Transport international" />;
+        return <GlobeAltIcon className="h-5 w-5 text-green-500" title="Transport international" />;
       case 'cross_border':
-        return <GlobeIcon className="h-5 w-5 text-purple-500" title="Transport transfrontalier" />;
+        return <GlobeAltIcon className="h-5 w-5 text-purple-500" title="Transport transfrontalier" />;
       default:
-        return <LocationMarkerIcon className="h-5 w-5 text-gray-500" title="Transport" />;
+        return <MapPinIcon className="h-5 w-5 text-gray-500" title="Transport" />;
     }
   };
   
@@ -515,7 +516,7 @@ const ShipmentDetail: React.FC = () => {
       case 'departure':
         return <TruckIcon className="h-5 w-5 text-indigo-500" />;
       case 'arrival':
-        return <LocationMarkerIcon className="h-5 w-5 text-green-500" />;
+        return <MapPinIcon className="h-5 w-5 text-green-500" />;
       case 'transit':
         return <TruckIcon className="h-5 w-5 text-yellow-500" />;
       case 'customs':
@@ -523,13 +524,13 @@ const ShipmentDetail: React.FC = () => {
       case 'delivery':
         return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
       case 'exception':
-        return <ExclamationIcon className="h-5 w-5 text-red-500" />;
+        return <ExclamationCircleIcon className="h-5 w-5 text-red-500" />;
       case 'delay':
         return <ClockIcon className="h-5 w-5 text-orange-500" />;
       case 'transfer':
         return <TruckIcon className="h-5 w-5 text-cyan-500" />;
       default:
-        return <LocationMarkerIcon className="h-5 w-5 text-gray-500" />;
+        return <MapPinIcon className="h-5 w-5 text-gray-500" />;
     }
   };
   
@@ -547,7 +548,7 @@ const ShipmentDetail: React.FC = () => {
         <div className="rounded-md bg-red-50 p-4">
           <div className="flex">
             <div className="flex-shrink-0">
-              <ExclamationIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+              <ExclamationCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-red-800">

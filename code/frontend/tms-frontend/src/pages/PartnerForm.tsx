@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeftIcon,
-  ExclamationIcon
-} from '@heroicons/react/outline';
+  ExclamationCircleIcon
+} from '@heroicons/react/24/outline';
 
 // Types
 interface Partner {
@@ -187,7 +187,7 @@ const PartnerForm: React.FC = () => {
         <div className="rounded-md bg-red-50 p-4 mb-6">
           <div className="flex">
             <div className="flex-shrink-0">
-              <ExclamationIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+              <ExclamationCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-red-800">{error}</p>

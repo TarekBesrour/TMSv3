@@ -3,12 +3,12 @@ import {
   ChartBarIcon,
   TruckIcon,
   ClockIcon,
-  ExclamationIcon,
+  ExclamationCircleIcon,
   CheckCircleIcon,
-  GlobeIcon,
-  CurrencyDollarIcon,
-  DocumentTextIcon,
-  LocationMarkerIcon
+  GlobeAltIcon
+  // CurrencyDollarIcon,
+  // DocumentTextIcon,
+  // LocationMarkerIcon
 } from '@heroicons/react/24/outline';
 
 // Mock data for charts
@@ -77,6 +77,30 @@ const generateMockData = () => {
   };
 };
 
+interface OnTimePerformanceItem {
+  month: string;
+  onTime: number;
+  delayed: number;
+}
+
+interface UpcomingDelivery {
+  id: string;
+  destination: string;
+  customer: string;
+  planned_delivery: string;
+  status: string;
+}
+
+interface RecentShipment {
+  id: string;
+  origin: string;
+  destination: string;
+  shipment_type: string;
+  transport_mode: string;
+  status: string;
+  planned_delivery: string;
+}
+
 const Dashboard: React.FC = () => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -122,7 +146,7 @@ const Dashboard: React.FC = () => {
       <div className="bg-red-50 p-4 rounded-md">
         <div className="flex">
           <div className="flex-shrink-0">
-            <ExclamationIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+            <ExclamationCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
           </div>
           <div className="ml-3">
             <h3 className="text-sm font-medium text-red-800">Erreur de chargement</h3>
@@ -263,7 +287,7 @@ const Dashboard: React.FC = () => {
           <div className="px-4 py-5 sm:p-6">
             <div className="flex items-center">
               <div className="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                <GlobeIcon className="h-6 w-6 text-white" aria-hidden="true" />
+                <GlobeAltIcon className="h-6 w-6 text-white" aria-hidden="true" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
@@ -311,7 +335,7 @@ const Dashboard: React.FC = () => {
                 <div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                      <GlobeIcon className="h-5 w-5 text-gray-400 mr-2" />
+                      <GlobeAltIcon className="h-5 w-5 text-gray-400 mr-2" />
                       <span className="text-sm font-medium text-gray-500">Maritime</span>
                     </div>
                     <span className="text-sm font-medium text-gray-900">{data.transportModes.sea}%</span>
@@ -472,7 +496,7 @@ const Dashboard: React.FC = () => {
             <div className="h-64">
               {/* In a real app, this would be a chart component */}
               <div className="flex h-full items-end">
-                {data.onTimePerformance.map((item, index) => (
+                {data.onTimePerformance.map((item: OnTimePerformanceItem, index: number) => (
                   <div key={index} className="flex-1 flex flex-col items-center">
                     <div className="w-full flex flex-col items-center space-y-1">
                       <div className="w-full px-2">
@@ -508,7 +532,7 @@ const Dashboard: React.FC = () => {
           <div className="px-4 py-5 sm:p-6">
             <div className="h-64 overflow-y-auto">
               <ul className="divide-y divide-gray-200">
-                {data.upcomingDeliveries.map((delivery) => (
+                {data.upcomingDeliveries.map((delivery: UpcomingDelivery) => (
                   <li key={delivery.id} className="py-4">
                     <div className="flex items-center space-x-4">
                       <div className="flex-shrink-0">
@@ -516,7 +540,7 @@ const Dashboard: React.FC = () => {
                           delivery.status === 'at_risk' ? 'bg-red-100' : 'bg-green-100'
                         }`}>
                           {delivery.status === 'at_risk' ? (
-                            <ExclamationIcon className="h-5 w-5 text-red-500" />
+                            <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
                           ) : (
                             <CheckCircleIcon className="h-5 w-5 text-green-500" />
                           )}
@@ -590,7 +614,7 @@ const Dashboard: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {data.recentShipments.map((shipment) => (
+                {data.recentShipments.map((shipment: RecentShipment) => (
                   <tr key={shipment.id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-600 hover:text-indigo-900">
                       <a href={`/shipments/${shipment.id}`}>{shipment.id}</a>

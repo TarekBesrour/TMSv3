@@ -2,16 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   ArrowLeftIcon,
-  SaveIcon,
+  ArrowDownTrayIcon,
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
+import { BankAccount } from '../types/bankAccount';
 
-const BankAccountForm = () => {
+interface BankAccountFormErrors {
+  general?: string;
+  account_name?: string;
+  bank_name?: string;
+  account_number?: string;
+  iban?: string;
+  swift_bic?: string;
+  currency?: string;
+  account_type?: string;
+  current_balance?: string;
+  notes?: string;
+}
+
+const BankAccountForm: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [isEditMode, setIsEditMode] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [formData, setFormData] = useState<BankAccount>({
+    id: '',
     account_name: '',
     bank_name: '',
     account_number: '',
@@ -22,17 +37,18 @@ const BankAccountForm = () => {
     current_balance: 0,
     notes: ''
   });
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<BankAccountFormErrors>({});
 
   useEffect(() => {
     if (id) {
       setIsEditMode(true);
-      fetchBankAccount(id);
+      fetchBankAccount(id as string);
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, [id]);
 
-  const fetchBankAccount = async (accountId) => {
+  const fetchBankAccount = async (accountId: string) => {
     try {
       setLoading(true);
       const response = await fetch(`/api/bank-accounts/${accountId}`);
@@ -51,23 +67,21 @@ const BankAccountForm = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
-    setErrors(prev => ({ ...prev, [name]: undefined })); // Clear error on change
+    setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrors({}); // Clear previous errors
-
+    setErrors({});
     try {
       const method = isEditMode ? 'PUT' : 'POST';
       const url = isEditMode ? `/api/bank-accounts/${id}` : '/api/bank-accounts';
-
       const response = await fetch(url, {
         method,
         headers: {
@@ -75,19 +89,17 @@ const BankAccountForm = () => {
         },
         body: JSON.stringify(formData)
       });
-
       const data = await response.json();
-
       if (data.success) {
         navigate('/bank-accounts');
       } else {
         if (data.errors) {
-          const newErrors = {};
-          data.errors.forEach(err => {
+          const newErrors: BankAccountFormErrors = {};
+          data.errors.forEach((err: { path: string; msg: string }) => {
             if (err.path) {
-              newErrors[err.path] = err.msg;
+              newErrors[err.path as keyof BankAccountFormErrors] = err.msg;
             } else {
-              newErrors.general = data.message; // General error message
+              newErrors.general = data.message;
             }
           });
           setErrors(newErrors);
@@ -212,7 +224,7 @@ const BankAccountForm = () => {
                     type="text"
                     name="iban"
                     id="iban"
-                    value={formData.iban}
+                    value={formData.iban ?? ''}
                     onChange={handleChange}
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
@@ -230,7 +242,7 @@ const BankAccountForm = () => {
                     type="text"
                     name="swift_bic"
                     id="swift_bic"
-                    value={formData.swift_bic}
+                    value={formData.swift_bic ?? ''}
                     onChange={handleChange}
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
@@ -250,7 +262,7 @@ const BankAccountForm = () => {
                     id="currency"
                     value={formData.currency}
                     onChange={handleChange}
-                    maxLength="3"
+                    maxLength={3}
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
@@ -305,8 +317,8 @@ const BankAccountForm = () => {
                   <textarea
                     id="notes"
                     name="notes"
-                    rows="3"
-                    value={formData.notes}
+                    rows={3}
+                    value={formData.notes ?? ''}
                     onChange={handleChange}
                     className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                   ></textarea>
@@ -321,7 +333,7 @@ const BankAccountForm = () => {
                   type="submit"
                   className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
-                  <SaveIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                  <ArrowDownTrayIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
                   {isEditMode ? 'Mettre à jour' : 'Créer'}
                 </button>
               </div>

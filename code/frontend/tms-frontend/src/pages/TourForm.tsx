@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { PlusIcon, MapPinIcon, TruckIcon, UserIcon } from '@heroicons/react/24/outline';
+import { Tour, TourStatus, Stop } from '../types/tour';
 
 const TourForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [tour, setTour] = useState({
+  const [tour, setTour] = useState<Omit<Tour, 'id' | 'tour_number' | 'vehicle' | 'driver' | 'total_distance' | 'estimated_duration' | 'optimization_score'> & { vehicle_id: string; driver_id: string; notes: string }>({
     tour_name: '',
     planned_date: '',
     start_time: '',
@@ -15,11 +16,11 @@ const TourForm = () => {
     status: 'planned',
     notes: ''
   });
-  const [stops, setStops] = useState([]);
-  const [vehicles, setVehicles] = useState([]);
-  const [drivers, setDrivers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [stops, setStops] = useState<Stop[]>([]);
+  const [vehicles, setVehicles] = useState<any[]>([]);
+  const [drivers, setDrivers] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchVehiclesAndDrivers();
@@ -28,7 +29,7 @@ const TourForm = () => {
     }
   }, [id]);
 
-  const fetchTour = async (tourId) => {
+  const fetchTour = async (tourId: string) => {
     try {
       const response = await fetch(`/api/tours/${tourId}`);
       const data = await response.json();
@@ -64,12 +65,12 @@ const TourForm = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setTour(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleStopChange = (index, e) => {
+  const handleStopChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     const newStops = [...stops];
     newStops[index] = { ...newStops[index], [name]: value };
@@ -80,11 +81,11 @@ const TourForm = () => {
     setStops(prev => [...prev, { address_id: '', scheduled_time: '', location_type: 'delivery', order_id: '', shipment_id: '' }]);
   };
 
-  const removeStop = (index) => {
+  const removeStop = (index: number) => {
     setStops(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
@@ -236,7 +237,7 @@ const TourForm = () => {
                   <textarea
                     id="notes"
                     name="notes"
-                    rows="3"
+                    rows={3}
                     value={tour.notes}
                     onChange={handleChange}
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"

@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   PlusIcon, 
-  SearchIcon, 
-  FilterIcon,
-  SortAscendingIcon,
-  ExclamationIcon,
+  MagnifyingGlassIcon , 
+  //FilterIcon,
+  BarsArrowUpIcon ,
+  ExclamationCircleIcon ,
   TruckIcon,
-  OfficeBuildingIcon,
+  BuildingOfficeIcon,
   UserGroupIcon
-} from '@heroicons/react/outline';
+} from '@heroicons/react/24/outline';
 
 // Types
 interface Contact {
@@ -185,7 +185,7 @@ const Contacts: React.FC = () => {
     } else if (partnerId === 2) {
       return <TruckIcon className="h-5 w-5 text-green-500" title="Transporteur" />;
     } else if (partnerId === 3) {
-      return <OfficeBuildingIcon className="h-5 w-5 text-purple-500" title="Fournisseur" />;
+      return <BuildingOfficeIcon className="h-5 w-5 text-purple-500" title="Fournisseur" />;
     }
     
     return null;
@@ -225,7 +225,7 @@ const Contacts: React.FC = () => {
         <div className="rounded-md bg-red-50 p-4 mb-6">
           <div className="flex">
             <div className="flex-shrink-0">
-              <ExclamationIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+              <ExclamationCircleIcon  className="h-5 w-5 text-red-400" aria-hidden="true" />
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-red-800">{error}</p>
@@ -240,7 +240,7 @@ const Contacts: React.FC = () => {
           {/* Search */}
           <div className="relative rounded-md shadow-sm">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <MagnifyingGlassIcon  className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </div>
             <input
               type="text"
@@ -312,7 +312,7 @@ const Contacts: React.FC = () => {
                       <div className="flex items-center">
                         Nom
                         {sortField === 'name' && (
-                          <SortAscendingIcon 
+                          <BarsArrowUpIcon  
                             className={`ml-1 h-4 w-4 ${sortDirection === 'asc' ? 'text-indigo-500' : 'text-gray-400'}`} 
                             aria-hidden="true" 
                           />
@@ -327,7 +327,7 @@ const Contacts: React.FC = () => {
                       <div className="flex items-center">
                         Email
                         {sortField === 'email' && (
-                          <SortAscendingIcon 
+                          <BarsArrowUpIcon  
                             className={`ml-1 h-4 w-4 ${sortDirection === 'asc' ? 'text-indigo-500' : 'text-gray-400'}`} 
                             aria-hidden="true" 
                           />
@@ -348,7 +348,7 @@ const Contacts: React.FC = () => {
                       <div className="flex items-center">
                         Fonction
                         {sortField === 'position' && (
-                          <SortAscendingIcon 
+                          <BarsArrowUpIcon  
                             className={`ml-1 h-4 w-4 ${sortDirection === 'asc' ? 'text-indigo-500' : 'text-gray-400'}`} 
                             aria-hidden="true" 
                           />

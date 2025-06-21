@@ -4,6 +4,8 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 
+
+
 dotenv.config();
 
 const app = express();
@@ -23,6 +25,7 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const tourPlanningRoutes = require("./routes/tourPlanningRoutes");
 const resourceAllocationRoutes = require("./routes/resourceAllocationRoutes");
+const referenceDataRoutes = require('./routes/referenceDataRoutes');
 
 // Use routes
 app.use("/api/auth", authRoutes);
@@ -33,6 +36,7 @@ app.use("/api", paymentRoutes); // Using /api as base for payments and bank acco
 app.use("/api", adminRoutes); // Using /api as base for admin and configuration
 app.use("/api", tourPlanningRoutes); // Using /api as base for tour planning
 app.use("/api", resourceAllocationRoutes); // Using /api as base for resource allocation
+app.use('/api/v1/references', referenceDataRoutes);
 
 // Basic route for testing
 app.get("/", (req, res) => {

@@ -10,20 +10,28 @@ import {
   BanknotesIcon,
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
+import type { Payment, PaymentStatus, PaymentType, PaymentMethod } from '../types/payment';
+import type { Pagination } from '../types/pagination';
 
 const Payments = () => {
   const navigate = useNavigate();
-  const [payments, setPayments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filters, setFilters] = useState<{
+    payment_type: string;
+    status: string;
+    payment_method: string;
+    date_from: string;
+    date_to: string;
+  }>({
     payment_type: '',
     status: '',
     payment_method: '',
     date_from: '',
     date_to: ''
   });
-  const [pagination, setPagination] = useState({
+  const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     pageSize: 20,
     total: 0,
@@ -38,8 +46,8 @@ const Payments = () => {
     try {
       setLoading(true);
       const queryParams = new URLSearchParams({
-        page: pagination.page,
-        pageSize: pagination.pageSize,
+        page: pagination.page.toString(),
+        pageSize: pagination.pageSize.toString(),
         search_term: searchTerm,
         ...filters
       });
@@ -62,12 +70,12 @@ const Payments = () => {
     }
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = (key: keyof typeof filters, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
     setPagination(prev => ({ ...prev, page: 1 }));
   };
@@ -84,8 +92,8 @@ const Payments = () => {
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const getStatusBadgeClass = (status) => {
-    const statusClasses = {
+  const getStatusBadgeClass = (status: PaymentStatus) => {
+    const statusClasses: Record<PaymentStatus, string> = {
       pending: 'bg-yellow-100 text-yellow-800',
       processing: 'bg-blue-100 text-blue-800',
       completed: 'bg-green-100 text-green-800',
@@ -96,8 +104,8 @@ const Payments = () => {
     return statusClasses[status] || 'bg-gray-100 text-gray-800';
   };
 
-  const getStatusName = (status) => {
-    const statusNames = {
+  const getStatusName = (status: PaymentStatus) => {
+    const statusNames: Record<PaymentStatus, string> = {
       pending: 'En attente',
       processing: 'En cours',
       completed: 'Terminé',
@@ -108,7 +116,7 @@ const Payments = () => {
     return statusNames[status] || status;
   };
 
-  const getPaymentTypeIcon = (type) => {
+  const getPaymentTypeIcon = (type: PaymentType) => {
     return type === 'incoming' ? (
       <ArrowDownIcon className="h-5 w-5 text-green-500" />
     ) : (
@@ -116,7 +124,7 @@ const Payments = () => {
     );
   };
 
-  const getPaymentMethodIcon = (method) => {
+  const getPaymentMethodIcon = (method: PaymentMethod) => {
     switch (method) {
       case 'credit_card':
         return <CreditCardIcon className="h-5 w-5 text-blue-500" />;
@@ -127,20 +135,20 @@ const Payments = () => {
     }
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR');
   };
 
-  const formatAmount = (amount, currency) => {
+  const formatAmount = (amount: number, currency: string) => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
       currency: currency || 'EUR'
     }).format(amount);
   };
 
-  const isOverdue = (payment) => {
-    if (!payment.due_date || payment.status === 'completed') return false;
-    return new Date(payment.due_date) < new Date();
+  const isOverdue = (payment: Payment) => {
+    if (!('due_date' in payment) || payment.status === 'completed') return false;
+    return new Date((payment as any).due_date) < new Date();
   };
 
   return (

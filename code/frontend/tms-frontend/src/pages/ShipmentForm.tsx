@@ -4,13 +4,13 @@ import {
   ArrowLeftIcon,
   PlusIcon,
   TrashIcon,
-  ExclamationIcon,
-  TruckIcon,
-  LocationMarkerIcon,
-  CalendarIcon,
-  GlobeIcon,
-  DocumentTextIcon
-} from '@heroicons/react/outline';
+  ExclamationCircleIcon
+  // TruckIcon,
+  // LocationMarkerIcon,
+  // CalendarIcon,
+  // GlobeIcon,
+  // DocumentTextIcon
+} from '@heroicons/react/24/outline';
 
 // Types
 interface ShipmentFormData {
@@ -382,7 +382,7 @@ const ShipmentForm: React.FC = () => {
         </div>
       </div>
 
-      {error && <div className="rounded-md bg-red-50 p-4 mb-6"><div className="flex"><div className="flex-shrink-0"><ExclamationIcon className="h-5 w-5 text-red-400" /></div><div className="ml-3"><p className="text-sm font-medium text-red-800">{error}</p></div></div></div>}
+      {error && <div className="rounded-md bg-red-50 p-4 mb-6"><div className="flex"><div className="flex-shrink-0"><ExclamationCircleIcon className="h-5 w-5 text-red-400" /></div><div className="ml-3"><p className="text-sm font-medium text-red-800">{error}</p></div></div></div>}
 
             <form onSubmit={handleSubmit}>
         {/* General Info Section */}

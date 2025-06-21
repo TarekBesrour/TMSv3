@@ -8,19 +8,21 @@ import {
   TruckIcon,
   GlobeAltIcon
 } from '@heroicons/react/24/outline';
+import { Rate } from '../types/rate';
+import { Pagination } from '../types/pagination';
 
-const Rates = () => {
+const Rates: React.FC = () => {
   const navigate = useNavigate();
-  const [rates, setRates] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filters, setFilters] = useState({
+  const [rates, setRates] = useState<Rate[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filters, setFilters] = useState<{ transport_mode: string; rate_type: string; currency: string; status: string }>({
     transport_mode: '',
     rate_type: '',
     currency: '',
     status: 'active'
   });
-  const [pagination, setPagination] = useState({
+  const [pagination, setPagination] = useState<Pagination>({
     page: 1,
     pageSize: 20,
     total: 0,
@@ -35,8 +37,8 @@ const Rates = () => {
     try {
       setLoading(true);
       const queryParams = new URLSearchParams({
-        page: pagination.page,
-        pageSize: pagination.pageSize,
+        page: String(pagination.page),
+        pageSize: String(pagination.pageSize),
         search_term: searchTerm,
         ...filters
       });
@@ -59,12 +61,12 @@ const Rates = () => {
     }
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = (key: keyof typeof filters, value: string) => {
     setFilters(prev => ({ ...prev, [key]: value }));
     setPagination(prev => ({ ...prev, page: 1 }));
   };
@@ -80,8 +82,8 @@ const Rates = () => {
     setPagination(prev => ({ ...prev, page: 1 }));
   };
 
-  const getStatusBadgeClass = (status) => {
-    const statusClasses = {
+  const getStatusBadgeClass = (status: 'active' | 'inactive' | 'expired') => {
+    const statusClasses: Record<'active' | 'inactive' | 'expired', string> = {
       active: 'bg-green-100 text-green-800',
       inactive: 'bg-gray-100 text-gray-800',
       expired: 'bg-red-100 text-red-800'
@@ -89,16 +91,16 @@ const Rates = () => {
     return statusClasses[status] || 'bg-gray-100 text-gray-800';
   };
 
-  const getStatusName = (status) => {
-    const statusNames = {
+  const getStatusName = (status: 'active' | 'inactive' | 'expired' | string) => {
+    const statusNames: Record<'active' | 'inactive' | 'expired', string> = {
       active: 'Actif',
       inactive: 'Inactif',
       expired: 'Expiré'
     };
-    return statusNames[status] || status;
+    return statusNames[status as 'active' | 'inactive' | 'expired'] || status;
   };
 
-  const getTransportModeIcon = (mode) => {
+  const getTransportModeIcon = (mode: string | undefined) => {
     switch (mode) {
       case 'road':
         return <TruckIcon className="h-5 w-5 text-blue-500" />;
@@ -113,14 +115,14 @@ const Rates = () => {
     }
   };
 
-  const formatAmount = (amount, currency) => {
+  const formatAmount = (amount: number = 0, currency: string = 'EUR') => {
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
       currency: currency || 'EUR'
     }).format(amount);
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString?: string) => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('fr-FR');
   };
@@ -277,7 +279,7 @@ const Rates = () => {
                 <div className="px-4 py-4 flex items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      {getTransportModeIcon(rate.transport_mode)}
+                      {getTransportModeIcon(rate.mode_of_transport)}
                     </div>
                     <div className="ml-4">
                       <div className="flex items-center">
@@ -302,11 +304,11 @@ const Rates = () => {
                         {formatAmount(rate.base_rate, rate.currency)}
                       </p>
                       <p className="text-sm text-gray-500">
-                        Valide jusqu'au {formatDate(rate.valid_until)}
+                        Valide jusqu'au {formatDate(rate.valid_to)}
                       </p>
                     </div>
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(rate.status)}`}>
-                      {getStatusName(rate.status)}
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClass(rate.status as 'active' | 'inactive' | 'expired')}`}>
+                      {getStatusName(rate.status ?? '')}
                     </span>
                     <button
                       onClick={() => navigate(`/rates/${rate.id}`)}

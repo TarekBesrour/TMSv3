@@ -12,13 +12,14 @@ import {
   PencilIcon,
   PlusIcon
 } from '@heroicons/react/24/outline';
+import type { Tour, TourStatus, Stop } from '../types/tour';
 
 const TourDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [tour, setTour] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [tour, setTour] = useState<Tour | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -26,7 +27,7 @@ const TourDetail = () => {
     }
   }, [id]);
 
-  const fetchTour = async (tourId) => {
+  const fetchTour = async (tourId: string) => {
     try {
       setLoading(true);
       const response = await fetch(`/api/tours/${tourId}`);
@@ -34,7 +35,7 @@ const TourDetail = () => {
       if (data.success) {
         setTour(data.data);
       } else {
-        setError(data.message);
+        setError(data.message || 'Erreur lors de la récupération.');
       }
     } catch (err) {
       setError('Failed to fetch tour details.');
@@ -47,14 +48,14 @@ const TourDetail = () => {
   const handleDelete = async () => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cette tournée ?')) {
       try {
-        const response = await fetch(`/api/tours/${id}`, {
+        const response = await fetch(`/api/tours/${id}` as string, {
           method: 'DELETE',
         });
         const data = await response.json();
         if (data.success) {
           navigate('/tours');
         } else {
-          setError(data.message);
+          setError(data.message || 'Erreur lors de la suppression.');
         }
       } catch (err) {
         setError('Failed to delete tour.');
@@ -81,7 +82,7 @@ const TourDetail = () => {
     }
   };
 
-  const getStatusBadgeClass = (status) => {
+  const getStatusBadgeClass = (status: TourStatus) => {
     switch (status) {
       case 'planned':
         return 'bg-blue-100 text-blue-800';
@@ -96,7 +97,7 @@ const TourDetail = () => {
     }
   };
 
-  const getStatusName = (status) => {
+  const getStatusName = (status: TourStatus) => {
     switch (status) {
       case 'planned':
         return 'Planifiée';
@@ -111,12 +112,12 @@ const TourDetail = () => {
     }
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string | undefined) => {
     if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('fr-FR');
   };
 
-  const formatTime = (timeString) => {
+  const formatTime = (timeString: string | undefined) => {
     if (!timeString) return 'N/A';
     return new Date(`1970-01-01T${timeString}`).toLocaleTimeString('fr-FR', {
       hour: '2-digit',
@@ -124,17 +125,17 @@ const TourDetail = () => {
     });
   };
 
-  const formatDateTime = (dateTimeString) => {
+  const formatDateTime = (dateTimeString: string | undefined) => {
     if (!dateTimeString) return 'N/A';
     return new Date(dateTimeString).toLocaleString('fr-FR');
   };
 
-  const formatDistance = (distance) => {
+  const formatDistance = (distance: number | undefined) => {
     if (!distance) return 'N/A';
     return `${Math.round(distance * 100) / 100} km`;
   };
 
-  const formatDuration = (duration) => {
+  const formatDuration = (duration: number | undefined) => {
     if (!duration) return 'N/A';
     const hours = Math.floor(duration / 60);
     const minutes = duration % 60;

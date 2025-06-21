@@ -2,17 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   CogIcon,
-  DatabaseIcon,
+  CircleStackIcon,
   ChartBarIcon,
   ExclamationTriangleIcon,
   CheckCircleIcon,
   ClockIcon
 } from '@heroicons/react/24/outline';
 
+interface SystemHealth {
+  database?: { status?: string };
+  api?: { status?: string };
+  storage?: { status?: string };
+  external_services?: { status?: string };
+}
+
+interface SystemStats {
+  active_users?: number;
+  active_orders?: number;
+  active_shipments?: number;
+  total_partners?: number;
+}
+
 const Administration = () => {
   const navigate = useNavigate();
-  const [systemHealth, setSystemHealth] = useState(null);
-  const [systemStats, setSystemStats] = useState(null);
+  const [systemHealth, setSystemHealth] = useState<SystemHealth | null>(null);
+  const [systemStats, setSystemStats] = useState<SystemStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -43,7 +57,7 @@ const Administration = () => {
     }
   };
 
-  const getHealthStatusIcon = (status) => {
+  const getHealthStatusIcon = (status: string | undefined) => {
     switch (status) {
       case 'healthy':
         return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
@@ -56,7 +70,7 @@ const Administration = () => {
     }
   };
 
-  const getHealthStatusClass = (status) => {
+  const getHealthStatusClass = (status: string | undefined) => {
     switch (status) {
       case 'healthy':
         return 'bg-green-100 text-green-800';
@@ -69,7 +83,7 @@ const Administration = () => {
     }
   };
 
-  const formatNumber = (num) => {
+  const formatNumber = (num: number) => {
     return new Intl.NumberFormat('fr-FR').format(num);
   };
 
@@ -117,7 +131,7 @@ const Administration = () => {
         >
           <div>
             <span className="rounded-lg inline-flex p-3 bg-green-50 text-green-700 ring-4 ring-white">
-              <DatabaseIcon className="h-6 w-6" aria-hidden="true" />
+              <CircleStackIcon className="h-6 w-6" aria-hidden="true" />
             </span>
           </div>
           <div className="mt-8">

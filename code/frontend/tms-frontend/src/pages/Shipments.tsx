@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   PlusIcon, 
-  SearchIcon, 
-  FilterIcon,
-  DocumentTextIcon,
-  LocationMarkerIcon,
+  MagnifyingGlassIcon, 
+  //FunnelIcon,
+  //DocumentTextIcon,
+  MapPinIcon,
   CalendarIcon,
-  ExclamationIcon,
+  ExclamationCircleIcon,
   TruckIcon,
-  GlobeIcon,
+  GlobeAltIcon,
   ClockIcon
-} from '@heroicons/react/outline';
+} from '@heroicons/react/24/outline';
 
 // Types
 interface Shipment {
@@ -328,13 +328,13 @@ const Shipments: React.FC = () => {
   const getShipmentTypeIcon = (type: string) => {
     switch (type) {
       case 'domestic':
-        return <LocationMarkerIcon className="h-5 w-5 text-blue-500" title="Transport national" />;
+        return <MapPinIcon className="h-5 w-5 text-blue-500" title="Transport national" />;
       case 'international':
-        return <GlobeIcon className="h-5 w-5 text-green-500" title="Transport international" />;
+        return <GlobeAltIcon className="h-5 w-5 text-green-500" title="Transport international" />;
       case 'cross_border':
-        return <GlobeIcon className="h-5 w-5 text-purple-500" title="Transport transfrontalier" />;
+        return <GlobeAltIcon className="h-5 w-5 text-purple-500" title="Transport transfrontalier" />;
       default:
-        return <LocationMarkerIcon className="h-5 w-5 text-gray-500" title="Transport" />;
+        return <MapPinIcon className="h-5 w-5 text-gray-500" title="Transport" />;
     }
   };
   
@@ -409,7 +409,7 @@ const Shipments: React.FC = () => {
         <div className="rounded-md bg-red-50 p-4 mb-6">
           <div className="flex">
             <div className="flex-shrink-0">
-              <ExclamationIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+              <ExclamationCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-red-800">{error}</p>
@@ -424,7 +424,7 @@ const Shipments: React.FC = () => {
           {/* Search */}
           <div className="relative rounded-md shadow-sm lg:col-span-2">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <SearchIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             </div>
             <input
               type="text"

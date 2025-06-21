@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { CalendarIcon, ClockIcon, UserIcon, TruckIcon } from '@heroicons/react/24/outline';
+import { ResourceAvailability, ResourceType, ResourceAvailabilityStatus, Vehicle, Driver } from '../types/resourceAvailability';
 
 const ResourceAvailabilityForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [availability, setAvailability] = useState({
-    resource_type: '',
+  const [availability, setAvailability] = useState<ResourceAvailability>({
+    id: '',
+    resource_type: '' as ResourceType,
     resource_id: '',
     start_time: '',
     end_time: '',
     status: 'available',
     notes: ''
   });
-  const [resources, setResources] = useState([]); // Vehicles or Drivers
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [resources, setResources] = useState<(Vehicle | Driver)[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -25,7 +27,7 @@ const ResourceAvailabilityForm = () => {
     fetchResources(availability.resource_type);
   }, [id, availability.resource_type]);
 
-  const fetchAvailability = async (availabilityId) => {
+  const fetchAvailability = async (availabilityId: string) => {
     try {
       const response = await fetch(`/api/availabilities/${availabilityId}`);
       const data = await response.json();
@@ -42,7 +44,7 @@ const ResourceAvailabilityForm = () => {
     }
   };
 
-  const fetchResources = async (type) => {
+  const fetchResources = async (type: ResourceType) => {
     if (!type) return;
     try {
       const url = type === 'vehicle' ? '/api/vehicles' : '/api/drivers';
@@ -56,7 +58,7 @@ const ResourceAvailabilityForm = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setAvailability(prev => ({
       ...prev,
@@ -64,7 +66,7 @@ const ResourceAvailabilityForm = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
@@ -149,7 +151,11 @@ const ResourceAvailabilityForm = () => {
                     <option value="">Sélectionner une ressource</option>
                     {resources.map(res => (
                       <option key={res.id} value={res.id}>
-                        {availability.resource_type === 'vehicle' ? res.registration_number : `${res.first_name} ${res.last_name}`}
+                        {availability.resource_type === 'vehicle' && 'registration_number' in res
+                          ? res.registration_number
+                          : 'first_name' in res && 'last_name' in res
+                            ? `${res.first_name} ${res.last_name}`
+                            : res.id}
                       </option>
                     ))}
                   </select>
@@ -203,7 +209,7 @@ const ResourceAvailabilityForm = () => {
                   <textarea
                     id="notes"
                     name="notes"
-                    rows="3"
+                    rows={3}
                     value={availability.notes}
                     onChange={handleChange}
                     className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"

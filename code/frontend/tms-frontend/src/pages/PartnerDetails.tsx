@@ -3,16 +3,19 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { 
   UserGroupIcon, 
   TruckIcon, 
-  OfficeBuildingIcon,
-  LocationMarkerIcon,
+  BuildingOfficeIcon ,
+  MapPinIcon,
   PhoneIcon,
-  MailIcon,
+  EnvelopeIcon,
   GlobeAltIcon,
   DocumentTextIcon,
-  PencilAltIcon,
+  PencilSquareIcon,
   ArrowLeftIcon,
-  ExclamationIcon
-} from '@heroicons/react/outline';
+  ExclamationCircleIcon,
+  FunnelIcon,
+  BarsArrowUpIcon,
+  MagnifyingGlassIcon
+} from '@heroicons/react/24/outline';
 import { Tab } from '@headlessui/react';
 
 // Types
@@ -388,7 +391,7 @@ const PartnerDetails: React.FC = () => {
       case 'CARRIER':
         return <TruckIcon className="h-8 w-8 text-green-500" />;
       case 'SUPPLIER':
-        return <OfficeBuildingIcon className="h-8 w-8 text-purple-500" />;
+        return <BuildingOfficeIcon className="h-8 w-8 text-purple-500" />;
       default:
         return <UserGroupIcon className="h-8 w-8 text-gray-500" />;
     }
@@ -469,7 +472,7 @@ const PartnerDetails: React.FC = () => {
     return (
       <div className="bg-white shadow overflow-hidden sm:rounded-lg p-6">
         <div className="flex items-center text-red-500">
-          <ExclamationIcon className="h-6 w-6 mr-2" />
+          <ExclamationCircleIcon className="h-6 w-6 mr-2" />
           <p>{error || 'Partenaire non trouvé'}</p>
         </div>
         <button
@@ -519,7 +522,7 @@ const PartnerDetails: React.FC = () => {
             onClick={handleEditPartner}
             className="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            <PencilAltIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+            <PencilSquareIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
             Modifier
           </button>
         </div>
@@ -778,13 +781,13 @@ const PartnerDetails: React.FC = () => {
                               type="button"
                               className="inline-flex items-center p-1 border border-transparent rounded-full shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                             >
-                              <PencilAltIcon className="h-4 w-4" aria-hidden="true" />
+                              <PencilSquareIcon className="h-4 w-4" aria-hidden="true" />
                             </button>
                           </div>
                         </div>
                         <div className="mt-2 flex items-start">
                           <div className="flex-shrink-0">
-                            <LocationMarkerIcon className="h-6 w-6 text-gray-400" aria-hidden="true" />
+                            <MapPinIcon className="h-6 w-6 text-gray-400" aria-hidden="true" />
                           </div>
                           <div className="ml-3 text-sm text-gray-500">
                             <p>{address.street_line1}</p>
@@ -1031,7 +1034,7 @@ const PartnerDetails: React.FC = () => {
                               )}
                               {driver.email && (
                                 <div className="flex items-center mt-1">
-                                  <MailIcon className="h-4 w-4 text-gray-400 mr-1" />
+                                  <EnvelopeIcon className="h-4 w-4 text-gray-400 mr-1" />
                                   <a href={`mailto:${driver.email}`} className="text-indigo-600 hover:text-indigo-900">
                                     {driver.email}
                                   </a>
