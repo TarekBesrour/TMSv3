@@ -12,6 +12,7 @@ const { body, param, query } = require('express-validator');
 const { authenticate } = require('../middlewares/authMiddleware');
 const { checkPermission } = require('../middlewares/permissionMiddleware');
 
+
 // Create a new order
 router.post(
   '/',

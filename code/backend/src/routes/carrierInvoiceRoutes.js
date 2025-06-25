@@ -4,7 +4,7 @@ const CarrierInvoiceController = require('../controllers/CarrierInvoiceControlle
 const authMiddleware = require('../middlewares/authMiddleware');
 
 // Middleware pour protéger les routes
-router.use(authMiddleware);
+router.use(authMiddleware.authenticate);
 
 // Routes pour la gestion des factures transporteurs
 router.post('/carrier-invoices', CarrierInvoiceController.createCarrierInvoice);

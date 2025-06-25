@@ -1,5 +1,5 @@
-const PaymentService = require(\'../services/PaymentService\');
-const { validationResult } = require(\'express-validator\');
+const PaymentService = require('../services/PaymentService');
+const { validationResult } = require('express-validator');
 
 class PaymentController {
   /**
@@ -13,7 +13,7 @@ class PaymentController {
       if (!errors.isEmpty()) {
         return res.status(400).json({
           success: false,
-          message: \'Invalid validation data\',
+          message: 'Invalid validation data',
           errors: errors.array()
         });
       }
@@ -22,7 +22,7 @@ class PaymentController {
 
       res.status(201).json({
         success: true,
-        message: \'Payment created successfully\',
+        message: 'Payment created successfully',
         data: payment
       });
     } catch (error) {
@@ -48,7 +48,7 @@ class PaymentController {
         data: payment
       });
     } catch (error) {
-      if (error.message.includes(\'not found\')) {
+      if (error.message.includes('not found')) {
         return res.status(404).json({
           success: false,
           message: error.message
@@ -104,7 +104,7 @@ class PaymentController {
       if (!errors.isEmpty()) {
         return res.status(400).json({
           success: false,
-          message: \'Invalid validation data\',
+          message: 'Invalid validation data',
           errors: errors.array()
         });
       }
@@ -114,11 +114,11 @@ class PaymentController {
 
       res.json({
         success: true,
-        message: \'Payment updated successfully\',
+        message: 'Payment updated successfully',
         data: payment
       });
     } catch (error) {
-      if (error.message.includes(\'not found\')) {
+      if (error.message.includes('not found')) {
         return res.status(404).json({
           success: false,
           message: error.message
@@ -143,10 +143,10 @@ class PaymentController {
 
       res.json({
         success: true,
-        message: \'Payment deleted successfully\'
+        message: 'Payment deleted successfully'
       });
     } catch (error) {
-      if (error.message.includes(\'not found\')) {
+      if (error.message.includes('not found')) {
         return res.status(404).json({
           success: false,
           message: error.message
@@ -171,11 +171,11 @@ class PaymentController {
 
       res.json({
         success: true,
-        message: \'Payment processed successfully\',
+        message: 'Payment processed successfully',
         data: payment
       });
     } catch (error) {
-      if (error.message.includes(\'not found\')) {
+      if (error.message.includes('not found')) {
         return res.status(404).json({
           success: false,
           message: error.message
@@ -201,11 +201,11 @@ class PaymentController {
 
       res.json({
         success: true,
-        message: \'Payment cancelled successfully\',
+        message: 'Payment cancelled successfully',
         data: payment
       });
     } catch (error) {
-      if (error.message.includes(\'not found\')) {
+      if (error.message.includes('not found')) {
         return res.status(404).json({
           success: false,
           message: error.message
@@ -288,7 +288,7 @@ class PaymentController {
       if (!errors.isEmpty()) {
         return res.status(400).json({
           success: false,
-          message: \'Invalid validation data\',
+          message: 'Invalid validation data',
           errors: errors.array()
         });
       }
@@ -304,7 +304,7 @@ class PaymentController {
       if (validationErrors.length > 0) {
         return res.status(400).json({
           success: false,
-          message: \'Invalid bank account data\',
+          message: 'Invalid bank account data',
           errors: validationErrors
         });
       }
@@ -313,7 +313,7 @@ class PaymentController {
 
       res.status(201).json({
         success: true,
-        message: \'Bank account created successfully\',
+        message: 'Bank account created successfully',
         data: bankAccount
       });
     } catch (error) {
@@ -337,7 +337,7 @@ class PaymentController {
       if (!bankAccount || bankAccount.tenant_id !== req.user.tenant_id) {
         return res.status(404).json({
           success: false,
-          message: \'Bank account not found\'
+          message: 'Bank account not found'
         });
       }
 
@@ -361,8 +361,8 @@ class PaymentController {
   async getBankAccounts(req, res) {
     try {
       const bankAccounts = await BankAccount.query()
-        .where(\'tenant_id\', req.user.tenant_id)
-        .orderBy(\'account_name\', \'asc\');
+        .where('tenant_id', req.user.tenant_id)
+        .orderBy('account_name', 'asc');
 
       res.json({
         success: true,
@@ -387,7 +387,7 @@ class PaymentController {
       if (!errors.isEmpty()) {
         return res.status(400).json({
           success: false,
-          message: \'Invalid validation data\',
+          message: 'Invalid validation data',
           errors: errors.array()
         });
       }
@@ -402,7 +402,7 @@ class PaymentController {
       if (!existingAccount || existingAccount.tenant_id !== req.user.tenant_id) {
         return res.status(404).json({
           success: false,
-          message: \'Bank account not found\'
+          message: 'Bank account not found'
         });
       }
 
@@ -410,7 +410,7 @@ class PaymentController {
       if (validationErrors.length > 0) {
         return res.status(400).json({
           success: false,
-          message: \'Invalid bank account data\',
+          message: 'Invalid bank account data',
           errors: validationErrors
         });
       }
@@ -419,7 +419,7 @@ class PaymentController {
 
       res.json({
         success: true,
-        message: \'Bank account updated successfully\',
+        message: 'Bank account updated successfully',
         data: updatedAccount
       });
     } catch (error) {
@@ -443,16 +443,16 @@ class PaymentController {
       if (!existingAccount || existingAccount.tenant_id !== req.user.tenant_id) {
         return res.status(404).json({
           success: false,
-          message: \'Bank account not found\'
+          message: 'Bank account not found'
         });
       }
 
       // Check if there are any payments associated with this bank account
-      const associatedPayments = await Payment.query().where(\'bank_account_id\', id).first();
+      const associatedPayments = await Payment.query().where('bank_account_id', id).first();
       if (associatedPayments) {
         return res.status(400).json({
           success: false,
-          message: \'Cannot delete bank account with associated payments\'
+          message: 'Cannot delete bank account with associated payments'
         });
       }
 
@@ -461,13 +461,13 @@ class PaymentController {
       if (numDeleted === 0) {
         return res.status(404).json({
           success: false,
-          message: \'Bank account not found\'
+          message: 'Bank account not found'
         });
       }
 
       res.json({
         success: true,
-        message: \'Bank account deleted successfully\'
+        message: 'Bank account deleted successfully'
       });
     } catch (error) {
       res.status(500).json({

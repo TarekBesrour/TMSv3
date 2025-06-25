@@ -120,7 +120,7 @@ class TourPlanningService {
       throw new ValidationError('Tournée non trouvée.', 404);
     }
     if (!stopData.address_id || !stopData.scheduled_time || !stopData.location_type) {
-      throw new ValidationError('L'adresse, l'heure planifiée et le type de lieu sont requis pour un arrêt.');
+      throw new ValidationError("L'adresse, l'heure planifiée et le type de lieu sont requis pour un arrêt.");
     }
     return tour.$relatedQuery('stops').insert(stopData);
   }
@@ -189,7 +189,7 @@ class TourPlanningService {
     // 1. Collecter les adresses des arrêts
     const addresses = tour.stops.map(stop => stop.address);
     if (addresses.some(addr => !addr || !addr.latitude || !addr.longitude)) {
-      throw new ValidationError('Toutes les adresses des arrêts doivent avoir des coordonnées géographiques (latitude, longitude) pour l'optimisation.');
+      throw new ValidationError("Toutes les adresses des arrêts doivent avoir des coordonnées géographiques (latitude, longitude) pour l'optimisation.");
     }
 
     // 2. Simuler le calcul de distance et de durée (très simplifié)

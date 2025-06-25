@@ -4,7 +4,8 @@ const AdminController = require('../controllers/AdminController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 // Middleware to protect routes
-router.use(authMiddleware);
+router.use(authMiddleware.authenticate);
+
 
 // System Configuration Routes
 router.get('/admin/configurations', AdminController.getConfigurations);

@@ -18,7 +18,7 @@ const pool = new Pool({
   }
 });
 
-describe('Tests d'intégration Neon PostgreSQL', () => {
+describe('Tests d\'intégration Neon PostgreSQL', () => {
   // Test de connexion de base
   test('Devrait se connecter à la base de données Neon', async () => {
     const client = await pool.connect();

@@ -4,7 +4,7 @@ const PaymentController = require('../controllers/PaymentController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 // Middleware pour protéger les routes
-router.use(authMiddleware);
+router.use(authMiddleware.authenticate);
 
 // Routes pour la gestion des paiements
 router.post('/payments', PaymentController.createPayment);

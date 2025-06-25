@@ -1,7 +1,7 @@
-const SystemConfiguration = require(\'../models/SystemConfiguration\');
-const ReferenceData = require(\'../models/ReferenceData\');
-const { transaction } = require(\'objection\');
-const { NotFoundError, ValidationError } = require(\'../utils/errors\');
+const SystemConfiguration = require('../models/SystemConfiguration');
+const ReferenceData = require('../models/ReferenceData');
+const { transaction } = require('objection');
+const { NotFoundError, ValidationError } = require('../utils/errors');
 
 class AdminService {
   /**
@@ -15,24 +15,24 @@ class AdminService {
    * @returns {Promise<Array>} - List of configurations
    */
   async getConfigurations(tenantId, filters = {}) {
-    let query = SystemConfiguration.query().where(\'tenant_id\', tenantId);
+    let query = SystemConfiguration.query().where('tenant_id', tenantId);
 
     if (filters.category) {
-      query = query.where(\'category\', filters.category);
+      query = query.where('category', filters.category);
     }
 
     if (filters.is_system !== undefined) {
-      query = query.where(\'is_system\', filters.is_system);
+      query = query.where('is_system', filters.is_system);
     }
 
     if (filters.search) {
       query = query.where(builder => {
-        builder.where(\'config_key\', \'like\', `%${filters.search}%`)
-          .orWhere(\'description\', \'like\', `%${filters.search}%`);
+        builder.where('config_key', 'like', `%${filters.search}%`)
+          .orWhere('description', 'like', `%${filters.search}%`);
       });
     }
 
-    return await query.orderBy(\'category\').orderBy(\'config_key\');
+    return await query.orderBy('category').orderBy('config_key');
   }
 
   /**
@@ -43,8 +43,8 @@ class AdminService {
    */
   async getConfigurationByKey(tenantId, key) {
     const config = await SystemConfiguration.query()
-      .where(\'tenant_id\', tenantId)
-      .where(\'config_key\', key)
+      .where('tenant_id', tenantId)
+      .where('config_key', key)
       .first();
 
     if (!config) {
@@ -79,12 +79,12 @@ class AdminService {
    * @param {number} userId - User ID for audit
    * @returns {Promise<Object>} - Updated configuration
    */
-  async setConfigurationValue(tenantId, key, value, type = \'string\', userId) {
+  async setConfigurationValue(tenantId, key, value, type = 'string', userId) {
     const formattedValue = SystemConfiguration.formatValue(value, type);
 
     const existingConfig = await SystemConfiguration.query()
-      .where(\'tenant_id\', tenantId)
-      .where(\'config_key\', key)
+      .where('tenant_id', tenantId)
+      .where('config_key', key)
       .first();
 
     if (existingConfig) {
@@ -115,12 +115,12 @@ class AdminService {
   async createOrUpdateConfiguration(configData, userId) {
     const validationErrors = await SystemConfiguration.validateConfiguration(configData);
     if (validationErrors.length > 0) {
-      throw new ValidationError(\'Invalid configuration data\', validationErrors);
+      throw new ValidationError('Invalid configuration data', validationErrors);
     }
 
     const existingConfig = await SystemConfiguration.query()
-      .where(\'tenant_id\', configData.tenant_id)
-      .where(\'config_key\', configData.config_key)
+      .where('tenant_id', configData.tenant_id)
+      .where('config_key', configData.config_key)
       .first();
 
     if (existingConfig) {
@@ -146,8 +146,8 @@ class AdminService {
    */
   async deleteConfiguration(tenantId, key) {
     const config = await SystemConfiguration.query()
-      .where(\'tenant_id\', tenantId)
-      .where(\'config_key\', key)
+      .where('tenant_id', tenantId)
+      .where('config_key', key)
       .first();
 
     if (!config) {
@@ -155,12 +155,12 @@ class AdminService {
     }
 
     if (config.is_system) {
-      throw new ValidationError(\'Cannot delete system configuration\');
+      throw new ValidationError('Cannot delete system configuration');
     }
 
     const numDeleted = await SystemConfiguration.query()
-      .where(\'tenant_id\', tenantId)
-      .where(\'config_key\', key)
+      .where('tenant_id', tenantId)
+      .where('config_key', key)
       .delete();
 
     return numDeleted > 0;
@@ -179,26 +179,26 @@ class AdminService {
    */
   async getReferenceDataByCategory(tenantId, category, options = {}) {
     let query = ReferenceData.query()
-      .where(\'tenant_id\', tenantId)
-      .where(\'category\', category);
+      .where('tenant_id', tenantId)
+      .where('category', category);
 
     if (options.active_only !== false) {
-      query = query.where(\'is_active\', true);
+      query = query.where('is_active', true);
     }
 
     if (options.include_hierarchy) {
-      query = query.withGraphFetched(\'[parent, children]\');
+      query = query.withGraphFetched('[parent, children]');
     }
 
     if (options.parent_id !== undefined) {
       if (options.parent_id === null) {
-        query = query.whereNull(\'parent_id\');
+        query = query.whereNull('parent_id');
       } else {
-        query = query.where(\'parent_id\', options.parent_id);
+        query = query.where('parent_id', options.parent_id);
       }
     }
 
-    return await query.orderBy(\'sort_order\').orderBy(\'label\');
+    return await query.orderBy('sort_order').orderBy('label');
   }
 
   /**
@@ -211,7 +211,7 @@ class AdminService {
     let query = ReferenceData.query().findById(id);
 
     if (withRelations) {
-      query = query.withGraphFetched(\'[parent, children, createdBy, updatedBy]\');
+      query = query.withGraphFetched('[parent, children, createdBy, updatedBy]');
     }
 
     const refData = await query;
@@ -232,7 +232,7 @@ class AdminService {
   async createReferenceData(refData, userId) {
     const validationErrors = await ReferenceData.validateReferenceData(refData);
     if (validationErrors.length > 0) {
-      throw new ValidationError(\'Invalid reference data\', validationErrors);
+      throw new ValidationError('Invalid reference data', validationErrors);
     }
 
     return await ReferenceData.query().insert({
@@ -256,7 +256,7 @@ class AdminService {
     }
 
     if (existingRefData.is_system && !refData.is_system) {
-      throw new ValidationError(\'Cannot modify system reference data\');
+      throw new ValidationError('Cannot modify system reference data');
     }
 
     const validationErrors = await ReferenceData.validateReferenceData({
@@ -265,7 +265,7 @@ class AdminService {
       id
     });
     if (validationErrors.length > 0) {
-      throw new ValidationError(\'Invalid reference data\', validationErrors);
+      throw new ValidationError('Invalid reference data', validationErrors);
     }
 
     return await ReferenceData.query()
@@ -287,13 +287,13 @@ class AdminService {
     }
 
     if (refData.is_system) {
-      throw new ValidationError(\'Cannot delete system reference data\');
+      throw new ValidationError('Cannot delete system reference data');
     }
 
     // Check if there are children
-    const children = await ReferenceData.query().where(\'parent_id\', id);
+    const children = await ReferenceData.query().where('parent_id', id);
     if (children.length > 0) {
-      throw new ValidationError(\'Cannot delete reference data with children\');
+      throw new ValidationError('Cannot delete reference data with children');
     }
 
     const numDeleted = await ReferenceData.query().deleteById(id);
@@ -338,62 +338,62 @@ class AdminService {
   getDefaultReferenceData() {
     return {
       transport_modes: [
-        { code: \'ROAD\', label: \'Transport routier\', description: \'Transport par route\' },
-        { code: \'RAIL\', label: \'Transport ferroviaire\', description: \'Transport par train\' },
-        { code: \'SEA\', label: \'Transport maritime\', description: \'Transport par mer\' },
-        { code: \'AIR\', label: \'Transport aérien\', description: \'Transport par avion\' },
-        { code: \'MULTIMODAL\', label: \'Transport multimodal\', description: \'Combinaison de plusieurs modes\' }
+        { code: 'ROAD', label: 'Transport routier', description: 'Transport par route' },
+        { code: 'RAIL', label: 'Transport ferroviaire', description: 'Transport par train' },
+        { code: 'SEA', label: 'Transport maritime', description: 'Transport par mer' },
+        { code: 'AIR', label: 'Transport aérien', description: 'Transport par avion' },
+        { code: 'MULTIMODAL', label: 'Transport multimodal', description: 'Combinaison de plusieurs modes' }
       ],
       vehicle_types: [
-        { code: \'TRUCK\', label: \'Camion\', description: \'Véhicule de transport routier\' },
-        { code: \'VAN\', label: \'Fourgon\', description: \'Véhicule utilitaire léger\' },
-        { code: \'TRAILER\', label: \'Semi-remorque\', description: \'Remorque tractée\' },
-        { code: \'CONTAINER\', label: \'Conteneur\', description: \'Conteneur de transport\' }
+        { code: 'TRUCK', label: 'Camion', description: 'Véhicule de transport routier' },
+        { code: 'VAN', label: 'Fourgon', description: 'Véhicule utilitaire léger' },
+        { code: 'TRAILER', label: 'Semi-remorque', description: 'Remorque tractée' },
+        { code: 'CONTAINER', label: 'Conteneur', description: 'Conteneur de transport' }
       ],
       cargo_types: [
-        { code: \'GENERAL\', label: \'Marchandise générale\', description: \'Marchandise standard\' },
-        { code: \'DANGEROUS\', label: \'Marchandise dangereuse\', description: \'Matières dangereuses\' },
-        { code: \'PERISHABLE\', label: \'Denrées périssables\', description: \'Produits frais\' },
-        { code: \'FRAGILE\', label: \'Marchandise fragile\', description: \'Produits fragiles\' },
-        { code: \'OVERSIZED\', label: \'Hors gabarit\', description: \'Marchandise exceptionnelle\' }
+        { code: 'GENERAL', label: 'Marchandise générale', description: 'Marchandise standard' },
+        { code: 'DANGEROUS', label: 'Marchandise dangereuse', description: 'Matières dangereuses' },
+        { code: 'PERISHABLE', label: 'Denrées périssables', description: 'Produits frais' },
+        { code: 'FRAGILE', label: 'Marchandise fragile', description: 'Produits fragiles' },
+        { code: 'OVERSIZED', label: 'Hors gabarit', description: 'Marchandise exceptionnelle' }
       ],
       incoterms: [
-        { code: \'EXW\', label: \'Ex Works\', description: \'À l\\\'usine\' },
-        { code: \'FCA\', label: \'Free Carrier\', description: \'Franco transporteur\' },
-        { code: \'CPT\', label: \'Carriage Paid To\', description: \'Port payé jusqu\\\'à\' },
-        { code: \'CIP\', label: \'Carriage and Insurance Paid\', description: \'Port payé, assurance comprise\' },
-        { code: \'DAP\', label: \'Delivered at Place\', description: \'Rendu au lieu de destination\' },
-        { code: \'DPU\', label: \'Delivered at Place Unloaded\', description: \'Rendu au lieu de destination déchargé\' },
-        { code: \'DDP\', label: \'Delivered Duty Paid\', description: \'Rendu droits acquittés\' }
+        { code: 'EXW', label: 'Ex Works', description: "À l'usine" },
+        { code: 'FCA', label: 'Free Carrier', description: 'Franco transporteur' },
+        { code: 'CPT', label: 'Carriage Paid To', description: "Port payé jusqu'à" },
+        { code: 'CIP', label: 'Carriage and Insurance Paid', description: 'Port payé, assurance comprise' },
+        { code: 'DAP', label: 'Delivered at Place', description: 'Rendu au lieu de destination' },
+        { code: 'DPU', label: 'Delivered at Place Unloaded', description: 'Rendu au lieu de destination déchargé' },
+        { code: 'DDP', label: 'Delivered Duty Paid', description: 'Rendu droits acquittés' }
       ],
       currencies: [
-        { code: \'EUR\', label: \'Euro\', description: \'Monnaie européenne\' },
-        { code: \'USD\', label: \'Dollar américain\', description: \'Monnaie américaine\' },
-        { code: \'GBP\', label: \'Livre sterling\', description: \'Monnaie britannique\' },
-        { code: \'CHF\', label: \'Franc suisse\', description: \'Monnaie suisse\' }
+        { code: 'EUR', label: 'Euro', description: 'Monnaie européenne' },
+        { code: 'USD', label: 'Dollar américain', description: 'Monnaie américaine' },
+        { code: 'GBP', label: 'Livre sterling', description: 'Monnaie britannique' },
+        { code: 'CHF', label: 'Franc suisse', description: 'Monnaie suisse' }
       ],
       units_of_measure: [
-        { code: \'KG\', label: \'Kilogramme\', description: \'Unité de poids\' },
-        { code: \'T\', label: \'Tonne\', description: \'Unité de poids\' },
-        { code: \'M3\', label: \'Mètre cube\', description: \'Unité de volume\' },
-        { code: \'L\', label: \'Litre\', description: \'Unité de volume\' },
-        { code: \'M\', label: \'Mètre\', description: \'Unité de longueur\' },
-        { code: \'KM\', label: \'Kilomètre\', description: \'Unité de distance\' }
+        { code: 'KG', label: 'Kilogramme', description: 'Unité de poids' },
+        { code: 'T', label: 'Tonne', description: 'Unité de poids' },
+        { code: 'M3', label: 'Mètre cube', description: 'Unité de volume' },
+        { code: 'L', label: 'Litre', description: 'Unité de volume' },
+        { code: 'M', label: 'Mètre', description: 'Unité de longueur' },
+        { code: 'KM', label: 'Kilomètre', description: 'Unité de distance' }
       ],
       document_types: [
-        { code: \'CMR\', label: \'Lettre de voiture CMR\', description: \'Document de transport routier\' },
-        { code: \'AWB\', label: \'Lettre de transport aérien\', description: \'Document de transport aérien\' },
-        { code: \'BL\', label: \'Connaissement\', description: \'Document de transport maritime\' },
-        { code: \'INVOICE\', label: \'Facture\', description: \'Document commercial\' },
-        { code: \'PACKING_LIST\', label: \'Liste de colisage\', description: \'Détail des marchandises\' },
-        { code: \'CERTIFICATE\', label: \'Certificat\', description: \'Document de certification\' }
+        { code: 'CMR', label: 'Lettre de voiture CMR', description: 'Document de transport routier' },
+        { code: 'AWB', label: 'Lettre de transport aérien', description: 'Document de transport aérien' },
+        { code: 'BL', label: 'Connaissement', description: 'Document de transport maritime' },
+        { code: 'INVOICE', label: 'Facture', description: 'Document commercial' },
+        { code: 'PACKING_LIST', label: 'Liste de colisage', description: 'Détail des marchandises' },
+        { code: 'CERTIFICATE', label: 'Certificat', description: 'Document de certification' }
       ],
       payment_terms: [
-        { code: \'IMMEDIATE\', label: \'Paiement immédiat\', description: \'Paiement à la livraison\' },
-        { code: \'NET_15\', label: \'Net 15 jours\', description: \'Paiement sous 15 jours\' },
-        { code: \'NET_30\', label: \'Net 30 jours\', description: \'Paiement sous 30 jours\' },
-        { code: \'NET_45\', label: \'Net 45 jours\', description: \'Paiement sous 45 jours\' },
-        { code: \'NET_60\', label: \'Net 60 jours\', description: \'Paiement sous 60 jours\' }
+        { code: 'IMMEDIATE', label: 'Paiement immédiat', description: 'Paiement à la livraison' },
+        { code: 'NET_15', label: 'Net 15 jours', description: 'Paiement sous 15 jours' },
+        { code: 'NET_30', label: 'Net 30 jours', description: 'Paiement sous 30 jours' },
+        { code: 'NET_45', label: 'Net 45 jours', description: 'Paiement sous 45 jours' },
+        { code: 'NET_60', label: 'Net 60 jours', description: 'Paiement sous 60 jours' }
       ]
     };
   }
@@ -410,25 +410,25 @@ class AdminService {
   async getSystemHealth(tenantId) {
     // This would typically check database connections, external services, etc.
     const health = {
-      status: \'healthy\',
+      status: 'healthy',
       timestamp: new Date().toISOString(),
       checks: {
-        database: \'healthy\',
-        configurations: \'healthy\',
-        reference_data: \'healthy\'
+        database: 'healthy',
+        configurations: 'healthy',
+        reference_data: 'healthy'
       }
     };
 
     try {
       // Check if we can query configurations
-      await SystemConfiguration.query().where(\'tenant_id\', tenantId).limit(1);
+      await SystemConfiguration.query().where('tenant_id', tenantId).limit(1);
       
       // Check if we can query reference data
-      await ReferenceData.query().where(\'tenant_id\', tenantId).limit(1);
+      await ReferenceData.query().where('tenant_id', tenantId).limit(1);
       
     } catch (error) {
-      health.status = \'unhealthy\';
-      health.checks.database = \'unhealthy\';
+      health.status = 'unhealthy';
+      health.checks.database = 'unhealthy';
       health.error = error.message;
     }
 
@@ -454,22 +454,22 @@ class AdminService {
 
     // Configuration statistics
     const configStats = await SystemConfiguration.query()
-      .where(\'tenant_id\', tenantId)
-      .select(\'category\')
-      .count(\'* as count\')
-      .groupBy(\'category\');
+      .where('tenant_id', tenantId)
+      .select('category')
+      .count('* as count')
+      .groupBy('category');
 
        stats.configurations.total = configStats.reduce((sum, stat) => sum + parseInt(stat.count), 0);
     configStats.forEach(stat => {
-      stats.configurations.by_category[stat.category || \'uncategorized\'] = parseInt(stat.count);
+      stats.configurations.by_category[stat.category || 'uncategorized'] = parseInt(stat.count);
     });
 
     // Reference data statistics
     const refDataStats = await ReferenceData.query()
-      .where(\'tenant_id\', tenantId)
-      .select(\'category\')
-      .count(\'* as count\')
-      .groupBy(\'category\');
+      .where('tenant_id', tenantId)
+      .select('category')
+      .count('* as count')
+      .groupBy('category');
 
     stats.reference_data.total = refDataStats.reduce((sum, stat) => sum + parseInt(stat.count), 0);
     refDataStats.forEach(stat => {

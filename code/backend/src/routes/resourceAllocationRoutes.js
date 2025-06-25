@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const ResourceAllocationController = require("../controllers/ResourceAllocationController");
-const { authenticateToken } = require("../middlewares/authMiddleware");
+// const { authenticateToken } = require("../middlewares/authMiddleware");
+const  authMiddleware  = require("../middlewares/authMiddleware");
 
 // Apply authentication middleware to all resource allocation routes
-router.use(authenticateToken);
+//router.use(authenticateToken);
+router.use(authMiddleware.authenticate);
 
 // Availability routes
 router.post("/availabilities", ResourceAllocationController.createAvailability);

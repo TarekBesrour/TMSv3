@@ -7,7 +7,7 @@
 const express = require('express');
 const multer = require('multer');
 const ReferenceDataController = require('../controllers/ReferenceDataController');
-const authMiddleware = require('../middleware/authMiddleware');
+const authMiddleware = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
@@ -30,7 +30,7 @@ const upload = multer({
 });
 
 // Apply authentication middleware to all routes
-router.use(authMiddleware);
+router.use(authMiddleware.authenticate);
 
 // Get all reference types
 router.get('/types', ReferenceDataController.getReferenceTypes);

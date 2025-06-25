@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const TourPlanningController = require("../controllers/TourPlanningController");
-const { authenticateToken } = require("../middlewares/authMiddleware");
+const authMiddleware = require("../middlewares/authMiddleware");
 
 // Apply authentication middleware to all tour planning routes
-router.use(authenticateToken);
+router.use(authMiddleware.authenticate);
 
 // Tour routes
 router.post("/tours", TourPlanningController.createTour);

@@ -109,8 +109,8 @@ class PaymentService {
           .withGraphFetched('[partner, invoice, carrierInvoice, bankAccount]');
       });
     } catch (error) {
-      if (error.name === \'ValidationError\') {
-        throw new ValidationError(\'Invalid payment data\', error.data);
+      if (error.name === 'ValidationError') {
+        throw new ValidationError('Invalid payment data', error.data);
       }
       throw error;
     }
@@ -160,68 +160,68 @@ class PaymentService {
 
     // Apply filters
     if (criteria.tenant_id) {
-      query = query.where(\'tenant_id\', criteria.tenant_id);
+      query = query.where('tenant_id', criteria.tenant_id);
     }
 
     if (criteria.payment_type) {
-      query = query.where(\'payment_type\', criteria.payment_type);
+      query = query.where('payment_type', criteria.payment_type);
     }
 
     if (criteria.status) {
-      query = query.where(\'status\', criteria.status);
+      query = query.where('status', criteria.status);
     }
 
     if (criteria.partner_id) {
-      query = query.where(\'partner_id\', criteria.partner_id);
+      query = query.where('partner_id', criteria.partner_id);
     }
 
     if (criteria.payment_method) {
-      query = query.where(\'payment_method\', criteria.payment_method);
+      query = query.where('payment_method', criteria.payment_method);
     }
 
     if (criteria.currency) {
-      query = query.where(\'currency\', criteria.currency);
+      query = query.where('currency', criteria.currency);
     }
 
     // Date range filters
     if (criteria.payment_date_from) {
-      query = query.where(\'payment_date\', \'>=\', criteria.payment_date_from);
+      query = query.where('payment_date', '>=', criteria.payment_date_from);
     }
 
     if (criteria.payment_date_to) {
-      query = query.where(\'payment_date\', \'<=\', criteria.payment_date_to);
+      query = query.where('payment_date', '<=', criteria.payment_date_to);
     }
 
     if (criteria.due_date_from) {
-      query = query.where(\'due_date\', \'>=\', criteria.due_date_from);
+      query = query.where('due_date', '>=', criteria.due_date_from);
     }
 
     if (criteria.due_date_to) {
-      query = query.where(\'due_date\', \'<=\', criteria.due_date_to);
+      query = query.where('due_date', '<=', criteria.due_date_to);
     }
 
     // Amount range filters
     if (criteria.amount_min) {
-      query = query.where(\'amount\', \'>=\', criteria.amount_min);
+      query = query.where('amount', '>=', criteria.amount_min);
     }
 
     if (criteria.amount_max) {
-      query = query.where(\'amount\', \'<=\', criteria.amount_max);
+      query = query.where('amount', '<=', criteria.amount_max);
     }
 
     // Overdue payments
     if (criteria.overdue) {
-      const today = new Date().toISOString().split(\'T\')[0];
-      query = query.where(\'due_date\', \'<\', today)
-        .whereIn(\'status\', [\'pending\', \'processing\']);
+      const today = new Date().toISOString().split('T')[0];
+      query = query.where('due_date', '<', today)
+        .whereIn('status', ['pending', 'processing']);
     }
 
     // Text search
     if (criteria.search_term) {
       query = query.where(builder => {
-        builder.where(\'reference\', \'like\', `%${criteria.search_term}%`)
-          .orWhere(\'description\', \'like\', `%${criteria.search_term}%`)
-          .orWhere(\'transaction_reference\', \'like\', `%${criteria.search_term}%`);
+        builder.where('reference', 'like', `%${criteria.search_term}%`)
+          .orWhere('description', 'like', `%${criteria.search_term}%`)
+          .orWhere('transaction_reference', 'like', `%${criteria.search_term}%`);
       });
     }
 
@@ -308,12 +308,12 @@ class PaymentService {
         throw new NotFoundError(`Payment with ID ${id} not found`);
       }
 
-      if (payment.status !== \'pending\' && payment.status !== \'processing\') {
+      if (payment.status !== 'pending' && payment.status !== 'processing') {
         throw new ValidationError(`Cannot process payment with status: ${payment.status}`);
       }
 
       const updateData = {
-        status: \'completed\',
+        status: 'completed',
         transaction_reference: processingData.transaction_reference,
         notes: processingData.notes,
         updated_by: userId
@@ -353,7 +353,7 @@ class PaymentService {
       }
 
       const updateData = {
-        status: \'cancelled\',
+        status: 'cancelled',
         notes: reason,
         updated_by: userId
       };
@@ -381,7 +381,7 @@ class PaymentService {
    */
   async getOverduePayments(tenantId, pagination = { page: 1, pageSize: 20 }) {
     const { page, pageSize } = pagination;
-    const today = new Date().toISOString().split(\'T\')[0];
+    const today = new Date().toISOString().split('T')[0];
 
     const query = Payment.query()
       .where('tenant_id', tenantId)

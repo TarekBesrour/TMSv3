@@ -4,7 +4,14 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 
+// --- Initialisation de la connexion Knex et Objection ---
+const Knex = require('knex');
+const { Model } = require('objection');
+const knexConfig = require('../knexfile');
 
+const knex = Knex(knexConfig[process.env.NODE_ENV || 'development']);
+Model.knex(knex);
+// --- Fin initialisation ---
 
 dotenv.config();
 
@@ -49,10 +56,17 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+const { handleError } = require('./utils/errorHandler');
+app.use(handleError);
+
+module.exports = app;
 
 

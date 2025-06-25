@@ -1,0 +1,44 @@
+# Ignorer les dépendances Node.js
+node_modules/
+
+# Ignorer les fichiers de configuration sensibles
+.env
+.env.*
+
+# Ignorer les fichiers de logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# Ignorer les fichiers de build ou temporaires
+coverage/
+dist/
+build/
+tmp/
+temp/
+
+# Ignorer les fichiers de base de données temporaires
+*.sqlite
+*.sqlite3
+*.db
+
+# Ignorer les fichiers système
+.DS_Store
+Thumbs.db
+
+# Ignorer les fichiers de migration ou de seed générés automatiquement (optionnel)
+/database/knex_migrations/*.js
+/database/seeds/*.js
+
+# Ignorer les fichiers d'uploads temporaires
+/tmp/
+
+# Ignorer les fichiers de test
+*.test.js
+*.spec.js
+
+# Ignorer les fichiers de configuration IDE
+.vscode/
+.idea/

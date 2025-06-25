@@ -674,6 +674,33 @@ class CarrierInvoiceController {
       });
     }
   }
+
+  // Mettre à jour une facture transporteur
+  async updateCarrierInvoice(req, res) {
+    // TODO: Implémenter la logique de mise à jour d'une facture transporteur
+    return res.status(501).json({
+      success: false,
+      message: 'Not implemented: updateCarrierInvoice'
+    });
+  }
+
+  // Supprimer une facture transporteur
+  async deleteCarrierInvoice(req, res) {
+    // TODO: Implémenter la logique de suppression d'une facture transporteur
+    return res.status(501).json({
+      success: false,
+      message: 'Not implemented: deleteCarrierInvoice'
+    });
+  }
+
+  // Obtenir le résumé de contrôle des factures transporteurs
+  async getControlSummary(req, res) {
+    // TODO: Implémenter la logique pour obtenir le résumé de contrôle
+    return res.status(501).json({
+      success: false,
+      message: 'Not implemented: getControlSummary'
+    });
+  }
 }
 
 module.exports = new CarrierInvoiceController();
