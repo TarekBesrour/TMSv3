@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { apiUrl } from '../utils/api';
 
 // Types
 export interface User {
@@ -71,9 +72,6 @@ interface RegisterData {
 // Create context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// API base URL
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
-
 // Provider component
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -92,17 +90,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           
           // Fetch user data
-          const response = await axios.get(`${API_URL}/auth/me`);
+          const response = await axios.get(apiUrl('/auth/me'));
           setUser(response.data);
         } catch (err) {
           // Token might be expired, try to refresh
           try {
-            const refreshResponse = await axios.post(`${API_URL}/auth/refresh-token`);
+            const refreshResponse = await axios.post(apiUrl('/auth/refresh-token'));
             localStorage.setItem('accessToken', refreshResponse.data.accessToken);
             axios.defaults.headers.common['Authorization'] = `Bearer ${refreshResponse.data.accessToken}`;
             
             // Fetch user data again
-            const userResponse = await axios.get(`${API_URL}/auth/me`);
+            const userResponse = await axios.get(apiUrl('/auth/me'));
             setUser(userResponse.data);
           } catch (refreshErr) {
             // Refresh failed, clear auth data
@@ -125,7 +123,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(true);
       setError(null);
       
-      const response = await axios.post(`${API_URL}/auth/login`, { email, password });
+      const response = await axios.post(apiUrl('/auth/login'), { email, password });
       
       // Store token
       localStorage.setItem('accessToken', response.data.accessToken);
@@ -152,7 +150,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(true);
       
       // Call logout endpoint
-      await axios.post(`${API_URL}/auth/logout`);
+      await axios.post(apiUrl('/auth/logout'));
       
       // Clear auth data
       localStorage.removeItem('accessToken');
@@ -180,7 +178,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(true);
       setError(null);
       
-      await axios.post(`${API_URL}/auth/register`, userData);
+      await axios.post(apiUrl('/auth/register'), userData);
       
       // Redirect to login with success message
       navigate('/login', { state: { message: 'Registration successful. Please check your email to verify your account.' } });
@@ -197,7 +195,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(true);
       setError(null);
       
-      await axios.post(`${API_URL}/auth/forgot-password`, { email });
+      await axios.post(apiUrl('/auth/forgot-password'), { email });
       
       // Redirect to login with success message
       navigate('/login', { state: { message: 'Password reset instructions have been sent to your email.' } });
@@ -214,7 +212,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(true);
       setError(null);
       
-      await axios.post(`${API_URL}/auth/reset-password`, { token, password });
+      await axios.post(apiUrl('/auth/reset-password'), { token, password });
       
       // Redirect to login with success message
       navigate('/login', { state: { message: 'Password has been reset successfully. You can now login with your new password.' } });
@@ -231,7 +229,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(true);
       setError(null);
       
-      await axios.post(`${API_URL}/auth/change-password`, { currentPassword, newPassword });
+      await axios.post(apiUrl('/auth/change-password'), { currentPassword, newPassword });
       
       return Promise.resolve();
     } catch (err: any) {

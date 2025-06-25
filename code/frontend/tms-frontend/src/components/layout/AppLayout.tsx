@@ -57,7 +57,7 @@ const navigation: NavSection[] = [
     items: [
       { name: 'Facturation', href: '/billing', icon: BanknotesIcon },
       { name: 'Paiements', href: '/payments', icon: BanknotesIcon },
-      { name: 'Comptes bancaires', href: '/bankaccounts', icon: BanknotesIcon },
+      { name: 'Comptes bancaires', href: '/bank-accounts', icon: BanknotesIcon },
       { name: 'Tarifs', href: '/rates', icon: DocumentTextIcon },
       { name: 'Surcharges', href: '/surcharges', icon: DocumentTextIcon },
       { name: 'Contrats', href: '/contracts', icon: DocumentTextIcon },
