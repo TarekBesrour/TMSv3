@@ -15,17 +15,23 @@ import {
 } from '@heroicons/react/24/outline';
 import { ReferenceType } from '../types/referenceData';
 import { useReferenceData } from '../hooks/useReferenceData';
+import { useAuth } from '../contexts/AuthContext';
 
 
 const References: React.FC = () => {
   const navigate = useNavigate();
   const { types, loading, error, loadTypes, clearError } = useReferenceData();
+  const { isAuthenticated, isLoading: authLoading } = useAuth(); // <-- Ajoute ceci
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filteredTypes, setFilteredTypes] = useState<ReferenceType[]>([]);
 
   useEffect(() => {
+     console.log('authLoading:', authLoading, 'isAuthenticated:', isAuthenticated); 
+    if (!authLoading && isAuthenticated) {
     loadTypes();
-  }, [loadTypes]);
+     }
+  }, [loadTypes, isAuthenticated, authLoading]);
+ // }, [loadTypes]);
 
   useEffect(() => {
     // Apply search filter

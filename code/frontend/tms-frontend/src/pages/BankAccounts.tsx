@@ -8,6 +8,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { BankAccount } from '../types/bankAccount';
 import { Pagination } from '../types/pagination';
+import { apiFetch } from '../utils/apiFetch'; 
 
 const BankAccounts: React.FC = () => {
   const navigate = useNavigate();
@@ -32,22 +33,43 @@ const BankAccounts: React.FC = () => {
   const fetchBankAccounts = async () => {
     try {
       setLoading(true);
-      const queryParams = new URLSearchParams({
+      /* const queryParams = new URLSearchParams({
         page: String(pagination.page),
         pageSize: String(pagination.pageSize),
         search_term: searchTerm,
         ...filters
-      });
+      }); */
+      const params: Record<string, string> = {
+      page: String(pagination.page),
+      pageSize: String(pagination.pageSize),
+      search_term: searchTerm,
+      };
+      if (filters.account_type) params.account_type = filters.account_type;
+      if (filters.currency) params.currency = filters.currency;
 
-      const response = await fetch(`/api/bank-accounts?${queryParams}`);
+      const queryParams = new URLSearchParams(params);
+
+      //console.log('Filtreeee comptes bancaires:', queryParams.toString());
+      
+      /*const API_URL = process.env.REACT_APP_API_URL;
+      const token = localStorage.getItem('accessToken');            
+       const response = await fetch(`${API_URL}/bank-accounts?${queryParams}`, {
+      headers: {        
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
+      }); */
+      const response = await apiFetch(`/bank-accounts?${queryParams}`);
+
       const data = await response.json();
 
       if (data.success) {
         setBankAccounts(data.data);
+        //console.log('Réponse comptes bancaires:', data);
         setPagination((prev) => ({
           ...prev,
-          total: data.pagination.total,
-          totalPages: data.pagination.totalPages
+          total: data.pagination?.total ?? data.data?.length ?? 0,
+          totalPages: data.pagination?.totalPages ?? 1
         }));
       }
     } catch (error) {

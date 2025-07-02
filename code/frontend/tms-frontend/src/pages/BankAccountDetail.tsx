@@ -8,6 +8,7 @@ import {
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import { BankAccount } from '../types/bankAccount';
+import { apiFetch } from '../utils/apiFetch'; // Assuming you have a utility function for API calls
 
 const BankAccountDetail: React.FC = () => {
   const { id } = useParams();
@@ -23,7 +24,18 @@ const BankAccountDetail: React.FC = () => {
   const fetchBankAccount = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/bank-accounts/${id}`);
+      //const response = await fetch(`/bank-accounts/${id}`);
+      /* const API_URL = process.env.REACT_APP_API_URL;
+      const token = localStorage.getItem('accessToken');   
+      const response = await fetch(`${API_URL}/bank-accounts/${id}`, {
+      headers: {        
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
+      }); */
+      const response = await apiFetch(`/bank-accounts/${id}`);
+    //console.log('Responseeeeee:', response);
+
       const data = await response.json();
       if (data.success) {
         setBankAccount(data.data);
@@ -41,7 +53,7 @@ const BankAccountDetail: React.FC = () => {
   const handleDeleteBankAccount = async () => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce compte bancaire ?')) {
       try {
-        const response = await fetch(`/api/bank-accounts/${id}`, {
+        const response = await fetch(`/bank-accounts/${id}`, {
           method: 'DELETE'
         });
         const data = await response.json();

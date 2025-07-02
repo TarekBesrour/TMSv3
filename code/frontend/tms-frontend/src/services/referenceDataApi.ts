@@ -26,7 +26,7 @@ class ReferenceDataApiService {
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('accessToken');
       
       const response = await fetch(`${API_BASE_URL}${url}`, {
         ...options,
@@ -151,7 +151,7 @@ class ReferenceDataApiService {
     file: File
   ): Promise<ApiResponse<ImportResult>> {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('accessToken');
       const formData = new FormData();
       formData.append('file', file);
 
@@ -188,7 +188,7 @@ class ReferenceDataApiService {
     format: 'csv' | 'json' = 'csv'
   ): Promise<Blob | null> {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('accessToken');
       
       const response = await fetch(`${API_BASE_URL}/references/${typeId}/export?format=${format}`, {
         headers: {

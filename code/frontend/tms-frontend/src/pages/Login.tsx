@@ -26,8 +26,8 @@ const Login: React.FC = () => {
     }
     
     // Clear any auth errors when component mounts
-    clearError();
-  }, [location, clearError]);
+    // clearError();
+  }, [location]);
   
   // Redirect if already authenticated
   useEffect(() => {
@@ -39,8 +39,9 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatusMessage(null);
+     clearError(); // <-- Ajoute ici pour effacer l'erreur précédente uniquement quand on tente un nouveau login
     
-    try {
+     try {
       await login(email, password);
       // If login is successful, the auth context will redirect
     } catch (err) {
@@ -91,7 +92,8 @@ const Login: React.FC = () => {
             </div>
           </div>
         )}
-        
+       {/* afficher éventuellement le message d'erreur d authentification  */}
+    
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -170,6 +172,8 @@ const Login: React.FC = () => {
             </p>
           </div>
         </form>
+      
+
       </div>
     </div>
   );

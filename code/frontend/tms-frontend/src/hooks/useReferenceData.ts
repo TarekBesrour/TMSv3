@@ -16,6 +16,7 @@ import {
   ApiError
 } from '../types/referenceData';
 import ReferenceDataApiService from '../services/referenceDataApi';
+import { useAuth } from '../contexts/AuthContext';
 
 interface UseReferenceDataState {
   types: ReferenceType[];
@@ -45,6 +46,7 @@ interface UseReferenceDataActions {
 type UseReferenceDataReturn = UseReferenceDataState & UseReferenceDataActions;
 
 export const useReferenceData = (): UseReferenceDataReturn => {
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [state, setState] = useState<UseReferenceDataState>({
     types: [],
     entries: [],
@@ -69,6 +71,8 @@ export const useReferenceData = (): UseReferenceDataReturn => {
   }, [setError]);
 
   const loadTypes = useCallback(async (): Promise<void> => {
+    if (authLoading || !isAuthenticated) return;
+
     setLoading(true);
     setError(null);
 
@@ -91,12 +95,14 @@ export const useReferenceData = (): UseReferenceDataReturn => {
       setError(error instanceof Error ? error.message : 'Unknown error occurred');
       setLoading(false);
     }
-  }, [setLoading, setError, handleApiError]);
+  }, [setLoading, setError, handleApiError, authLoading, isAuthenticated]);
 
   const loadEntries = useCallback(async (
     typeId: string,
     filters: ReferenceEntriesFilters = {}
   ): Promise<void> => {
+    if (authLoading || !isAuthenticated) return;
+
     setLoading(true);
     setError(null);
 
@@ -122,9 +128,10 @@ export const useReferenceData = (): UseReferenceDataReturn => {
       setError(error instanceof Error ? error.message : 'Unknown error occurred');
       setLoading(false);
     }
-  }, [setLoading, setError, handleApiError]);
+  }, [setLoading, setError, handleApiError, authLoading, isAuthenticated]);
 
   const loadEntry = useCallback(async (typeId: string, id: number): Promise<void> => {
+    if (authLoading || !isAuthenticated) return;
     setLoading(true);
     setError(null);
 
@@ -147,12 +154,13 @@ export const useReferenceData = (): UseReferenceDataReturn => {
       setError(error instanceof Error ? error.message : 'Unknown error occurred');
       setLoading(false);
     }
-  }, [setLoading, setError, handleApiError]);
+  }, [setLoading, setError, handleApiError,authLoading, isAuthenticated]);
 
   const createEntry = useCallback(async (
     typeId: string,
     data: ReferenceEntryFormData
   ): Promise<boolean> => {
+    if (authLoading || !isAuthenticated) return false;
     setLoading(true);
     setError(null);
 
@@ -172,13 +180,15 @@ export const useReferenceData = (): UseReferenceDataReturn => {
       setLoading(false);
       return false;
     }
-  }, [setLoading, setError, handleApiError]);
+  }, [setLoading, setError, handleApiError, authLoading, isAuthenticated]);
 
   const updateEntry = useCallback(async (
     typeId: string,
     id: number,
     data: Partial<ReferenceEntryFormData>
   ): Promise<boolean> => {
+    if (authLoading || !isAuthenticated) return false;
+    
     setLoading(true);
     setError(null);
 
@@ -205,9 +215,10 @@ export const useReferenceData = (): UseReferenceDataReturn => {
       setLoading(false);
       return false;
     }
-  }, [setLoading, setError, handleApiError]);
+  }, [setLoading, setError, handleApiError, authLoading, isAuthenticated]);
 
   const deactivateEntry = useCallback(async (typeId: string, id: number): Promise<boolean> => {
+    if (authLoading || !isAuthenticated) return false;
     setLoading(true);
     setError(null);
 
@@ -227,9 +238,10 @@ export const useReferenceData = (): UseReferenceDataReturn => {
       setLoading(false);
       return false;
     }
-  }, [setLoading, setError, handleApiError]);
+  }, [setLoading, setError, handleApiError, authLoading, isAuthenticated]);
 
   const activateEntry = useCallback(async (typeId: string, id: number): Promise<boolean> => {
+     if (authLoading || !isAuthenticated) return false;
     setLoading(true);
     setError(null);
 
@@ -249,12 +261,13 @@ export const useReferenceData = (): UseReferenceDataReturn => {
       setLoading(false);
       return false;
     }
-  }, [setLoading, setError, handleApiError]);
+  }, [setLoading, setError, handleApiError, authLoading, isAuthenticated]);
 
   const importData = useCallback(async (
     typeId: string,
     file: File
   ): Promise<ImportResult | null> => {
+    if (authLoading || !isAuthenticated) return null;
     setLoading(true);
     setError(null);
 
@@ -274,12 +287,13 @@ export const useReferenceData = (): UseReferenceDataReturn => {
       setLoading(false);
       return null;
     }
-  }, [setLoading, setError, handleApiError]);
+  }, [setLoading, setError, handleApiError, authLoading, isAuthenticated]);
 
   const exportData = useCallback(async (
     typeId: string,
     format: 'csv' | 'json' = 'csv'
   ): Promise<void> => {
+    if (authLoading || !isAuthenticated) return;
     setLoading(true);
     setError(null);
 
@@ -307,7 +321,7 @@ export const useReferenceData = (): UseReferenceDataReturn => {
       setError(error instanceof Error ? error.message : 'Unknown error occurred');
       setLoading(false);
     }
-  }, [setLoading, setError]);
+  }, [setLoading, setError, authLoading, isAuthenticated]);
 
   const clearError = useCallback((): void => {
     setError(null);

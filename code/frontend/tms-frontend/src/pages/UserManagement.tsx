@@ -36,7 +36,7 @@ const UserManagement: React.FC = () => {
   const { hasPermission } = useAuth();
   const navigate = useNavigate();
   
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+  const API_URL = process.env.REACT_APP_API_URL; //|| 'http://localhost:3001/api';
   
   // Fetch users
   useEffect(() => {
@@ -59,7 +59,13 @@ const UserManagement: React.FC = () => {
           url += `&role=${encodeURIComponent(roleFilter)}`;
         }
         
-        const response = await axios.get(url);
+        //const response = await axios.get(url);
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        });
         
         setUsers(response.data.data);
         setTotalPages(response.data.pagination.totalPages);
@@ -77,7 +83,14 @@ const UserManagement: React.FC = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await axios.get(`${API_URL}/auth/roles`);
+        const token = localStorage.getItem('accessToken');
+        //const response = await axios.get(`${API_URL}/auth/roles`);
+         const response = await axios.get(`${API_URL}/auth/roles`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
         setRoles(response.data.data);
       } catch (err) {
         console.error('Failed to fetch roles', err);

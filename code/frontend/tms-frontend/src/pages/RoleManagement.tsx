@@ -47,7 +47,7 @@ const RoleManagement: React.FC = () => {
   const { hasPermission } = useAuth();
   const navigate = useNavigate();
   
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+  const API_URL = process.env.REACT_APP_API_URL; //|| 'http://localhost:5000/api';
   
   // Fetch roles and permissions
   useEffect(() => {
@@ -57,7 +57,14 @@ const RoleManagement: React.FC = () => {
         setError(null);
         
         // Fetch roles
-        const rolesResponse = await axios.get(`${API_URL}/auth/roles`);
+         const token = localStorage.getItem('accessToken');
+        //const rolesResponse = await axios.get(`${API_URL}/auth/roles`);
+             
+         const rolesResponse = await axios.get(`${API_URL}/auth/roles`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
         setRoles(rolesResponse.data.data);
         
         // Fetch permissions by module

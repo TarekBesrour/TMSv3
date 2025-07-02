@@ -61,9 +61,14 @@ function ReferenceEntryFormWrapper(props: { mode: 'create' | 'edit' }) {
 
 // Composant de protection des routes
 function RequireAuth({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated,isLoading } = useAuth();
   const location = useLocation();
-  if (!isAuthenticated) {
+
+/* if (isLoading) {
+    return <div> Chargement...</div>;
+  } */
+
+  if (!isAuthenticated && !isLoading) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
   return <>{children}</>;

@@ -6,6 +6,7 @@ import {
   ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import { BankAccount } from '../types/bankAccount';
+import { apiFetch } from '../utils/apiFetch'; // Assuming you have a utility function for API calls
 
 interface BankAccountFormErrors {
   general?: string;
@@ -51,7 +52,18 @@ const BankAccountForm: React.FC = () => {
   const fetchBankAccount = async (accountId: string) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/bank-accounts/${accountId}`);
+//const response = await fetch(`/bank-accounts/${accountId}`);
+     /*  const API_URL = process.env.REACT_APP_API_URL;
+      const token = localStorage.getItem('accessToken');   
+      const response = await fetch(`${API_URL}/bank-accounts/${accountId}`,{
+      headers: {        
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }
+      }); */
+      
+      const response = await apiFetch(`/bank-accounts/${accountId}`);
+
       const data = await response.json();
       if (data.success) {
         setFormData(data.data);
@@ -77,18 +89,47 @@ const BankAccountForm: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    
     e.preventDefault();
     setErrors({});
     try {
+        
       const method = isEditMode ? 'PUT' : 'POST';
-      const url = isEditMode ? `/api/bank-accounts/${id}` : '/api/bank-accounts';
-      const response = await fetch(url, {
+      //const url = isEditMode ? `/api/bank-accounts/${id}` : '/api/bank-accounts';
+      //const API_URL = process.env.REACT_APP_API_URL;
+      //const url = isEditMode ? `${API_URL}/bank-accounts/${id}` : `${API_URL}/bank-accounts`;
+      const url = isEditMode ? `/bank-accounts/${id}` : `/bank-accounts`;
+      //const token = localStorage.getItem('accessToken');
+      
+       const dataToSend = {
+      ...formData,
+      current_balance:
+        formData.current_balance !== undefined && formData.current_balance !== null
+          ? Number(formData.current_balance)
+          : null,
+      };
+      
+      // Supprime l'id si on est en création (POST)
+   /*  if (!isEditMode) {
+      delete dataToSend.id;
+    } */
+
+      /* const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(dataToSend)
+      }); */
+      
+      const response = await apiFetch(url, {
+        method,
+        body: JSON.stringify(dataToSend),
       });
+
+//console.log('Responseeeeee:', response && '___' && method);
+
       const data = await response.json();
       if (data.success) {
         navigate('/bank-accounts');
