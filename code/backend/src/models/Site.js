@@ -21,9 +21,9 @@ class Site extends Model {
       required: ['partner_id', 'address_id', 'name', 'type'],
       
       properties: {
-        id: { type: 'integer' },
-        partner_id: { type: 'integer' },
-        address_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        partner_id: { type: ['integer','string'] },
+        address_id: { type: ['integer','string'] },
         name: { type: 'string', maxLength: 100 },
         type: { 
           type: 'string', 
@@ -31,7 +31,7 @@ class Site extends Model {
         },
         code: { type: ['string', 'null'], maxLength: 50 },
         opening_hours: { type: ['string', 'null'], maxLength: 255 },
-        contact_id: { type: ['integer', 'null'] },
+        contact_id: { type: ['integer', 'string','null'] },
         capacity: { type: ['number', 'null'] },
         surface_area: { type: ['number', 'null'] },
         loading_docks: { type: ['integer', 'null'] },

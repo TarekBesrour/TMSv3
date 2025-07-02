@@ -12,7 +12,7 @@ class Equipment extends Model {
       required: ['identification', 'type', 'status'],
 
       properties: {
-        id: { type: 'integer' },
+        id: { type: ['integer','string'] },
         identification: { type: 'string', minLength: 1, maxLength: 255 },
         type: { type: 'string', minLength: 1, maxLength: 255 }, // e.g., 'remorque', 'conteneur', 'hayon'
         characteristics: { type: 'string', maxLength: 1000 }, // JSON string or text for dimensions, capacity, compatibilities

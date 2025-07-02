@@ -31,9 +31,9 @@ class TransportUnit extends Model {
       required: ['shipment_id', 'type', 'status'],
 
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
-        shipment_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
+        shipment_id: { type: ['integer','string'] },
         reference: { type: ['string', 'null'], maxLength: 50 },
         
         // Type and identification
@@ -100,7 +100,7 @@ class TransportUnit extends Model {
         },
         
         // Current location
-        current_location_id: { type: ['integer', 'null'] },
+        current_location_id: { type: ['integer', 'string','null'] },
         current_location_type: { 
           type: ['string', 'null'], 
           enum: ['address', 'port', 'airport', 'terminal', 'warehouse', 'hub', 'vehicle', null] 

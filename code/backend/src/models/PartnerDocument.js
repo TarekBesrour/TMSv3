@@ -21,9 +21,9 @@ class PartnerDocument extends Model {
       required: ['partner_id', 'name', 'file_path'],
       
       properties: {
-        id: { type: 'integer' },
-        partner_id: { type: 'integer' },
-        contract_id: { type: ['integer', 'null'] },
+        id: { type: ['integer','string'] },
+        partner_id: { type: ['integer','string'] },
+        contract_id: { type: ['integer', 'string','null'] },
         type: { 
           type: 'string', 
           enum: ['CONTRACT', 'CERTIFICATE', 'LICENSE', 'INSURANCE', 'INVOICE', 'OTHER'],

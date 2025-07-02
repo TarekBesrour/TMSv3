@@ -15,6 +15,7 @@ class ReferenceDataController {
    */
   static async getReferenceTypes(req, res) {
     try {
+      console.log('req.user:', req.user);
       const types = await ReferenceDataService.getReferenceTypes(req.user.tenant_id);
       res.json(types);
     } catch (error) {

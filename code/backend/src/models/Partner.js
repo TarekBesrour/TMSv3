@@ -21,8 +21,8 @@ class Partner extends Model {
       required: ['name', 'type'],
       
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: ['integer', 'null'] },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string', 'null'] },
         name: { type: 'string', maxLength: 255 },
         type: { 
           type: 'string', 

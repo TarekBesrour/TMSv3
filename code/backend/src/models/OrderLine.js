@@ -31,13 +31,13 @@ class OrderLine extends Model {
       required: ['order_id', 'product_name', 'quantity'],
 
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
-        order_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
+        order_id: { type: ['integer','string'] },
         line_number: { type: 'integer' },
         
         // Product information
-        product_id: { type: ['integer', 'null'] },
+        product_id: { type: ['integer', 'string','null'] },
         product_code: { type: ['string', 'null'], maxLength: 50 },
         product_name: { type: 'string', maxLength: 255 },
         description: { type: ['string', 'null'] },

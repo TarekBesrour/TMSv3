@@ -24,8 +24,8 @@ class User extends Model {
       required: ['email', 'password_hash', 'first_name', 'last_name'],
       
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: ['integer', 'null'] },
+        id: { type: ['integer', 'string'] },
+        tenant_id: { type: ['integer','string', 'null'] },
         email: { type: 'string', format: 'email', maxLength: 255 },
         password_hash: { type: 'string', maxLength: 255 },
         first_name: { type: 'string', maxLength: 100 },
@@ -45,8 +45,8 @@ class User extends Model {
         email_verified_at: { type: ['string', 'null'], format: 'date-time' },
         created_at: { type: 'string', format: 'date-time' },
         updated_at: { type: 'string', format: 'date-time' },
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: ['integer','string', 'null'] },
+        updated_by: { type: ['integer','string', 'null'] }
       }
     };
   }

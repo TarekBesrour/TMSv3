@@ -31,9 +31,9 @@ class TransportSegment extends Model {
       required: ['shipment_id', 'transport_mode', 'sequence_number', 'status'],
 
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
-        shipment_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
+        shipment_id: { type: ['integer','string'] },
         sequence_number: { type: 'integer' },
         reference: { type: ['string', 'null'], maxLength: 50 },
         
@@ -42,13 +42,13 @@ class TransportSegment extends Model {
           type: 'string', 
           enum: ['road', 'rail', 'sea', 'air', 'inland_waterway'] 
         },
-        carrier_id: { type: ['integer', 'null'] },
+        carrier_id: { type: ['integer', 'string','null'] },
         carrier_reference: { type: ['string', 'null'], maxLength: 100 },
         
         // Vehicle/vessel information
-        vehicle_id: { type: ['integer', 'null'] },
+        vehicle_id: { type: ['integer', 'string','null'] },
         vehicle_reference: { type: ['string', 'null'], maxLength: 100 },
-        driver_id: { type: ['integer', 'null'] },
+        driver_id: { type: ['integer', 'string','null'] },
         
         // For sea/air transport
         vessel_name: { type: ['string', 'null'], maxLength: 100 },
@@ -63,7 +63,7 @@ class TransportSegment extends Model {
         wagon_number: { type: ['string', 'null'], maxLength: 20 },
         
         // Locations
-        origin_location_id: { type: ['integer', 'null'] },
+        origin_location_id: { type: ['integer', 'string','null'] },
         origin_location_type: { 
           type: ['string', 'null'], 
           enum: ['address', 'port', 'airport', 'terminal', 'warehouse', 'hub', null] 
@@ -72,7 +72,7 @@ class TransportSegment extends Model {
         origin_location_name: { type: ['string', 'null'], maxLength: 255 },
         origin_country: { type: ['string', 'null'], maxLength: 2 },
         
-        destination_location_id: { type: ['integer', 'null'] },
+        destination_location_id: { type: ['integer', 'string','null'] },
         destination_location_type: { 
           type: ['string', 'null'], 
           enum: ['address', 'port', 'airport', 'terminal', 'warehouse', 'hub', null] 

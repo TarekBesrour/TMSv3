@@ -22,11 +22,11 @@ class UserRole extends Model {
       required: ['user_id', 'role_id'],
       
       properties: {
-        user_id: { type: 'integer' },
-        role_id: { type: 'integer' },
+        user_id: { type: ['integer','string'] },
+        role_id: { type: ['integer', 'string'] },
         assigned_at: { type: 'string', format: 'date-time' },
-        assigned_by: { type: ['integer', 'null'] },
-        tenant_id: { type: ['integer', 'null'] }
+        assigned_by: { type: ['integer','string', 'null'] },
+        tenant_id: { type: ['integer','string', 'null'] }
       }
     };
   }

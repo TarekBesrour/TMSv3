@@ -31,10 +31,10 @@ class CustomsInfo extends Model {
       required: ['status'],
 
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
-        order_id: { type: ['integer', 'null'] },
-        shipment_id: { type: ['integer', 'null'] },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
+        order_id: { type: ['integer', 'string','null'] },
+        shipment_id: { type: ['integer', 'string','null'] },
         
         // Customs declaration information
         customs_declaration_number: { type: ['string', 'null'], maxLength: 100 },
@@ -76,10 +76,10 @@ class CustomsInfo extends Model {
         },
         
         // Parties
-        exporter_id: { type: ['integer', 'null'] },
-        importer_id: { type: ['integer', 'null'] },
-        declarant_id: { type: ['integer', 'null'] },
-        customs_broker_id: { type: ['integer', 'null'] },
+        exporter_id: { type: ['integer', 'string','null'] },
+        importer_id: { type: ['integer', 'string','null'] },
+        declarant_id: { type: ['integer', 'string','null'] },
+        customs_broker_id: { type: ['integer', 'string','null'] },
         
         // Status
         status: { 

@@ -31,11 +31,11 @@ class TrackingEvent extends Model {
       required: ['event_type', 'timestamp'],
 
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
-        shipment_id: { type: ['integer', 'null'] },
-        transport_segment_id: { type: ['integer', 'null'] },
-        transport_unit_id: { type: ['integer', 'null'] },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
+        shipment_id: { type: ['integer', 'string','null'] },
+        transport_segment_id: { type: ['integer', 'string','null'] },
+        transport_unit_id: { type: ['integer', 'string','null'] },
         
         // Event information
         event_type: { 
@@ -63,7 +63,7 @@ class TrackingEvent extends Model {
             'hub', 'border', 'customs', 'vehicle', null
           ] 
         },
-        location_id: { type: ['integer', 'null'] },
+        location_id: { type: ['integer', 'string','null'] },
         location_name: { type: ['string', 'null'], maxLength: 255 },
         location_code: { type: ['string', 'null'], maxLength: 50 },
         country: { type: ['string', 'null'], maxLength: 2 },

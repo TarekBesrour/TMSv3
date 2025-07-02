@@ -63,7 +63,7 @@ class UserController {
             .where('roles.name', role)
         );
       }
-      
+      //console.log(query.toKnexQuery().toString());
       const result = await query;
       
       res.json({

@@ -1,5 +1,6 @@
 const PaymentService = require('../services/PaymentService');
 const { validationResult } = require('express-validator');
+const BankAccount = require('../models/BankAccount');
 
 class PaymentController {
   /**
@@ -284,6 +285,7 @@ class PaymentController {
    */
   async createBankAccount(req, res) {
     try {
+      //console.log('BODY REÇU:', req.body);
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({
@@ -300,8 +302,11 @@ class PaymentController {
         updated_by: req.user.id
       };
 
+      delete accountData.id;
+
       const validationErrors = await BankAccount.validateBankAccount(accountData);
       if (validationErrors.length > 0) {
+        console.log('Erreurs de validation compte bancaire:', validationErrors);
         return res.status(400).json({
           success: false,
           message: 'Invalid bank account data',
@@ -309,6 +314,7 @@ class PaymentController {
         });
       }
 
+      
       const bankAccount = await BankAccount.query().insert(accountData);
 
       res.status(201).json({
@@ -317,6 +323,7 @@ class PaymentController {
         data: bankAccount
       });
     } catch (error) {
+      console.error('Erreur création compte bancaire:', error);
       res.status(500).json({
         success: false,
         message: error.message
@@ -360,15 +367,51 @@ class PaymentController {
    */
   async getBankAccounts(req, res) {
     try {
-      const bankAccounts = await BankAccount.query()
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.pageSize) || 20;
+      const offset = (page - 1) * limit;
+
+      // Filtrage par tenant
+      const query = BankAccount.query()
         .where('tenant_id', req.user.tenant_id)
         .orderBy('account_name', 'asc');
 
+      //Filtres 
+      if (req.query.account_type) {
+        query.where('account_type', req.query.account_type);
+      }
+      if (req.query.currency) {
+        query.where('currency', req.query.currency);
+      }
+      if (req.query.search_term) {
+      const search = `%${req.query.search_term}%`;
+      query.where(builder =>
+        builder
+          .where('account_name', 'ilike', search)
+          .orWhere('account_number', 'ilike', search)
+          .orWhere('bank_name', 'ilike', search)
+      );
+      }
+
+      // Compte total
+      const total = await query.resultSize();
+      // Récupère les comptes paginés
+      const bankAccounts = await query.clone().offset(offset).limit(limit);
+
+      const totalPages = Math.ceil(total / limit) || 1;
+
       res.json({
         success: true,
-        data: bankAccounts
+        data: bankAccounts,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages
+        }
       });
     } catch (error) {
+      console.log('Erreur récupération comptes bancaires:', error);
       res.status(500).json({
         success: false,
         message: error.message
@@ -397,7 +440,8 @@ class PaymentController {
         ...req.body,
         updated_by: req.user.id
       };
-
+      delete accountData.id;
+      
       const existingAccount = await BankAccount.query().findById(id);
       if (!existingAccount || existingAccount.tenant_id !== req.user.tenant_id) {
         return res.status(404).json({

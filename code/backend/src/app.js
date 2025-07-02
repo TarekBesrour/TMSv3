@@ -4,6 +4,8 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 
+dotenv.config();
+
 // --- Initialisation de la connexion Knex et Objection ---
 const Knex = require('knex');
 const { Model } = require('objection');
@@ -13,7 +15,7 @@ const knex = Knex(knexConfig[process.env.NODE_ENV || 'development']);
 Model.knex(knex);
 // --- Fin initialisation ---
 
-dotenv.config();
+
 
 const app = express();
 
@@ -53,7 +55,7 @@ app.get("/", (req, res) => {
 // Error handling middleware (optional, but good practice)
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send("Something broke!");
+  res.status(500).send(err.message || 'Something broke!');
 });
 
 const PORT = process.env.PORT || 3001;

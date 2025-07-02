@@ -21,8 +21,8 @@ class Driver extends Model {
       required: ['partner_id', 'first_name', 'last_name'],
       
       properties: {
-        id: { type: 'integer' },
-        partner_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        partner_id: { type: ['integer','string'] },
         first_name: { type: 'string', maxLength: 100 },
         last_name: { type: 'string', maxLength: 100 },
         license_number: { type: ['string', 'null'], maxLength: 50 },

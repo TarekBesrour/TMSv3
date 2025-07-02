@@ -14,8 +14,8 @@ class SystemConfiguration extends Model {
       type: 'object',
       required: ['tenant_id', 'config_key', 'config_value'],
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
         
         // Configuration key and value
         config_key: { type: 'string', maxLength: 255 },
@@ -37,8 +37,8 @@ class SystemConfiguration extends Model {
         default_value: { type: ['string', 'null'] },
         
         // Audit
-        created_by: { type: 'integer' },
-        updated_by: { type: 'integer' },
+        created_by: { type: ['integer','string'] },
+        updated_by: { type: ['integer','string'] },
         created_at: { type: 'string', format: 'date-time' },
         updated_at: { type: 'string', format: 'date-time' }
       }

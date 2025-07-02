@@ -5,7 +5,9 @@ const InvoiceController = require('../controllers/InvoiceController');
 const authMiddleware = require('../middlewares/authMiddleware');
 
 // Middleware d'authentification pour toutes les routes
-router.use(authMiddleware.verifyToken);
+//router.use(authMiddleware.verifyToken);
+router.use(authMiddleware.authenticate);
+
 
 // Validation des données de facture
 const validateInvoiceData = [

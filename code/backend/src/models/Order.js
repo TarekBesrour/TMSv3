@@ -40,11 +40,11 @@ class Order extends Model {
       required: ['customer_id', 'status'],
 
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
         reference: { type: 'string', maxLength: 50 },
         external_reference: { type: ['string', 'null'], maxLength: 100 },
-        customer_id: { type: 'integer' },
+        customer_id: { type: ['integer','string'] },
         customer_order_reference: { type: ['string', 'null'], maxLength: 100 },
         
         // Dates
@@ -87,8 +87,8 @@ class Order extends Model {
         total_cost: { type: ['number', 'null'] },
         
         // Shipping information
-        origin_address_id: { type: ['integer', 'null'] },
-        destination_address_id: { type: ['integer', 'null'] },
+        origin_address_id: { type: ['integer', 'string','null'] },
+        destination_address_id: { type: ['integer', 'string','null'] },
         
         // Multimodal preferences
         preferred_transport_modes: { 

@@ -22,7 +22,7 @@ class Tenant extends Model {
       required: ['name', 'schema_name', 'status'],
       
       properties: {
-        id: { type: 'integer' },
+        id: { type: ['integer', 'string'] },
         name: { type: 'string', maxLength: 100 },
         schema_name: { type: 'string', maxLength: 50 },
         domain: { type: ['string', 'null'], maxLength: 255 },

@@ -39,10 +39,10 @@ class Shipment extends Model {
       required: ['status'],
 
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
         reference: { type: 'string', maxLength: 50 },
-        order_id: { type: ['integer', 'null'] },
+        order_id: { type: ['integer', 'string','null'] },
         
         // Type and classification
         shipment_type: { 
@@ -55,11 +55,11 @@ class Shipment extends Model {
         },
         
         // Locations
-        origin_address_id: { type: ['integer', 'null'] },
-        destination_address_id: { type: ['integer', 'null'] },
+        origin_address_id: { type: ['integer', 'string','null'] },
+        destination_address_id: { type: ['integer', 'string','null'] },
         
         // Primary carrier
-        carrier_id: { type: ['integer', 'null'] },
+        carrier_id: { type: ['integer', 'string','null'] },
         carrier_reference: { type: ['string', 'null'], maxLength: 100 },
         
         // Primary transport mode

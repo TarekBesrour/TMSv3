@@ -22,8 +22,8 @@ class Role extends Model {
       required: ['name', 'description'],
       
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: ['integer', 'null'] },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string', 'null'] },
         name: { type: 'string', maxLength: 50 },
         description: { type: 'string', maxLength: 255 },
         is_system_role: { type: 'boolean', default: false },

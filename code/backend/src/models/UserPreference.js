@@ -22,7 +22,7 @@ class UserPreference extends Model {
       required: ['user_id'],
       
       properties: {
-        user_id: { type: 'integer' },
+        user_id: { type: ['integer','string'] },
         language: { type: 'string', maxLength: 10, default: 'fr' },
         theme: { type: 'string', maxLength: 20, default: 'light' },
         timezone: { type: 'string', maxLength: 50, default: 'Europe/Paris' },

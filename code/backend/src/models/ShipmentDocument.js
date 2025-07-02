@@ -31,12 +31,12 @@ class ShipmentDocument extends Model {
       required: ['document_type', 'status'],
 
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
-        shipment_id: { type: ['integer', 'null'] },
-        order_id: { type: ['integer', 'null'] },
-        customs_info_id: { type: ['integer', 'null'] },
-        transport_segment_id: { type: ['integer', 'null'] },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
+        shipment_id: { type: ['integer', 'string','null'] },
+        order_id: { type: ['integer', 'string','null'] },
+        customs_info_id: { type: ['integer', 'string','null'] },
+        transport_segment_id: { type: ['integer', 'string','null'] },
         
         // Document information
         document_type: { 
@@ -74,8 +74,8 @@ class ShipmentDocument extends Model {
         expiry_date: { type: ['string', 'null'], format: 'date-time' },
         
         // Parties
-        issuer_id: { type: ['integer', 'null'] },
-        recipient_id: { type: ['integer', 'null'] },
+        issuer_id: { type: ['integer', 'string','null'] },
+        recipient_id: { type: ['integer', 'string','null'] },
         
         // Additional information
         notes: { type: ['string', 'null'] },

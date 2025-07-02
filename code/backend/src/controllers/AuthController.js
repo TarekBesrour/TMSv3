@@ -58,6 +58,7 @@ class AuthController {
       }
 
       const { email, password, firstName, lastName, tenantId } = req.body;
+      const parsedTenantId = tenantId ? Number(tenantId) : null;
 
       // Check if email already exists
       const existingUser = await User.query().where('email', email).first();
@@ -76,7 +77,7 @@ class AuthController {
           password_hash: passwordHash,
           first_name: firstName,
           last_name: lastName,
-          tenant_id: tenantId,
+          tenant_id: parsedTenantId,
           status: 'pending' // Require email verification
         });
 

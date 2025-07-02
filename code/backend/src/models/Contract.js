@@ -15,14 +15,14 @@ class Contract extends BaseModel {
       type: 'object',
       required: ['contract_reference', 'contract_type', 'partner_id', 'valid_from'],
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
         contract_reference: { type: 'string', maxLength: 100 },
         contract_type: { 
           type: 'string',
           enum: ['client', 'carrier']
         },
-        partner_id: { type: 'integer' },
+        partner_id: { type: ['integer','string'] },
         valid_from: { type: 'string', format: 'date-time' },
         valid_to: { type: ['string', 'null'], format: 'date-time' },
         payment_terms: { type: ['string', 'null'], maxLength: 200 },

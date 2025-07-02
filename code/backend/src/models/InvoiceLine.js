@@ -11,8 +11,8 @@ class InvoiceLine extends BaseModel {
       type: 'object',
       required: ['invoice_id', 'description', 'quantity', 'unit_price', 'line_total'],
       properties: {
-        id: { type: 'integer' },
-        invoice_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        invoice_id: { type: ['integer','string'] },
         
         // Description du service/produit
         description: { type: 'string', minLength: 1 },
@@ -37,11 +37,11 @@ class InvoiceLine extends BaseModel {
         },
         
         // Références
-        order_id: { type: 'integer' },
-        shipment_id: { type: 'integer' },
-        segment_id: { type: 'integer' },
-        rate_id: { type: 'integer' },
-        surcharge_id: { type: 'integer' },
+        order_id: { type: ['integer','string'] },
+        shipment_id: { type: ['integer','string'] },
+        segment_id: { type: ['integer','string'] },
+        rate_id: { type: ['integer','string'] },
+        surcharge_id: { type: ['integer','string'] },
         
         // Informations de transport
         origin: { type: 'string' },
@@ -66,11 +66,11 @@ class InvoiceLine extends BaseModel {
         is_billable: { type: 'boolean', default: true },
         
         // Relations
-        tenant_id: { type: 'integer' },
+        tenant_id: { type: ['integer','string'] },
         
         // Audit
-        created_by: { type: 'integer' },
-        updated_by: { type: 'integer' },
+        created_by: { type: ['integer','string'] },
+        updated_by: { type: ['integer','string'] },
         created_at: { type: 'string', format: 'date-time' },
         updated_at: { type: 'string', format: 'date-time' }
       }

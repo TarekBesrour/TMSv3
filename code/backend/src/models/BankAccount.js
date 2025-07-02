@@ -14,8 +14,8 @@ class BankAccount extends Model {
       type: 'object',
       required: ['tenant_id', 'account_name', 'account_number', 'bank_name', 'currency'],
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
         
         // Informations du compte
         account_name: { type: 'string', maxLength: 255 },
@@ -41,7 +41,8 @@ class BankAccount extends Model {
         },
         
         // Solde (optionnel, pour suivi)
-        current_balance: { type: ['number', 'null'] },
+        //current_balance: { type: ['number', 'null'] },
+        current_balance: { anyOf: [{ type: 'number' }, { type: 'null' }] },
         last_balance_update: { type: ['string', 'null'], format: 'date-time' },
         
         // Notes et description
@@ -49,8 +50,8 @@ class BankAccount extends Model {
         notes: { type: ['string', 'null'] },
         
         // Audit
-        created_by: { type: 'integer' },
-        updated_by: { type: 'integer' },
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' },
         created_at: { type: 'string', format: 'date-time' },
         updated_at: { type: 'string', format: 'date-time' }
       }

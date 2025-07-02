@@ -14,8 +14,8 @@ class ReferenceData extends Model {
       type: 'object',
       required: ['tenant_id', 'category', 'code', 'label'],
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
         
         // Reference data identification
         category: { type: 'string', maxLength: 100 },
@@ -28,7 +28,7 @@ class ReferenceData extends Model {
         metadata: { type: ['object', 'null'] },
         
         // Hierarchy and ordering
-        parent_id: { type: ['integer', 'null'] },
+        parent_id: { type: ['integer', 'string','null'] },
         sort_order: { type: 'integer', default: 0 },
         level: { type: 'integer', default: 0 },
         
@@ -41,8 +41,8 @@ class ReferenceData extends Model {
         language_code: { type: 'string', maxLength: 5, default: 'fr' },
         
         // Audit
-        created_by: { type: 'integer' },
-        updated_by: { type: 'integer' },
+        created_by: { type: ['integer','string'] },
+        updated_by: { type: ['integer','string'] },
         created_at: { type: 'string', format: 'date-time' },
         updated_at: { type: 'string', format: 'date-time' }
       }

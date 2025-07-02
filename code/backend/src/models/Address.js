@@ -21,8 +21,8 @@ class Address extends Model {
       required: ['partner_id', 'street_line1', 'city', 'postal_code', 'country'],
       
       properties: {
-        id: { type: 'integer' },
-        partner_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        partner_id: { type: ['integer','string'] },
         name: { type: ['string', 'null'], maxLength: 100 },
         street_line1: { type: 'string', maxLength: 255 },
         street_line2: { type: ['string', 'null'], maxLength: 255 },

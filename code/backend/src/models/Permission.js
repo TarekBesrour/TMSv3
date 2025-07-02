@@ -22,7 +22,7 @@ class Permission extends Model {
       required: ['name', 'code', 'module'],
       
       properties: {
-        id: { type: 'integer' },
+        id: { type: ['integer','string'] },
         name: { type: 'string', maxLength: 100 },
         code: { type: 'string', maxLength: 100 },
         module: { type: 'string', maxLength: 50 },

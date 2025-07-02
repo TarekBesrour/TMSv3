@@ -14,8 +14,8 @@ class Payment extends Model {
       type: 'object',
       required: ['tenant_id', 'payment_type', 'amount', 'currency', 'payment_date', 'status'],
       properties: {
-        id: { type: 'integer' },
-        tenant_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        tenant_id: { type: ['integer','string'] },
         payment_type: { 
           type: 'string', 
           enum: ['incoming', 'outgoing'] 
@@ -23,9 +23,9 @@ class Payment extends Model {
         reference: { type: 'string', maxLength: 100 },
         
         // Relations
-        invoice_id: { type: ['integer', 'null'] },
-        carrier_invoice_id: { type: ['integer', 'null'] },
-        partner_id: { type: 'integer' },
+        invoice_id: { type: ['integer', 'string','null'] },
+        carrier_invoice_id: { type: ['integer', 'string','null'] },
+        partner_id: { type: ['integer','string'] },
         
         // Montants
         amount: { type: 'number', minimum: 0 },
@@ -48,7 +48,7 @@ class Payment extends Model {
         },
         
         // Informations bancaires
-        bank_account_id: { type: ['integer', 'null'] },
+        bank_account_id: { type: ['integer', 'string','null'] },
         transaction_reference: { type: ['string', 'null'], maxLength: 255 },
         
         // Descriptions et notes
@@ -56,8 +56,8 @@ class Payment extends Model {
         notes: { type: ['string', 'null'] },
         
         // Audit
-        created_by: { type: 'integer' },
-        updated_by: { type: 'integer' },
+        created_by: { type: ['integer','string'] },
+        updated_by: { type: ['integer','string'] },
         created_at: { type: 'string', format: 'date-time' },
         updated_at: { type: 'string', format: 'date-time' }
       }

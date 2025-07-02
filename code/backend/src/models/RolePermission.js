@@ -22,8 +22,8 @@ class RolePermission extends Model {
       required: ['role_id', 'permission_id'],
       
       properties: {
-        role_id: { type: 'integer' },
-        permission_id: { type: 'integer' },
+        role_id: { type: ['integer','string'] },
+        permission_id: { type: ['integer','string'] },
         granted_at: { type: 'string', format: 'date-time' },
         granted_by: { type: ['integer', 'null'] }
       }

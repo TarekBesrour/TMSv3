@@ -21,8 +21,8 @@ class Vehicle extends Model {
       required: ['partner_id', 'registration_number', 'type'],
       
       properties: {
-        id: { type: 'integer' },
-        partner_id: { type: 'integer' },
+        id: { type: ['integer','string'] },
+        partner_id: { type: ['integer','string'] },
         registration_number: { type: 'string', maxLength: 50 },
         type: { 
           type: 'string', 
