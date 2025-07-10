@@ -10,7 +10,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   CheckIcon,
   XMarkIcon,
-  ExclamationTriangleIcon
+  ExclamationTriangleIcon,
+  ArrowLeftIcon
 } from '@heroicons/react/24/outline';
 import {
   ReferenceEntry,
@@ -20,7 +21,7 @@ import {
 import { useReferenceData } from '../hooks/useReferenceData';
 
 interface ReferenceEntryFormProps {
-  mode: 'create' | 'edit';
+  mode: 'create' | 'edit' | 'view'; // Added 'view' mode
   typeId: string;
   entryId?: number;
   onSuccess?: () => void;
@@ -34,6 +35,7 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
   onSuccess,
   onCancel
 }) => {
+   console.log('ReferenceEntryForm - Props:', { mode, typeId, entryId });
   const navigate = useNavigate();
   const { currentEntry, loading, error, loadEntry, createEntry, updateEntry, clearError } = useReferenceData();
 
@@ -53,13 +55,15 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
-    if (mode === 'edit' && entryId) {
+    if ((mode === 'edit' || mode === 'view') && entryId) { // Load data for edit and view modes
+      console.log('ReferenceEntryForm - Calling loadEntry for:', typeId, entryId);
       loadEntry(typeId, entryId);
     }
   }, [mode, typeId, entryId, loadEntry]);
 
   useEffect(() => {
-    if (mode === 'edit' && currentEntry) {
+    if ((mode === 'edit' || mode === 'view') && currentEntry) { // Populate form data for edit and view modes
+      console.log('useReferenceData - currentEntry updated:', currentEntry);
       setFormData({
         code: currentEntry.code,
         label: currentEntry.label,
@@ -171,13 +175,24 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
       <div className="bg-white shadow rounded-lg">
         <div className="px-4 py-5 sm:p-6">
           <div className="mb-6">
+            <div className="flex items-center mb-4">
+              <button
+                onClick={handleCancel}
+                className="mr-4 inline-flex items-center text-sm text-gray-500 hover:text-gray-700"
+              >
+                <ArrowLeftIcon className="h-4 w-4 mr-1" />
+                Retour à la liste
+              </button>
+            </div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
-              {mode === 'create' ? 'Nouvelle entrée de référentiel' : 'Modifier l\'entrée de référentiel'}
+              {mode === 'create' ? 'Nouvelle entrée de référentiel' : mode === 'edit' ? 'Modifier l\'entrée de référentiel' : 'Détails de l\'entrée de référentiel'}
             </h3>
             <p className="mt-1 text-sm text-gray-500">
               {mode === 'create' 
                 ? 'Créer une nouvelle entrée dans le référentiel'
-                : 'Modifier les informations de l\'entrée existante'
+                : mode === 'edit' || mode === 'view'
+                  ? 'Modifier les informations de l\'entrée existante'
+                  : 'Consulter les détails de l\'entrée de référentiel'
               }
             </p>
           </div>
@@ -211,7 +226,7 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
                   formErrors.code ? 'border-red-300' : ''
                 }`}
                 placeholder="Entrez le code unique"
-                disabled={isSubmitting}
+                disabled={isSubmitting || mode === 'view'} // Disable in view mode
               />
               {formErrors.code && (
                 <p className="mt-1 text-sm text-red-600">{formErrors.code}</p>
@@ -232,7 +247,7 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
                   formErrors.label ? 'border-red-300' : ''
                 }`}
                 placeholder="Entrez le libellé"
-                disabled={isSubmitting}
+                disabled={isSubmitting || mode === 'view'} // Disable in view mode
               />
               {formErrors.label && (
                 <p className="mt-1 text-sm text-red-600">{formErrors.label}</p>
@@ -253,7 +268,7 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
                   formErrors.description ? 'border-red-300' : ''
                 }`}
                 placeholder="Entrez une description (optionnel)"
-                disabled={isSubmitting}
+                disabled={isSubmitting || mode === 'view'} // Disable in view mode
               />
               {formErrors.description && (
                 <p className="mt-1 text-sm text-red-600">{formErrors.description}</p>
@@ -274,7 +289,7 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
                   formErrors.value ? 'border-red-300' : ''
                 }`}
                 placeholder="Entrez une valeur (optionnel)"
-                disabled={isSubmitting}
+                disabled={isSubmitting || mode === 'view'} // Disable in view mode
               />
               {formErrors.value && (
                 <p className="mt-1 text-sm text-red-600">{formErrors.value}</p>
@@ -293,7 +308,7 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
                 onChange={(e) => handleInputChange('sort_order', parseInt(e.target.value) || 0)}
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 min="0"
-                disabled={isSubmitting}
+                disabled={isSubmitting || mode === 'view'} // Disable in view mode
               />
             </div>
 
@@ -307,7 +322,7 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
                 value={formData.language_code}
                 onChange={(e) => handleInputChange('language_code', e.target.value)}
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                disabled={isSubmitting}
+                disabled={isSubmitting || mode === 'view'} // Disable in view mode
               >
                 <option value="fr">Français (fr)</option>
                 <option value="en">Anglais (en)</option>
@@ -325,7 +340,7 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
                 checked={formData.is_active}
                 onChange={(e) => handleInputChange('is_active', e.target.checked)}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                disabled={isSubmitting}
+                disabled={isSubmitting || mode === 'view'} // Disable in view mode
               />
               <label htmlFor="is_active" className="ml-2 block text-sm text-gray-900">
                 Entrée active
@@ -333,34 +348,36 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
             </div>
 
             {/* Form Actions */}
-            <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                disabled={isSubmitting}
-              >
-                <XMarkIcon className="h-4 w-4 mr-2" />
-                Annuler
-              </button>
-              <button
-                type="submit"
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    {mode === 'create' ? 'Création...' : 'Modification...'}
-                  </>
-                ) : (
-                  <>
-                    <CheckIcon className="h-4 w-4 mr-2" />
-                    {mode === 'create' ? 'Créer' : 'Modifier'}
-                  </>
-                )}
-              </button>
-            </div>
+            {mode !== 'view' && ( // Hide buttons in view mode
+              <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  disabled={isSubmitting}
+                >
+                  <XMarkIcon className="h-4 w-4 mr-2" />
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      {mode === 'create' ? 'Création...' : 'Modification...'}
+                    </>
+                  ) : (
+                    <>
+                      <CheckIcon className="h-4 w-4 mr-2" />
+                      {mode === 'create' ? 'Créer' : 'Modifier'}
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
           </form>
         </div>
       </div>
@@ -369,4 +386,3 @@ const ReferenceEntryForm: React.FC<ReferenceEntryFormProps> = ({
 };
 
 export default ReferenceEntryForm;
-

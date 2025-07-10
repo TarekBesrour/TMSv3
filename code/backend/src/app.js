@@ -35,6 +35,7 @@ const adminRoutes = require("./routes/adminRoutes");
 const tourPlanningRoutes = require("./routes/tourPlanningRoutes");
 const resourceAllocationRoutes = require("./routes/resourceAllocationRoutes");
 const referenceDataRoutes = require('./routes/referenceDataRoutes');
+const partnerRoutes = require('./routes/partnerRoutes');
 
 // Use routes
 app.use("/api/auth", authRoutes);
@@ -46,6 +47,7 @@ app.use("/api", adminRoutes); // Using /api as base for admin and configuration
 app.use("/api", tourPlanningRoutes); // Using /api as base for tour planning
 app.use("/api", resourceAllocationRoutes); // Using /api as base for resource allocation
 app.use('/api/v1/references', referenceDataRoutes);
+app.use('/api/v1/partners', partnerRoutes);
 
 // Basic route for testing
 app.get("/", (req, res) => {

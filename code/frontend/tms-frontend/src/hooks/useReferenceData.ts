@@ -137,7 +137,7 @@ export const useReferenceData = (): UseReferenceDataReturn => {
 
     try {
       const response = await ReferenceDataApiService.getReferenceEntry(typeId, id);
-      
+      console.log('useReferenceData - API Response for loadEntry:', response);
       if (response.error) {
         handleApiError(response.error);
         return;

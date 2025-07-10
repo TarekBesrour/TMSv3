@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Equipment } from '../types/equipment';
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { apiFetch } from '../utils/apiFetch';
 
 const EquipmentList: React.FC = () => {
   const [equipments, setEquipments] = useState<Equipment[]>([]);
@@ -12,7 +13,7 @@ const EquipmentList: React.FC = () => {
   useEffect(() => {
     const fetchEquipments = async () => {
       try {
-        const response = await fetch('/api/equipments');
+        const response = await apiFetch('/equipments');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

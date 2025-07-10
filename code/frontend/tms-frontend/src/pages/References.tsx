@@ -61,6 +61,7 @@ const References: React.FC = () => {
     const typeNames: Record<string, string> = {
       'transport_modes': 'Modes de Transport',
       'vehicle_types': 'Types de Véhicules',
+      'equipment_type': 'Types d\'Equipement',
       'cargo_types': 'Types de Marchandises',
       'incoterms': 'Incoterms',
       'currencies': 'Devises',

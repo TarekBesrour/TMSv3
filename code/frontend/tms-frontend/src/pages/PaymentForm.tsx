@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeftIcon, ArrowDownTrayIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import type { PaymentStatus, PaymentType, PaymentMethod } from '../types/payment';
-import type { Partner } from '../types/partner';
+import type { Partner } from '../types/partner.js';
 import type { Invoice } from '../types/invoice';
 import type { BankAccount } from '../types/bankAccount';
 
@@ -108,7 +108,7 @@ const PaymentForm = () => {
       }
 
       // Fetch Bank Accounts
-      const bankAccountsResponse = await fetch('/api/bank-accounts');
+      const bankAccountsResponse = await fetch('/bank-accounts');
       const bankAccountsData = await bankAccountsResponse.json();
       if (bankAccountsData.success) {
         setBankAccounts(bankAccountsData.data);

@@ -53,9 +53,10 @@ const BankAccountDetail: React.FC = () => {
   const handleDeleteBankAccount = async () => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce compte bancaire ?')) {
       try {
-        const response = await fetch(`/bank-accounts/${id}`, {
+        /* const response = await fetch(`/bank-accounts/${id}`, {
           method: 'DELETE'
-        });
+        }); */
+        const response = await apiFetch(`/bank-accounts/${id}`, { method: 'DELETE' });
         const data = await response.json();
         if (data.success) {
           navigate('/bank-accounts'); // Redirect to bank accounts list

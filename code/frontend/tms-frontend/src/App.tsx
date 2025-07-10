@@ -8,6 +8,7 @@ import Planning from './pages/Planning';
 import Shipments from './pages/Shipments';
 import Documents from './pages/Documents';
 import Fleet from './pages/Fleet';
+import VehicleDetails from './pages/VehicleDetails';
 import Maintenance from './pages/Maintenance';
 import Partners from './pages/Partners';
 import KPIs from './pages/KPIs';
@@ -38,7 +39,10 @@ import Surcharges from './pages/Surcharges';
 import SurchargeForm from './pages/SurchargeForm';
 import SurchargeDetail from './pages/SurchargeDetail';
 import Sites from './pages/Sites';
+import SiteForm from './pages/SiteForm';
+import SiteDetail from './pages/SiteDetail';
 import Drivers from './pages/Drivers';
+import DriverDetails from './pages/DriverDetails';
 import Contacts from './pages/Contacts';
 import Vehicles from './pages/Vehicles';
 import UserManagement from './pages/UserManagement';
@@ -53,10 +57,111 @@ import EquipmentForm from './pages/EquipmentForm';
 import Login from './pages/Login';
 import { useAuth } from './contexts/AuthContext';
 import { useParams } from 'react-router-dom';
+import PartnerDetails from './pages/PartnerDetails';
+import PartnerForm from './pages/PartnerForm';
+// Import new specialized components
+import Clients from './pages/Clients';
+import ClientDetails from './pages/ClientDetails';
+import ClientForm from './pages/ClientForm';
+import Carriers from './pages/Carriers';
+import CarrierDetails from './pages/CarrierDetails';
+import CarrierForm from './pages/CarrierForm';
 
-function ReferenceEntryFormWrapper(props: { mode: 'create' | 'edit' }) {
-  const { typeId } = useParams<{ typeId: string }>();
-  return <ReferenceEntryForm {...props} typeId={typeId!} />;
+import { 
+  HomeIcon, 
+  TruckIcon, 
+  DocumentTextIcon, 
+  CubeIcon, 
+  ChartBarIcon, 
+  CogIcon, 
+  UserGroupIcon,
+  CalendarIcon,
+  ClipboardDocumentListIcon,
+  BanknotesIcon,
+  ChatBubbleLeftRightIcon,
+  WrenchScrewdriverIcon,
+  UserIcon
+} from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
+
+// New navigation structure based on functional modules of the TMS
+
+const navigation = [
+  {
+    title: "Partenaires & Entités",
+    items: [
+      { name: 'Partenaires', href: '/partners', icon: UserGroupIcon },
+      { name: 'Clients', href: '/clients', icon: UserGroupIcon },
+      { name: 'Transporteurs', href: '/carriers', icon: UserGroupIcon },
+      { name: 'Contacts', href: '/contacts', icon: UserIcon },
+      { name: 'Sites', href: '/sites', icon: CubeIcon },
+    ]
+  },
+  {
+    title: "Commandes & Expéditions",
+    items: [
+      { name: 'Commandes', href: '/orders', icon: ClipboardDocumentListIcon },
+      { name: 'Expéditions', href: '/shipments', icon: TruckIcon },
+      { name: 'Planification', href: '/planning', icon: CalendarIcon, aiPowered: true, badge: 'IA' },
+      { name: 'Tournées', href: '/tours', icon: CalendarIcon },
+      { name: 'Disponibilité ressources', href: '/resource-availability', icon: CalendarIcon },
+    ]
+  },
+  {
+    title: "Coûts & Facturation",
+    items: [
+      { name: 'Facturation', href: '/billing', icon: BanknotesIcon },
+      { name: 'Paiements', href: '/payments', icon: BanknotesIcon },
+      { name: 'Comptes bancaires', href: '/bank-accounts', icon: BanknotesIcon },
+      { name: 'Tarifs', href: '/rates', icon: DocumentTextIcon },
+      { name: 'Surcharges', href: '/surcharges', icon: DocumentTextIcon },
+      { name: 'Contrats', href: '/contracts', icon: DocumentTextIcon },
+    ]
+  },
+  {
+    title: "Flotte & Ressources",
+    items: [
+      { name: 'Flotte', href: '/fleet', icon: TruckIcon },
+      { name: 'Véhicules', href: '/vehicles', icon: TruckIcon },
+      { name: 'Conducteurs', href: '/drivers', icon: UserIcon },
+      { name: 'Maintenance', href: '/maintenance', icon: WrenchScrewdriverIcon, aiPowered: true, badge: 'IA' },
+      { name: 'Équipements', href: '/equipments', icon: CubeIcon },
+    ]
+  },
+  {
+    title: "Analyse & Reporting",
+    items: [
+      { name: 'Tableau de bord', href: '/dashboard', icon: HomeIcon },
+      { name: 'KPIs', href: '/kpis', icon: ChartBarIcon, aiPowered: true, badge: 'IA' },
+      { name: 'Prévisions', href: '/forecasting', icon: ChartBarIcon, aiPowered: true, badge: 'IA' },
+      { name: 'Rapports', href: '/reports', icon: DocumentTextIcon },
+    ]
+  },
+  {
+    title: "Intégration & Connectivité",
+    items: [
+      { name: 'Référentiels', href: '/admin/references', icon: CubeIcon },
+      { name: 'Documents', href: '/documents', icon: DocumentTextIcon, aiPowered: true, badge: 'IA' },
+      { name: 'Assistant IA', href: '/assistant', icon: ChatBubbleLeftRightIcon, aiPowered: true },
+    ]
+  },
+  {
+    title: "Administration & Sécurité",
+    items: [
+      { name: 'Paramètres', href: '/settings', icon: CogIcon },
+      { name: 'Utilisateurs', href: '/usermanagement', icon: UserIcon },
+      { name: 'Rôles', href: '/rolemanagement', icon: UserGroupIcon },
+      { name: 'Administration', href: '/administration', icon: CogIcon },
+      { name: 'Profil', href: '/profile', icon: UserIcon },
+    ]
+  }
+];
+
+
+
+function ReferenceEntryFormWrapper(props: { mode: 'create' | 'edit' | 'view' }) {
+  const { typeId, id } = useParams<{ typeId: string; id?: string }>(); // Extract 'id' as well
+  return <ReferenceEntryForm {...props} typeId={typeId!} entryId={id ? parseInt(id) : undefined} />; // Pass 'id' as 'entryId'
 }
 
 // Composant de protection des routes
@@ -83,18 +188,37 @@ function App() {
         path="/*"
         element={
           <RequireAuth>
-            <AppLayout>
+            <AppLayout navigation={navigation}>
               <Routes>
                 <Route path="/" element={<Navigate to="/dashboard" replace />} />
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />                
                 <Route path="/assistant" element={<Assistant />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/planning" element={<Planning />} />
                 <Route path="/shipments" element={<Shipments />} />
                 <Route path="/documents" element={<Documents />} />
                 <Route path="/fleet" element={<Fleet />} />
+                <Route path="/vehicles/:id" element={<VehicleDetails />} />                
                 <Route path="/maintenance" element={<Maintenance />} />
-                <Route path="/partners" element={<Partners />} />        
+                <Route path="/kpis" element={<KPIs />} />
+                
+                {/* Partners routes */}
+                <Route path="/partners" element={<Partners />} />  
+                <Route path="/partners/new" element={<PartnerForm mode="create" />} />
+                <Route path="/partners/:id" element={<PartnerDetails />} />
+                <Route path="/partners/:id/edit" element={<PartnerForm mode="edit" />} />
+           {/* Clients routes */}
+              <Route path="/clients" element={<Clients />} />
+              <Route path="/clients/new" element={<ClientForm />} />
+              <Route path="/clients/:id" element={<ClientDetails />} />
+              <Route path="/clients/:id/edit" element={<ClientForm mode="edit" />} />
+              
+              {/* Carriers routes */}
+              <Route path="/carriers" element={<Carriers />} />
+              <Route path="/carriers/new" element={<CarrierForm />} />
+              <Route path="/carriers/:id" element={<CarrierDetails />} />
+              <Route path="/carriers/:id/edit" element={<CarrierForm mode="edit" />} />
+
                 <Route path="/forecasting" element={<Forecasting />} />
                 <Route path="/billing" element={<Billing />} />
                 <Route path="/settings" element={<Settings />} />        
@@ -102,6 +226,8 @@ function App() {
                 <Route path="/admin/references/:typeId" element={<ReferenceEntries />} />
                 <Route path="/admin/references/:typeId/new" element={<ReferenceEntryFormWrapper mode="create" />} />
                 <Route path="/admin/references/:typeId/:id/edit" element={<ReferenceEntryFormWrapper mode="edit" />} />
+                {/* New route for view mode */}
+                <Route path="/admin/references/:typeId/:id" element={<ReferenceEntryFormWrapper mode="view" />} /> 
 
                 {/* Payment Routes */}
                 <Route path="/payments" element={<Payments />} />
@@ -153,7 +279,11 @@ function App() {
 
                 {/* Additional Routes */}
                 <Route path="/sites" element={<Sites />} />
+                <Route path="/sites/new" element={<SiteForm />} />
+                <Route path="/sites/:id" element={<SiteDetail />} />
                 <Route path="/drivers" element={<Drivers />} />
+                <Route path="/drivers/:id" element={<DriverDetails />} />
+
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/vehicles" element={<Vehicles />} />
                 <Route path="/usermanagement" element={<UserManagement />} />
@@ -172,5 +302,3 @@ function App() {
 }
 
 export default App;
-
-

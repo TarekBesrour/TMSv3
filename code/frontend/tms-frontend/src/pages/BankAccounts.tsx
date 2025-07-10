@@ -132,23 +132,39 @@ const BankAccounts: React.FC = () => {
         <div className="px-4 py-5 sm:p-6">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {/* Search */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 flex flex-col gap-2">
               <label htmlFor="search" className="block text-sm font-medium text-gray-700">
                 Recherche
               </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                  </div>
+                  <input
+                    type="text"
+                    name="search"
+                    id="search"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                    placeholder="Nom du compte, numéro, banque..."
+                    autoComplete="off"
+                  />
                 </div>
-                <input
-                  type="text"
-                  name="search"
-                  id="search"
-                  value={searchTerm}
-                  onChange={handleSearch}
-                  className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
-                  placeholder="Nom du compte, numéro..."
-                />
+                {searchTerm && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchTerm('')}
+                    className="inline-flex items-center px-2 py-2 border border-gray-300 rounded-md bg-white text-gray-500 hover:bg-gray-50 focus:outline-none"
+                    title="Effacer la recherche"
+                  >
+                    <span className="sr-only">Effacer</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
 
@@ -256,9 +272,13 @@ const BankAccounts: React.FC = () => {
                     </div>
                     <button
                       onClick={() => navigate(`/bank-accounts/${account.id}`)}
-                      className="text-indigo-600 hover:text-indigo-900 text-sm font-medium"
+                      className="inline-flex items-center gap-1 text-indigo-600 hover:text-indigo-900 text-sm font-medium px-2 py-1 rounded-md border border-indigo-100 bg-indigo-50 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      title={`Voir le compte ${account.account_name}`}
                     >
-                      Voir
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-3A2.25 2.25 0 008.25 5.25V9m7.5 0v10.5A2.25 2.25 0 0113.5 21h-3A2.25 2.25 0 018.25 19.5V9m7.5 0h-9" />
+                      </svg>
+                      <span>Voir</span>
                     </button>
                   </div>
                 </div>

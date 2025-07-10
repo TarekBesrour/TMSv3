@@ -1,20 +1,9 @@
+// AppLayout.tsx
 import React, { useState } from 'react';
-import { 
-  HomeIcon, 
-  TruckIcon, 
-  DocumentTextIcon, 
-  CubeIcon, 
-  ChartBarIcon, 
-  CogIcon, 
-  UserGroupIcon,
-  CalendarIcon,
-  ClipboardDocumentListIcon,
-  BanknotesIcon,
-  ChatBubbleLeftRightIcon,
-  WrenchScrewdriverIcon,
-  UserIcon
-} from '@heroicons/react/24/outline';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
+import { NavigationMenu } from './NavigationMenu'; // Import du nouveau composant
+
+// ... (vos imports d'icônes et vos types NavSection, NavItem)
 
 // Types for navigation items
 interface NavItem {
@@ -31,254 +20,80 @@ interface NavSection {
   title: string;
   items: NavItem[];
 }
+// Les props sont maintenant passées au composant
+interface AppLayoutProps {
+  children: React.ReactNode;
+  navigation: NavSection[];
+  // Vous pouvez aussi passer l'utilisateur, etc.
+}
 
-// New navigation structure based on functional modules of the TMS
-const navigation: NavSection[] = [
-  {
-    title: "Partenaires & Entités",
-    items: [
-      { name: 'Clients', href: '/partners', icon: UserGroupIcon },
-      { name: 'Contacts', href: '/contacts', icon: UserIcon },
-      { name: 'Sites', href: '/sites', icon: CubeIcon },
-    ]
-  },
-  {
-    title: "Commandes & Expéditions",
-    items: [
-      { name: 'Commandes', href: '/orders', icon: ClipboardDocumentListIcon },
-      { name: 'Expéditions', href: '/shipments', icon: TruckIcon },
-      { name: 'Planification', href: '/planning', icon: CalendarIcon, aiPowered: true, badge: 'IA' },
-      { name: 'Tournées', href: '/tours', icon: CalendarIcon },
-      { name: 'Disponibilité ressources', href: '/resource-availability', icon: CalendarIcon },
-    ]
-  },
-  {
-    title: "Coûts & Facturation",
-    items: [
-      { name: 'Facturation', href: '/billing', icon: BanknotesIcon },
-      { name: 'Paiements', href: '/payments', icon: BanknotesIcon },
-      { name: 'Comptes bancaires', href: '/bank-accounts', icon: BanknotesIcon },
-      { name: 'Tarifs', href: '/rates', icon: DocumentTextIcon },
-      { name: 'Surcharges', href: '/surcharges', icon: DocumentTextIcon },
-      { name: 'Contrats', href: '/contracts', icon: DocumentTextIcon },
-    ]
-  },
-  {
-    title: "Flotte & Ressources",
-    items: [
-      { name: 'Flotte', href: '/fleet', icon: TruckIcon },
-      { name: 'Véhicules', href: '/vehicles', icon: TruckIcon },
-      { name: 'Conducteurs', href: '/drivers', icon: UserIcon },
-      { name: 'Maintenance', href: '/maintenance', icon: WrenchScrewdriverIcon, aiPowered: true, badge: 'IA' },
-      { name: 'Équipements', href: '/equipments', icon: CubeIcon },
-    ]
-  },
-  {
-    title: "Analyse & Reporting",
-    items: [
-      { name: 'Tableau de bord', href: '/dashboard', icon: HomeIcon },
-      { name: 'KPIs', href: '/kpis', icon: ChartBarIcon, aiPowered: true, badge: 'IA' },
-      { name: 'Prévisions', href: '/forecasting', icon: ChartBarIcon, aiPowered: true, badge: 'IA' },
-      { name: 'Rapports', href: '/reports', icon: DocumentTextIcon },
-    ]
-  },
-  {
-    title: "Intégration & Connectivité",
-    items: [
-      { name: 'Référentiels', href: '/admin/references', icon: CubeIcon },
-      { name: 'Documents', href: '/documents', icon: DocumentTextIcon, aiPowered: true, badge: 'IA' },
-      { name: 'Assistant IA', href: '/assistant', icon: ChatBubbleLeftRightIcon, aiPowered: true },
-    ]
-  },
-  {
-    title: "Administration & Sécurité",
-    items: [
-      { name: 'Paramètres', href: '/settings', icon: CogIcon },
-      { name: 'Utilisateurs', href: '/usermanagement', icon: UserIcon },
-      { name: 'Rôles', href: '/rolemanagement', icon: UserGroupIcon },
-      { name: 'Administration', href: '/administration', icon: CogIcon },
-      { name: 'Profil', href: '/profile', icon: UserIcon },
-    ]
-  }
-];
+const AppLayout: React.FC<AppLayoutProps> = ({ children, navigation }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false); // mobile drawer
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // desktop collapse
 
-const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Sidebar content
+  const sidebarContent = (
+    <div className={`flex flex-col h-0 flex-1 transition-all duration-300 ${sidebarCollapsed ? 'w-20' : 'w-64'}`}> 
+      <div className="flex items-center h-16 flex-shrink-0 px-4 bg-gray-900">
+        <span className={`text-white text-xl font-bold transition-all duration-300 ${sidebarCollapsed ? 'text-base' : ''}`}>SALMA TMS</span>
+      </div>
+      <div className="flex-1 flex flex-col overflow-y-auto bg-gray-800">
+        <NavigationMenu navigation={navigation} onHamburgerClick={() => {
+          if (window.innerWidth < 768) {
+            setSidebarOpen(true); // mobile
+          } else {
+            setSidebarCollapsed((prev) => !prev); // desktop
+          }
+        }} collapsed={sidebarCollapsed} />
+      </div>
+    </div>
+  );
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100">
       {/* Mobile sidebar */}
-      <div className={`md:hidden ${sidebarOpen ? 'fixed inset-0 flex z-40' : 'hidden'}`}>
-        {/* Overlay */}
-        <div 
-          className={`fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity ease-linear duration-300 ${sidebarOpen ? 'opacity-100' : 'opacity-0'}`}
-          onClick={() => setSidebarOpen(false)}
-        />
-        
-        {/* Sidebar panel */}
-        <div className={`relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-gray-800 transition ease-in-out duration-300 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-          <div className="absolute top-0 right-0 -mr-12 pt-2">
-            <button
-              type="button"
-              className="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-              onClick={() => setSidebarOpen(false)}
-            >
-              <span className="sr-only">Fermer le menu</span>
-              <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
-            </button>
-          </div>
-          
-          {/* Logo */}
-          <div className="flex-shrink-0 flex items-center px-4">
-            <span className="text-white text-xl font-bold">TMS IA</span>
-          </div>
-          
-          {/* Navigation */}
-          <div className="mt-5 flex-1 h-0 overflow-y-auto">
-            <nav className="px-2 space-y-6">
-              {navigation.map((section) => (
-                <div key={section.title} className="space-y-1">
-                  <h3 className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                    {section.title}
-                  </h3>
-                  {section.items.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                        item.current
-                          ? 'bg-gray-900 text-white'
-                          : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                      }`}
-                    >
-                      <item.icon
-                        className={`mr-3 flex-shrink-0 h-6 w-6 ${
-                          item.current ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'
-                        }`}
-                        aria-hidden="true"
-                      />
-                      <span className="flex-1">{item.name}</span>
-                      {item.badge && (
-                        <span className={`ml-3 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                          item.aiPowered ? 'bg-indigo-100 text-indigo-800' : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {item.badge}
-                        </span>
-                      )}
-                    </a>
-                  ))}
-                </div>
-              ))}
-            </nav>
+      {sidebarOpen && (
+        <div className="md:hidden fixed inset-0 flex z-40">
+          <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
+          <div className="relative flex-1 flex flex-col max-w-xs w-full bg-gray-800">
+            <div className="absolute top-0 right-0 -mr-12 pt-2">
+              <button type="button" onClick={() => setSidebarOpen(false)} className="...">
+                <XMarkIcon className="h-6 w-6 text-white" />
+              </button>
+            </div>
+            {sidebarContent}
           </div>
         </div>
-        
-        <div className="flex-shrink-0 w-14" aria-hidden="true">
-          {/* Force sidebar to shrink to fit close icon */}
-        </div>
-      </div>
+      )}
 
       {/* Static sidebar for desktop */}
-      <div className="hidden md:flex md:flex-shrink-0">
-        <div className="flex flex-col w-64">
-          <div className="flex flex-col h-0 flex-1">
-            <div className="flex items-center h-16 flex-shrink-0 px-4 bg-gray-900">
-              <span className="text-white text-xl font-bold">TMS IA</span>
-            </div>
-            <div className="flex-1 flex flex-col overflow-y-auto bg-gray-800">
-              <nav className="flex-1 px-2 py-4 space-y-6">
-                {navigation.map((section) => (
-                  <div key={section.title} className="space-y-1">
-                    <h3 className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                      {section.title}
-                    </h3>
-                    {section.items.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                          item.current
-                            ? 'bg-gray-900 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                        }`}
-                      >
-                        <item.icon
-                          className={`mr-3 flex-shrink-0 h-6 w-6 ${
-                            item.current ? 'text-white' : 'text-gray-400 group-hover:text-gray-300'
-                          }`}
-                          aria-hidden="true"
-                        />
-                        <span className="flex-1">{item.name}</span>
-                        {item.badge && (
-                          <span className={`ml-3 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                            item.aiPowered ? 'bg-indigo-100 text-indigo-800' : 'bg-gray-100 text-gray-800'
-                          }`}>
-                            {item.badge}
-                          </span>
-                        )}
-                      </a>
-                    ))}
-                  </div>
-                ))}
-              </nav>
-            </div>
-          </div>
-        </div>
+      <div className={`hidden md:flex md:flex-shrink-0 transition-all duration-300 ${sidebarCollapsed ? 'w-20' : 'w-64'}`}> 
+        <div className="flex flex-col h-full">{sidebarContent}</div>
       </div>
-      
+
       {/* Main content */}
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         <div className="relative z-10 flex-shrink-0 flex h-16 bg-white shadow">
+          {/* Bouton menu/hamburger toujours visible */}
           <button
             type="button"
-            className="px-4 border-r border-gray-200 text-gray-500 md:hidden"
-            onClick={() => setSidebarOpen(true)}
+            className="px-4 text-gray-500 hover:text-gray-700 focus:outline-none"
+            onClick={() => {
+              if (window.innerWidth < 768) {
+                setSidebarOpen(true); // mobile
+              } else {
+                setSidebarCollapsed((prev) => !prev); // desktop
+              }
+            }}
+            title={sidebarCollapsed ? 'Déplier le menu' : 'Réduire le menu'}
           >
-            <span className="sr-only">Ouvrir le menu</span>
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            <Bars3Icon className="h-6 w-6" />
           </button>
           <div className="flex-1 px-4 flex justify-between">
-            <div className="flex-1 flex">
-              {/* Search bar placeholder */}
-              <div className="w-full flex md:ml-0">
-                <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                  <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" clipRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" />
-                    </svg>
-                  </div>
-                  <input
-                    id="search"
-                    className="block w-full h-full pl-10 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
-                    placeholder="Rechercher"
-                    type="search"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="ml-4 flex items-center md:ml-6">
-              {/* Profile dropdown placeholder */}
-              <div className="ml-3 relative">
-                <div>
-                  <button
-                    type="button"
-                    className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    id="user-menu"
-                    aria-expanded="false"
-                    aria-haspopup="true"
-                  >
-                    <span className="sr-only">Ouvrir le menu utilisateur</span>
-                    <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
-                      <span className="text-gray-600 font-medium">JD</span>
-                    </div>
-                  </button>
-                </div>
-              </div>
-            </div>
+            {/* ... (votre barre de recherche et menu profil restent ici) */}
           </div>
         </div>
 
-        {/* Page content */}
         <main className="flex-1 relative overflow-y-auto focus:outline-none">
           <div className="py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">

@@ -17,12 +17,26 @@ import {
   MagnifyingGlassIcon
 } from '@heroicons/react/24/outline';
 import { Tab } from '@headlessui/react';
+//import { apiFetch } from '../utils/apiFetch';
+import {
+  getPartnerById,
+  getPartnerContacts,
+  getPartnerAddresses,
+  getPartnerSites,
+  getPartnerContracts,
+  getPartnerDocuments,
+  Partner as ApiPartner
+  //getCarrierDrivers,
+  //getCarrierVehicles
+} from '../services/partnersApi';
+
 
 // Types
 interface Partner {
-  id: number;
+  id: string;
   name: string;
-  type: 'CLIENT' | 'CARRIER' | 'SUPPLIER' | 'OTHER';
+  //type: 'CLIENT' | 'CARRIER' | 'SUPPLIER' | 'OTHER';
+  type: 'customer' | 'carrier' | 'supplier' | 'agent' | 'broker' | 'other';
   legal_form: string | null;
   registration_number: string | null;
   vat_number: string | null;
@@ -39,10 +53,11 @@ interface Contact {
   last_name: string;
   position: string | null;
   email: string | null;
-  phone: string | null;
-  mobile: string | null;
+  phone: string | null;  
   is_primary: boolean;
   status: 'active' | 'inactive';
+  created_at: string;
+  updated_at: string;
 }
 
 interface Address {
@@ -166,10 +181,47 @@ const PartnerDetails: React.FC = () => {
       try {
         setLoading(true);
         setError(null);
-        
+        //***** tarek*/
+  if (!id) {
+        throw new Error('ID du partenaire manquant');
+      }
+
+      // Récupération du partenaire
+      const partnerData = await getPartnerById(id);
+      setPartner(partnerData);
+
+      // Appels en parallèle des données associées
+      const [
+        contactsData,
+        addressesData,
+        sitesData,
+        contractsData,
+        documentsData,
+        //driversData,
+        //vehiclesData
+      ] = await Promise.all([
+        getPartnerContacts(id),
+        getPartnerAddresses(id),
+        getPartnerSites(id),
+        getPartnerContracts(id),
+        getPartnerDocuments(id),
+        //partnerData.type === 'CARRIER' ? getCarrierDrivers(id) : Promise.resolve([]),
+        //partnerData.type === 'CARRIER' ? getCarrierVehicles(id) : Promise.resolve([])
+      ]);
+
+      // //setContacts(contactsData);
+      // setAddresses(addressesData);
+      // setSites(sitesData);
+      // setContracts(contractsData);
+      // setDocuments(documentsData);
+      // setDrivers(driversData);
+      // setVehicles(vehiclesData);
+
+      setLoading(false);
+        //******* tarek*/
         // In a real app, this would be API calls
         // For now, we'll simulate with mock data
-        setTimeout(() => {
+        /* setTimeout(() => {
           // Mock partner data
           const mockPartner: Partner = {
             id: Number(id),
@@ -366,7 +418,7 @@ const PartnerDetails: React.FC = () => {
           setContracts(mockContracts);
           setDocuments(mockDocuments);
           setLoading(false);
-        }, 800);
+        }, 800); */
       } catch (err: any) {
         setError(err.message || 'Une erreur est survenue lors du chargement des données du partenaire');
         setLoading(false);
@@ -386,11 +438,11 @@ const PartnerDetails: React.FC = () => {
   
   const getPartnerTypeIcon = (type: string) => {
     switch (type) {
-      case 'CLIENT':
+      case 'customer':
         return <UserGroupIcon className="h-8 w-8 text-blue-500" />;
-      case 'CARRIER':
+      case 'carrier':
         return <TruckIcon className="h-8 w-8 text-green-500" />;
-      case 'SUPPLIER':
+      case 'supplier':
         return <BuildingOfficeIcon className="h-8 w-8 text-purple-500" />;
       default:
         return <UserGroupIcon className="h-8 w-8 text-gray-500" />;
@@ -399,11 +451,11 @@ const PartnerDetails: React.FC = () => {
   
   const getPartnerTypeLabel = (type: string) => {
     switch (type) {
-      case 'CLIENT':
+      case 'customer':
         return 'Client';
-      case 'CARRIER':
+      case 'carrier':
         return 'Transporteur';
-      case 'SUPPLIER':
+      case 'supplier':
         return 'Fournisseur';
       default:
         return 'Autre';
@@ -620,7 +672,7 @@ const PartnerDetails: React.FC = () => {
             >
               Sites ({sites.length})
             </Tab>
-            {partner.type === 'CARRIER' && (
+            {partner.type === 'carrier' && (
               <Tab
                 className={({ selected }) =>
                   classNames(
@@ -634,7 +686,7 @@ const PartnerDetails: React.FC = () => {
                 Véhicules ({vehicles.length})
               </Tab>
             )}
-            {partner.type === 'CARRIER' && (
+            {partner.type === 'carrier' && (
               <Tab
                 className={({ selected }) =>
                   classNames(
@@ -903,7 +955,7 @@ const PartnerDetails: React.FC = () => {
             </Tab.Panel>
             
             {/* Vehicles panel (only for carriers) */}
-            {partner.type === 'CARRIER' && (
+            {partner.type === 'carrier' && (
               <Tab.Panel className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-medium text-gray-900">Véhicules</h3>
@@ -983,7 +1035,7 @@ const PartnerDetails: React.FC = () => {
             )}
             
             {/* Drivers panel (only for carriers) */}
-            {partner.type === 'CARRIER' && (
+            {partner.type === 'carrier' && (
               <Tab.Panel className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-medium text-gray-900">Chauffeurs</h3>

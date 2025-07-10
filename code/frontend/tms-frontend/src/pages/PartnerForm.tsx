@@ -5,24 +5,19 @@ import {
   ExclamationCircleIcon
 } from '@heroicons/react/24/outline';
 
+import { createPartner, getPartnerById, updatePartner, Partner as ApiPartner } from '../services/partnersApi';
 // Types
-interface Partner {
-  id?: number;
-  name: string;
-  type: 'CLIENT' | 'CARRIER' | 'SUPPLIER' | 'OTHER';
-  legal_form: string | null;
-  registration_number: string | null;
-  vat_number: string | null;
-  website: string | null;
-  logo_url: string | null;
-  notes: string | null;
-  status: 'active' | 'inactive' | 'pending' | 'blocked';
+import type { Partner } from '../services/partnersApi';
+
+// PartnerFormProps
+interface PartnerFormProps {
+  mode?: 'create' | 'edit';
 }
 
-const PartnerForm: React.FC = () => {
+const PartnerForm: React.FC<PartnerFormProps> = ({ mode }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const isEditMode = !!id;
+  const isEditMode = mode ? mode === 'edit' : !!id;
   
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
@@ -30,8 +25,9 @@ const PartnerForm: React.FC = () => {
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   
   const [partner, setPartner] = useState<Partner>({
+    id: undefined,
     name: '',
-    type: 'CLIENT',
+    type: 'customer',
     legal_form: '',
     registration_number: '',
     vat_number: '',
@@ -47,27 +43,9 @@ const PartnerForm: React.FC = () => {
         try {
           setLoading(true);
           setError(null);
-          
-          // In a real app, this would be an API call
-          // For now, we'll simulate with mock data
-          setTimeout(() => {
-            // Mock partner data
-            const mockPartner: Partner = {
-              id: Number(id),
-              name: 'Acme Logistics',
-              type: 'CLIENT',
-              legal_form: 'SAS',
-              registration_number: '123456789',
-              vat_number: 'FR12345678901',
-              website: 'https://acme-logistics.com',
-              logo_url: null,
-              notes: 'Important client for international shipping.',
-              status: 'active'
-            };
-            
-            setPartner(mockPartner);
-            setLoading(false);
-          }, 800);
+          const data = await getPartnerById(id!);
+          setPartner(data);
+          setLoading(false);
         } catch (err: any) {
           setError(err.message || 'Une erreur est survenue lors du chargement des données du partenaire');
           setLoading(false);
@@ -122,23 +100,20 @@ const PartnerForm: React.FC = () => {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!validateForm()) {
       return;
     }
-    
     try {
       setSaving(true);
       setError(null);
-      
-      // In a real app, this would be an API call
-      // For now, we'll simulate with a timeout
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Navigate back to partner list or detail page
       if (isEditMode) {
+        // TODO: call updatePartner (à implémenter)
+        //await new Promise(resolve => setTimeout(resolve, 1000));
+        await updatePartner(id!, partner);
         navigate(`/partners/${id}`);
       } else {
+        // Création réelle via API
+        await createPartner(partner);
         navigate('/partners');
       }
     } catch (err: any) {
@@ -238,10 +213,12 @@ const PartnerForm: React.FC = () => {
                       formErrors.type ? 'border-red-300' : ''
                     }`}
                   >
-                    <option value="CLIENT">Client</option>
-                    <option value="CARRIER">Transporteur</option>
-                    <option value="SUPPLIER">Fournisseur</option>
-                    <option value="OTHER">Autre</option>
+                    <option value="customer">Client</option>
+                    <option value="carrier">Transporteur</option>
+                    <option value="supplier">Fournisseur</option>
+                    <option value="agent">Agent</option>
+                    <option value="broker">Courtier</option>
+                    <option value="other">Autre</option>
                   </select>
                   {formErrors.type && (
                     <p className="mt-2 text-sm text-red-600">{formErrors.type}</p>

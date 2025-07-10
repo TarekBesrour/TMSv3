@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { fetchSites, Site as ApiSite } from '../services/sitesApi';
 import { 
   PlusIcon, 
   MagnifyingGlassIcon, 
@@ -14,22 +15,14 @@ import {
 } from '@heroicons/react/24/outline';
 
 // Types
-interface Site {
-  id: number;
-  name: string;
-  type: string;
-  address: string;
-  city: string;
-  country: string;
-  partner_id: number;
-  partner_name: string;
-}
+
+// Utilise le type ApiSite du service
 
 const Sites: React.FC = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [sites, setSites] = useState<Site[]>([]);
-  const [filteredSites, setFilteredSites] = useState<Site[]>([]);
+  const [sites, setSites] = useState<ApiSite[]>([]);
+  const [filteredSites, setFilteredSites] = useState<ApiSite[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState<string | null>(null);
   
@@ -42,79 +35,20 @@ const Sites: React.FC = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   
   useEffect(() => {
-    const fetchSites = async () => {
+    const loadSites = async () => {
       try {
         setLoading(true);
         setError(null);
-        
-        // In a real app, this would be an API call
-        // For now, we'll simulate with mock data
-        setTimeout(() => {
-          // Mock sites data
-          const mockSites: Site[] = [
-            {
-              id: 1,
-              name: 'Entrepôt Central Paris',
-              type: 'warehouse',
-              address: '123 Rue de la Logistique',
-              city: 'Paris',
-              country: 'FR',
-              partner_id: 1,
-              partner_name: 'Acme Logistics'
-            },
-            {
-              id: 2,
-              name: 'Centre de Distribution Lyon',
-              type: 'distribution_center',
-              address: '456 Avenue du Transport',
-              city: 'Lyon',
-              country: 'FR',
-              partner_id: 1,
-              partner_name: 'Acme Logistics'
-            },
-            {
-              id: 3,
-              name: 'Terminal Portuaire Marseille',
-              type: 'port',
-              address: '789 Quai Maritime',
-              city: 'Marseille',
-              country: 'FR',
-              partner_id: 2,
-              partner_name: 'Fast Freight'
-            },
-            {
-              id: 4,
-              name: 'Hub Logistique Bruxelles',
-              type: 'hub',
-              address: '101 Rue de l\'Europe',
-              city: 'Bruxelles',
-              country: 'BE',
-              partner_id: 2,
-              partner_name: 'Fast Freight'
-            },
-            {
-              id: 5,
-              name: 'Usine Principale',
-              type: 'factory',
-              address: '202 Rue de la Production',
-              city: 'Lille',
-              country: 'FR',
-              partner_id: 3,
-              partner_name: 'Global Supply'
-            }
-          ];
-          
-          setSites(mockSites);
-          setFilteredSites(mockSites);
-          setLoading(false);
-        }, 800);
+        const data = await fetchSites();
+        setSites(data);
+        setFilteredSites(data);
+        setLoading(false);
       } catch (err: any) {
         setError(err.message || 'Une erreur est survenue lors du chargement des sites');
         setLoading(false);
       }
     };
-    
-    fetchSites();
+    loadSites();
   }, []);
   
   useEffect(() => {
@@ -125,10 +59,10 @@ const Sites: React.FC = () => {
     if (searchTerm) {
       const lowerSearchTerm = searchTerm.toLowerCase();
       result = result.filter(site => 
-        site.name.toLowerCase().includes(lowerSearchTerm) ||
-        site.address.toLowerCase().includes(lowerSearchTerm) ||
-        site.city.toLowerCase().includes(lowerSearchTerm) ||
-        site.partner_name.toLowerCase().includes(lowerSearchTerm)
+        (site.name ?? '').toLowerCase().includes(lowerSearchTerm) ||
+        (site.address ?? '').toLowerCase().includes(lowerSearchTerm) ||
+        (site.city ?? '').toLowerCase().includes(lowerSearchTerm) ||
+        (site.partner_name ?? '').toLowerCase().includes(lowerSearchTerm)
       );
     }
     
@@ -145,15 +79,13 @@ const Sites: React.FC = () => {
     // Apply sorting
     result.sort((a, b) => {
       let comparison = 0;
-      
       if (sortField === 'name') {
-        comparison = a.name.localeCompare(b.name);
+        comparison = (a.name ?? '').localeCompare(b.name ?? '');
       } else if (sortField === 'city') {
-        comparison = a.city.localeCompare(b.city);
+        comparison = (a.city ?? '').localeCompare(b.city ?? '');
       } else if (sortField === 'partner_name') {
-        comparison = a.partner_name.localeCompare(b.partner_name);
+        comparison = (a.partner_name ?? '').localeCompare(b.partner_name ?? '');
       }
-      
       return sortDirection === 'asc' ? comparison : -comparison;
     });
     
@@ -224,7 +156,7 @@ const Sites: React.FC = () => {
   };
   
   // Get unique countries for filter
-  const uniqueCountries = Array.from(new Set(sites.map(site => site.country)));
+  const uniqueCountries = Array.from(new Set(sites.map(site => site.country ?? '')));
   
   if (loading) {
     return (
@@ -320,7 +252,7 @@ const Sites: React.FC = () => {
               <option value="all">Tous</option>
               {uniqueCountries.map(country => (
                 <option key={country} value={country}>
-                  {getCountryName(country)}
+                  {getCountryName(country ?? '')}
                 </option>
               ))}
             </select>
@@ -415,8 +347,8 @@ const Sites: React.FC = () => {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">{site.address}</div>
-                          <div className="text-sm text-gray-500">{site.city}, {getCountryName(site.country)}</div>
+                          <div className="text-sm text-gray-900">{site.address ?? ''}</div>
+                          <div className="text-sm text-gray-500">{(site.city ?? '') + (site.country ? ', ' + getCountryName(site.country ?? '') : '')}</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">{site.partner_name}</div>

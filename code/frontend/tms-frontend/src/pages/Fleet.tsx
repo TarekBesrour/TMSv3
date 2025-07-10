@@ -1,8 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import { TruckIcon, WrenchScrewdriverIcon, ClockIcon, ChartBarIcon } from '@heroicons/react/24/outline';
+import { apiFetch } from '../utils/apiFetch';
+import { data } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+
+interface Vehicle {
+  id: string;
+  registration_number: string;
+  type: string;
+  brand: string;
+  model: string;
+  status: string;
+  health?: number;
+  nextMaintenance?: string;
+  alerts?: number ; 
+  driver?: string;
+  location?: string;
+}
+
+const Fleet: React.FC = () => {
+  //const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [loading, setLoading] = useState(true);
+   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      try {
+        const response = await apiFetch('/vehicles');
+//         const text = await response.text();
+// console.log('Réponse brute :', text);
+        const result = await response.json();
+        setVehicles(result.data); // ton service retourne un objet `{ data, pagination }`
+      } catch (err) {
+        
+        console.error('Erreur de chargement des véhicules :', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVehicles();
+  }, []);
+
 
 // Fleet component - Fleet management with AI-enhanced features
-const Fleet: React.FC = () => {
+/* const Fleet: React.FC = () => {
   // Sample data for vehicles
   const [vehicles, setVehicles] = useState([
     { id: 'TR-7845', type: 'Camion 19T', brand: 'Volvo', model: 'FH16', status: 'En service', driver: 'Martin Dupont', location: 'En route - A6', health: 92, nextMaintenance: '15/06/2025', alerts: 1 },
@@ -10,7 +54,7 @@ const Fleet: React.FC = () => {
     { id: 'TR-9012', type: 'Camion 7.5T', brand: 'Renault', model: 'D Wide', status: 'En service', driver: 'Jean Leroy', location: 'En route - A8', health: 76, nextMaintenance: '05/06/2025', alerts: 2 },
     { id: 'TR-5421', type: 'Utilitaire 3.5T', brand: 'Iveco', model: 'Daily', status: 'Au dépôt', driver: 'Lucie Blanc', location: 'Dépôt Paris', health: 95, nextMaintenance: '20/07/2025', alerts: 0 },
     { id: 'TR-8754', type: 'Camion 19T', brand: 'Scania', model: 'R450', status: 'Maintenance', driver: 'Non assigné', location: 'Garage Lyon', health: 65, nextMaintenance: 'En cours', alerts: 3 },
-  ]);
+  ]); */
 
   // AI-generated insights
   const insights = [
@@ -179,8 +223,8 @@ const Fleet: React.FC = () => {
                       </div>
                       <div className="ml-4">
                         <div className="flex items-center">
-                          <h3 className="text-lg font-medium text-gray-900">{vehicle.id}</h3>
-                          {vehicle.alerts > 0 && (
+                          <h3 className="text-lg font-medium text-gray-900">{vehicle.registration_number}</h3>
+                          {(vehicle.alerts ?? 0) > 0 && (
                             <span className="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                               {vehicle.alerts} alertes
                             </span>
@@ -216,8 +260,8 @@ const Fleet: React.FC = () => {
                         <div className="w-24 bg-gray-200 rounded-full h-2.5">
                           <div 
                             className={`h-2.5 rounded-full ${
-                              vehicle.health >= 90 ? 'bg-green-500' :
-                              vehicle.health >= 70 ? 'bg-yellow-500' :
+                               (vehicle.health ?? 0) >= 90 ? 'bg-green-500' :
+                                (vehicle.health ?? 0) >= 70 ? 'bg-yellow-500' :
                               'bg-red-500'
                             }`}
                             style={{ width: `${vehicle.health}%` }}
@@ -248,12 +292,19 @@ const Fleet: React.FC = () => {
                   )}
                   
                   <div className="mt-4 flex justify-end space-x-3">
-                    <button
+                    {/* <button
                       type="button"
                       className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                     >
                       Détails
-                    </button>
+                    </button> */}
+                    <button
+                    
+                    onClick={() => navigate(`/vehicles/${vehicle.id}`)}
+                    className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Détails
+                  </button>
                     <button
                       type="button"
                       className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

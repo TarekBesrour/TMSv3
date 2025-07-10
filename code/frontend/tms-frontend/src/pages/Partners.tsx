@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { fetchPartners, Partner as ApiPartner, PartnersApiResponse } from '../services/partnersApi';
 import { useNavigate } from 'react-router-dom';
 import { 
   UserGroupIcon, 
@@ -13,17 +14,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
 // Types
-interface Partner {
-  id: number;
-  name: string;
-  type: 'CLIENT' | 'CARRIER' | 'SUPPLIER' | 'OTHER';
-  legal_form: string | null;
-  registration_number: string | null;
-  vat_number: string | null;
-  website: string | null;
-  logo_url: string | null;
-  status: 'active' | 'inactive' | 'pending' | 'blocked';
-}
+
 
 interface PaginationInfo {
   page: number;
@@ -33,7 +24,7 @@ interface PaginationInfo {
 }
 
 const Partners: React.FC = () => {
-  const [partners, setPartners] = useState<Partner[]>([]);
+const [partners, setPartners] = useState<ApiPartner[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationInfo>({
@@ -52,62 +43,46 @@ const Partners: React.FC = () => {
   
   // Fetch partners
   useEffect(() => {
-    const fetchPartners = async () => {
+    const loadPartners = async () => {
       try {
         setLoading(true);
         setError(null);
-        
-        // In a real app, this would be an API call
-        // For now, we'll simulate with mock data
-        setTimeout(() => {
-          const mockPartners: Partner[] = [
-            { id: 1, name: 'Acme Logistics', type: 'CLIENT', legal_form: 'SAS', registration_number: '123456789', vat_number: 'FR12345678901', website: 'https://acme-logistics.com', logo_url: null, status: 'active' },
-            { id: 2, name: 'FastTruck Transport', type: 'CARRIER', legal_form: 'SARL', registration_number: '987654321', vat_number: 'FR98765432109', website: 'https://fasttruck.com', logo_url: null, status: 'active' },
-            { id: 3, name: 'Global Shipping Co', type: 'CARRIER', legal_form: 'SA', registration_number: '456789123', vat_number: 'FR45678912345', website: 'https://globalshipping.com', logo_url: null, status: 'active' },
-            { id: 4, name: 'Tech Supplies Inc', type: 'SUPPLIER', legal_form: 'Inc', registration_number: '789123456', vat_number: 'US78912345678', website: 'https://techsupplies.com', logo_url: null, status: 'active' },
-            { id: 5, name: 'European Distributors', type: 'CLIENT', legal_form: 'GmbH', registration_number: '321654987', vat_number: 'DE32165498765', website: 'https://eurodist.com', logo_url: null, status: 'inactive' },
-          ];
-          
-          // Apply filters
-          let filteredPartners = mockPartners;
-          
-          if (search) {
-            const searchLower = search.toLowerCase();
-            filteredPartners = filteredPartners.filter(partner => 
-              partner.name.toLowerCase().includes(searchLower) ||
-              (partner.registration_number && partner.registration_number.toLowerCase().includes(searchLower)) ||
-              (partner.vat_number && partner.vat_number.toLowerCase().includes(searchLower))
-            );
-          }
-          
-          if (typeFilter) {
-            filteredPartners = filteredPartners.filter(partner => partner.type === typeFilter);
-          }
-          
-          if (statusFilter) {
-            filteredPartners = filteredPartners.filter(partner => partner.status === statusFilter);
-          }
-          
-          setPartners(filteredPartners);
-          setPagination({
-            page: 1,
-            limit: 10,
-            total: filteredPartners.length,
-            totalPages: Math.ceil(filteredPartners.length / 10)
-          });
-          setLoading(false);
-        }, 500);
+        const response: PartnersApiResponse | ApiPartner[] = await fetchPartners({
+          search,
+          type: typeFilter,
+          status: statusFilter,
+          page: pagination.page,
+          limit: pagination.limit,
+        });
+        if (response && Array.isArray((response as PartnersApiResponse).data)) {
+          const r = response as PartnersApiResponse;
+          setPartners(r.data);
+          setPagination((prev) => ({
+            ...prev,
+            ...r.pagination,
+          }));
+        } else if (Array.isArray(response)) {
+          setPartners(response);
+          setPagination((prev) => ({
+            ...prev,
+            total: response.length,
+            totalPages: Math.ceil(response.length / prev.limit),
+          }));
+        } else {
+          setPartners([]);
+        }
+        setLoading(false);
       } catch (err: any) {
         setError(err.message || 'Une erreur est survenue lors du chargement des partenaires');
         setLoading(false);
       }
     };
-    
-    fetchPartners();
-  }, [search, typeFilter, statusFilter]);
+    loadPartners();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, typeFilter, statusFilter, pagination.page, pagination.limit]);
   
   const handleCreatePartner = () => {
-    navigate('/partners/create');
+    navigate('/partners/new');
   };
   
   const handleViewPartner = (id: number) => {
@@ -130,11 +105,11 @@ const Partners: React.FC = () => {
   
   const getPartnerTypeIcon = (type: string) => {
     switch (type) {
-      case 'CLIENT':
+      case 'customer':
         return <UserGroupIcon className="h-5 w-5 text-blue-500" />;
-      case 'CARRIER':
+      case 'carrier':
         return <TruckIcon className="h-5 w-5 text-green-500" />;
-      case 'SUPPLIER':
+      case 'supplier':
         return <BuildingOfficeIcon className="h-5 w-5 text-purple-500" />;
       default:
         return <UserGroupIcon className="h-5 w-5 text-gray-500" />;
@@ -143,11 +118,11 @@ const Partners: React.FC = () => {
   
   const getPartnerTypeLabel = (type: string) => {
     switch (type) {
-      case 'CLIENT':
+      case 'customer':
         return 'Client';
-      case 'CARRIER':
+      case 'carrier':
         return 'Transporteur';
-      case 'SUPPLIER':
+      case 'supplier':
         return 'Fournisseur';
       default:
         return 'Autre';
@@ -255,10 +230,10 @@ const Partners: React.FC = () => {
                   onChange={(e) => setTypeFilter(e.target.value)}
                 >
                   <option value="">Tous les types</option>
-                  <option value="CLIENT">Client</option>
-                  <option value="CARRIER">Transporteur</option>
-                  <option value="SUPPLIER">Fournisseur</option>
-                  <option value="OTHER">Autre</option>
+                  <option value="customer">Client</option>
+                  <option value="carrier">Transporteur</option>
+                  <option value="supplier">Fournisseur</option>
+                  <option value="other">Autre</option>
                 </select>
               </div>
               
@@ -333,7 +308,14 @@ const Partners: React.FC = () => {
             </li>
           ) : (
             partners.map((partner) => (
-              <li key={partner.id} className="px-6 py-4 hover:bg-gray-50 cursor-pointer" onClick={() => handleViewPartner(partner.id)}>
+              <li
+                key={partner.id ?? partner.name}
+                className={`px-6 py-4 ${partner.id ? 'hover:bg-gray-50 cursor-pointer' : 'bg-gray-100 cursor-not-allowed'}`}
+                onClick={() => {
+                  if (partner.id !== undefined && partner.id !== null) handleViewPartner(partner.id);
+                }}
+                aria-disabled={partner.id === undefined || partner.id === null}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
@@ -387,11 +369,12 @@ const Partners: React.FC = () => {
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    handleViewPartner(partner.id);
+                                    if (partner.id !== undefined && partner.id !== null) handleViewPartner(partner.id);
                                   }}
-                                  className={`${
+                                  disabled={partner.id === undefined || partner.id === null}
+                                  className={`$${' '}
                                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                  } block w-full text-left px-4 py-2 text-sm`}
+                                  } block w-full text-left px-4 py-2 text-sm${partner.id === undefined || partner.id === null ? ' opacity-50 cursor-not-allowed' : ''}`}
                                 >
                                   Voir les détails
                                 </button>
@@ -402,11 +385,12 @@ const Partners: React.FC = () => {
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    handleEditPartner(partner.id);
+                                    if (partner.id !== undefined && partner.id !== null) handleEditPartner(partner.id);
                                   }}
-                                  className={`${
+                                  disabled={partner.id === undefined || partner.id === null}
+                                  className={`$${' '}
                                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                  } block w-full text-left px-4 py-2 text-sm`}
+                                  } block w-full text-left px-4 py-2 text-sm${partner.id === undefined || partner.id === null ? ' opacity-50 cursor-not-allowed' : ''}`}
                                 >
                                   Modifier
                                 </button>
@@ -417,11 +401,12 @@ const Partners: React.FC = () => {
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    handleDeletePartner(partner.id);
+                                    if (partner.id !== undefined && partner.id !== null) handleDeletePartner(partner.id);
                                   }}
-                                  className={`${
+                                  disabled={partner.id === undefined || partner.id === null}
+                                  className={`$${' '}
                                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700'
-                                  } block w-full text-left px-4 py-2 text-sm text-red-600`}
+                                  } block w-full text-left px-4 py-2 text-sm text-red-600${partner.id === undefined || partner.id === null ? ' opacity-50 cursor-not-allowed' : ''}`}
                                 >
                                   Supprimer
                                 </button>
