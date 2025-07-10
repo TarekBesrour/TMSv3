@@ -31,8 +31,8 @@ class ShipmentDocument extends Model {
       required: ['document_type', 'status'],
 
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
         shipment_id: { type: ['integer', 'string','null'] },
         order_id: { type: ['integer', 'string','null'] },
         customs_info_id: { type: ['integer', 'string','null'] },
@@ -83,8 +83,8 @@ class ShipmentDocument extends Model {
         requires_original: { type: 'boolean', default: false },
         
         // Audit fields
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

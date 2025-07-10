@@ -31,9 +31,9 @@ class TransportSegment extends Model {
       required: ['shipment_id', 'transport_mode', 'sequence_number', 'status'],
 
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
-        shipment_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
+        shipment_id: { type: 'string' },
         sequence_number: { type: 'integer' },
         reference: { type: ['string', 'null'], maxLength: 50 },
         
@@ -117,8 +117,8 @@ class TransportSegment extends Model {
         notes: { type: ['string', 'null'] },
         
         // Audit fields
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

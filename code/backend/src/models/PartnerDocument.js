@@ -21,8 +21,8 @@ class PartnerDocument extends Model {
       required: ['partner_id', 'name', 'file_path'],
       
       properties: {
-        id: { type: ['integer','string'] },
-        partner_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        partner_id: { type: 'string' },
         contract_id: { type: ['integer', 'string','null'] },
         type: { 
           type: 'string', 
@@ -42,8 +42,8 @@ class PartnerDocument extends Model {
         },
         created_at: { type: 'string', format: 'date-time' },
         updated_at: { type: 'string', format: 'date-time' },
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

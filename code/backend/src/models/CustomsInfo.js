@@ -31,8 +31,8 @@ class CustomsInfo extends Model {
       required: ['status'],
 
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
         order_id: { type: ['integer', 'string','null'] },
         shipment_id: { type: ['integer', 'string','null'] },
         
@@ -101,8 +101,8 @@ class CustomsInfo extends Model {
         notes: { type: ['string', 'null'] },
         
         // Audit fields
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

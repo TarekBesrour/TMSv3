@@ -21,12 +21,12 @@ class Partner extends Model {
       required: ['name', 'type'],
       
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string', 'null'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
         name: { type: 'string', maxLength: 255 },
         type: { 
           type: 'string', 
-          enum: ['CLIENT', 'CARRIER', 'SUPPLIER', 'OTHER'],
+          enum: ['customer', 'carrier', 'supplier', 'agent', 'broker', 'other'],
         },
         legal_form: { type: ['string', 'null'], maxLength: 50 },
         registration_number: { type: ['string', 'null'], maxLength: 50 },
@@ -41,8 +41,8 @@ class Partner extends Model {
         },
         created_at: { type: 'string', format: 'date-time' },
         updated_at: { type: 'string', format: 'date-time' },
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

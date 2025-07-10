@@ -31,8 +31,8 @@ class TrackingEvent extends Model {
       required: ['event_type', 'timestamp'],
 
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
         shipment_id: { type: ['integer', 'string','null'] },
         transport_segment_id: { type: ['integer', 'string','null'] },
         transport_unit_id: { type: ['integer', 'string','null'] },
@@ -95,8 +95,8 @@ class TrackingEvent extends Model {
         updated_at: { type: 'string', format: 'date-time' },
         
         // Audit fields
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

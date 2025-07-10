@@ -15,7 +15,7 @@ class ResourceAvailability extends Model {
       required: ["resource_type", "resource_id", "start_time", "end_time", "status", "tenant_id"],
       properties: {
         id: { type: "integer" },
-        tenant_id: { type: ['integer','string'] },
+        tenant_id: { type: 'string' },
         resource_type: { type: "string", enum: ["vehicle", "driver"] },
         resource_id: { type: "integer" },
         start_time: { type: "string", format: "date-time" },

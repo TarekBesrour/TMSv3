@@ -11,11 +11,11 @@ class Invoice extends BaseModel {
       type: 'object',
       required: ['invoice_number', 'customer_id', 'invoice_date', 'due_date', 'currency', 'status'],
       properties: {
-        id: { type: ['integer','string'] },
+        id: { type: 'string' },
         invoice_number: { type: 'string', minLength: 1, maxLength: 50 },
         
         // Informations client
-        customer_id: { type: ['integer','string'] },
+        customer_id: { type: 'string' },
         customer_name: { type: 'string' },
         customer_address: { type: 'string' },
         customer_tax_number: { type: 'string' },
@@ -58,7 +58,7 @@ class Invoice extends BaseModel {
           type: 'array',
           items: { type: 'integer' }
         },
-        contract_id: { type: ['integer','string'] },
+        contract_id: { type: 'string' },
         
         // Informations de paiement
         payment_method: { 
@@ -108,7 +108,7 @@ class Invoice extends BaseModel {
           type: 'string', 
           enum: ['manual', 'automatic', 'recurring', 'api'] 
         },
-        template_id: { type: ['integer','string'] },
+        template_id: { type: 'string' },
         
         // Métadonnées
         is_recurring: { type: 'boolean', default: false },
@@ -119,7 +119,7 @@ class Invoice extends BaseModel {
         next_invoice_date: { type: 'string', format: 'date' },
         
         // Relations
-        tenant_id: { type: ['integer','string'] },
+        tenant_id: { type: 'string' },
         
         // Audit
         created_by: { type: ['integer','string'] },

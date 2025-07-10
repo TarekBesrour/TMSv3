@@ -11,7 +11,7 @@ class Rate extends BaseModel {
       type: 'object',
       required: ['name', 'transport_mode', 'rate_type', 'base_rate', 'currency', 'effective_date'],
       properties: {
-        id: { type: ['integer','string'] },
+        id: { type: 'string' },
         name: { type: 'string', minLength: 1, maxLength: 255 },
         description: { type: 'string' },
         transport_mode: { 
@@ -66,9 +66,9 @@ class Rate extends BaseModel {
         priority: { type: 'integer', minimum: 1, maximum: 10, default: 5 },
         
         // Relations
-        partner_id: { type: ['integer','string'] },
-        contract_id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
+        partner_id: { type: 'string' },
+        contract_id: { type: 'string' },
+        tenant_id: { type: 'string' },
         
         // Audit
         created_by: { type: ['integer','string'] },

@@ -22,15 +22,15 @@ class Role extends Model {
       required: ['name', 'description'],
       
       properties: {
-        id: { type: ['integer','string'] },
+        id: { type: 'string' },
         tenant_id: { type: ['integer','string', 'null'] },
         name: { type: 'string', maxLength: 50 },
         description: { type: 'string', maxLength: 255 },
         is_system_role: { type: 'boolean', default: false },
         created_at: { type: 'string', format: 'date-time' },
         updated_at: { type: 'string', format: 'date-time' },
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

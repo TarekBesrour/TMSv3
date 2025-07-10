@@ -11,11 +11,11 @@ class CarrierInvoice extends BaseModel {
       type: 'object',
       required: ['invoice_number', 'carrier_id', 'invoice_date', 'currency', 'status'],
       properties: {
-        id: { type: ['integer','string'] },
+        id: { type: 'string' },
         invoice_number: { type: 'string', minLength: 1, maxLength: 50 },
         
         // Informations transporteur
-        carrier_id: { type: ['integer','string'] },
+        carrier_id: { type: 'string' },
         carrier_name: { type: 'string' },
         carrier_reference: { type: 'string' },
         
@@ -55,7 +55,7 @@ class CarrierInvoice extends BaseModel {
           type: 'array',
           items: { type: 'integer' }
         },
-        contract_id: { type: ['integer','string'] },
+        contract_id: { type: 'string' },
         
         // Informations de contrôle
         control_date: { type: 'string', format: 'date-time' },
@@ -136,7 +136,7 @@ class CarrierInvoice extends BaseModel {
         },
         
         // Relations
-        tenant_id: { type: ['integer','string'] },
+        tenant_id: { type: 'string' },
         
         // Audit
         created_by: { type: ['integer','string'] },

@@ -70,13 +70,14 @@ class DriverService {
     const drivers = await query.withGraphFetched('partner');
 
     // Return drivers with pagination info
+    const totalPages = Math.ceil(total / limit);
     return {
       data: drivers,
       pagination: {
         page,
         limit,
         total,
-        totalPages: Math.ceil(total / limit)
+        totalPages
       }
     };
   }

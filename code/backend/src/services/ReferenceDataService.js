@@ -378,7 +378,8 @@ class ReferenceDataService {
   static getCategoryDescription(category) {
     const descriptions = {
       'transport_modes': 'Transport modes (road, rail, air, sea)',
-      'vehicle_types': 'Types of vehicles',
+      'vehicle_types': 'Types of vehicles (trucks, vans, etc.)',
+      'equipment_type': 'Types of equipment (trailers, containers, etc.)',
       'cargo_types': 'Types of cargo/merchandise',
       'incoterms': 'International commercial terms',
       'currencies': 'Currency codes and exchange rates',

@@ -36,6 +36,12 @@ const tourPlanningRoutes = require("./routes/tourPlanningRoutes");
 const resourceAllocationRoutes = require("./routes/resourceAllocationRoutes");
 const referenceDataRoutes = require('./routes/referenceDataRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
+const siteRoutes = require('./routes/siteRoutes');
+const driverRoutes = require('./routes/driverRoutes');
+const vehicleRoutes = require('./routes/VehicleRoutes');
+const equipmentRoutes = require('./routes/equipmentRoutes');
+
+
 
 // Use routes
 app.use("/api/auth", authRoutes);
@@ -48,6 +54,12 @@ app.use("/api", tourPlanningRoutes); // Using /api as base for tour planning
 app.use("/api", resourceAllocationRoutes); // Using /api as base for resource allocation
 app.use('/api/v1/references', referenceDataRoutes);
 app.use('/api/v1/partners', partnerRoutes);
+
+
+app.use('/api/v1/sites', siteRoutes);
+app.use('/api/drivers', driverRoutes);
+app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/equipments', equipmentRoutes);
 
 // Basic route for testing
 app.get("/", (req, res) => {

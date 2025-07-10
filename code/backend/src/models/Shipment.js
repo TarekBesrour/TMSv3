@@ -39,8 +39,8 @@ class Shipment extends Model {
       required: ['status'],
 
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
         reference: { type: 'string', maxLength: 50 },
         order_id: { type: ['integer', 'string','null'] },
         
@@ -128,8 +128,8 @@ class Shipment extends Model {
         notes: { type: ['string', 'null'] },
         
         // Audit fields
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

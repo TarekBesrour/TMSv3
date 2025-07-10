@@ -545,7 +545,7 @@ await knex.schema.createTable('order_lines', table => {
 // ENUMs pour partners
 await knex.schema.raw(`CREATE TYPE enum_partners_type AS ENUM ('customer', 'carrier', 'supplier', 'agent', 'broker', 'other')`);
 await knex.schema.raw(`CREATE TYPE enum_partners_industry AS ENUM ('automotive', 'retail', 'manufacturing', 'technology', 'food_beverage', 'pharmaceutical', 'construction', 'other')`);
-await knex.schema.raw(`CREATE TYPE enum_partners_status AS ENUM ('active', 'inactive', 'blacklisted', 'prospect')`);
+await knex.schema.raw(`CREATE TYPE enum_partners_status AS ENUM ('active', 'inactive', 'pending', 'blocked')`); //modifié
 
 // Table partners
 await knex.schema.createTable('partners', table => {
@@ -554,13 +554,15 @@ await knex.schema.createTable('partners', table => {
   table.string('name', 255).notNullable();
   table.string('short_name', 100);
   table.specificType('type', 'enum_partners_type').notNullable();
+  table.string('legal_form', 50).nullable(); //new
   table.specificType('industry', 'enum_partners_industry');
-  table.string('tax_id', 100);
+  //table.string('tax_id', 100); //à supprimer
   table.string('registration_number', 100);
   table.string('vat_number', 100);
   table.string('email', 255);
   table.string('phone', 50);
   table.string('website', 255);
+  table.string('logo_url', 255).nullable(); //new
   table.string('main_contact_name', 100);
   table.string('main_contact_email', 255);
   table.string('main_contact_phone', 50);
@@ -700,6 +702,7 @@ await knex.schema.createTable('reference_data', table => {
   table.timestamp('created_at', { useTz: true }).nullable();
   table.timestamp('updated_at', { useTz: true }).nullable();
 });
+table.unique(['tenant_id', 'category', 'code'], 'uniq_refdata_tenant_category_code');
 
 // Création de la table roles
 await knex.schema.createTable('roles', table => {

@@ -11,7 +11,7 @@ class PricingRule extends BaseModel {
       type: 'object',
       required: ['name', 'rule_type', 'conditions', 'actions'],
       properties: {
-        id: { type: ['integer','string'] },
+        id: { type: 'string' },
         name: { type: 'string', minLength: 1, maxLength: 255 },
         description: { type: 'string' },
         
@@ -111,7 +111,7 @@ class PricingRule extends BaseModel {
                     type: 'string', 
                     enum: ['add_surcharge', 'remove_surcharge', 'modify_surcharge'] 
                   },
-                  surcharge_id: { type: ['integer','string'] },
+                  surcharge_id: { type: 'string' },
                   surcharge_name: { type: 'string' },
                   value: { type: 'number' },
                   calculation_method: { type: 'string' }
@@ -153,7 +153,7 @@ class PricingRule extends BaseModel {
         last_used_at: { type: 'string', format: 'date-time' },
         
         // Relations
-        tenant_id: { type: ['integer','string'] },
+        tenant_id: { type: 'string' },
         
         // Audit
         created_by: { type: ['integer','string'] },

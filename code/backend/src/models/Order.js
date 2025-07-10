@@ -40,11 +40,11 @@ class Order extends Model {
       required: ['customer_id', 'status'],
 
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
         reference: { type: 'string', maxLength: 50 },
         external_reference: { type: ['string', 'null'], maxLength: 100 },
-        customer_id: { type: ['integer','string'] },
+        customer_id: { type: 'string' },
         customer_order_reference: { type: ['string', 'null'], maxLength: 100 },
         
         // Dates
@@ -104,8 +104,8 @@ class Order extends Model {
         notes: { type: ['string', 'null'] },
         
         // Audit fields
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

@@ -11,8 +11,8 @@ class ContractLine extends BaseModel {
       type: 'object',
       required: ['contract_id', 'service_type', 'rate_type', 'rate_value', 'currency'],
       properties: {
-        id: { type: ['integer','string'] },
-        contract_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        contract_id: { type: 'string' },
         
         // Type de service
         service_type: { 
@@ -82,7 +82,7 @@ class ContractLine extends BaseModel {
         notes: { type: 'string' },
         
         // Relations
-        tenant_id: { type: ['integer','string'] },
+        tenant_id: { type: 'string' },
         
         // Audit
         created_by: { type: ['integer','string'] },

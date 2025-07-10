@@ -14,8 +14,8 @@ class SystemConfiguration extends Model {
       type: 'object',
       required: ['tenant_id', 'config_key', 'config_value'],
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
         
         // Configuration key and value
         config_key: { type: 'string', maxLength: 255 },

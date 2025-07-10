@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const passwords = ['admin123', 'user123'];
+const passwords = ['admin789', 'user789'];
 const saltRounds = 10;
 
 (async () => {

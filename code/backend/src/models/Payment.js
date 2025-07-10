@@ -14,8 +14,8 @@ class Payment extends Model {
       type: 'object',
       required: ['tenant_id', 'payment_type', 'amount', 'currency', 'payment_date', 'status'],
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
         payment_type: { 
           type: 'string', 
           enum: ['incoming', 'outgoing'] 
@@ -25,7 +25,7 @@ class Payment extends Model {
         // Relations
         invoice_id: { type: ['integer', 'string','null'] },
         carrier_invoice_id: { type: ['integer', 'string','null'] },
-        partner_id: { type: ['integer','string'] },
+        partner_id: { type: 'string' },
         
         // Montants
         amount: { type: 'number', minimum: 0 },

@@ -59,10 +59,20 @@ class BankAccount extends Model {
   }
 
   static get relationMappings() {
+    const Tenant = require('./Tenant');
     const User = require('./User');
     const Payment = require('./Payment');
 
     return {
+      tenant: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Tenant,
+        join: {
+          from: 'bank_accounts.tenant_id',
+          to: 'tenants.id'
+        }
+      },
+
       createdBy: {
         relation: Model.BelongsToOneRelation,
         modelClass: User,

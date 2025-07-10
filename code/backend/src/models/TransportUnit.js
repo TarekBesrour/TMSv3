@@ -31,9 +31,9 @@ class TransportUnit extends Model {
       required: ['shipment_id', 'type', 'status'],
 
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
-        shipment_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
+        shipment_id: { type: 'string' },
         reference: { type: ['string', 'null'], maxLength: 50 },
         
         // Type and identification
@@ -113,8 +113,8 @@ class TransportUnit extends Model {
         loaded_at: { type: ['string', 'null'], format: 'date-time' },
         
         // Audit fields
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

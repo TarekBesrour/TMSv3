@@ -31,9 +31,9 @@ class OrderLine extends Model {
       required: ['order_id', 'product_name', 'quantity'],
 
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
-        order_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
+        order_id: { type: 'string' },
         line_number: { type: 'integer' },
         
         // Product information
@@ -89,8 +89,8 @@ class OrderLine extends Model {
         updated_at: { type: 'string', format: 'date-time' },
         
         // Audit fields
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

@@ -5,10 +5,14 @@ const EquipmentService = require("../services/EquipmentService");
 class EquipmentController {
   static async getAllEquipments(req, res) {
     try {
+      console.log('getAllEquipments appelé');
+  console.log(req.query);
       const filters = req.query;
+      console.log(filters);
       const pagination = { page: parseInt(req.query.page), pageSize: parseInt(req.query.pageSize) };
       const equipments = await EquipmentService.getAllEquipments(filters, pagination);
       res.json(equipments);
+      
     } catch (error) {
       res.status(500).json({ error: error.message });
     }

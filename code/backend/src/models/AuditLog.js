@@ -22,7 +22,7 @@ class AuditLog extends Model {
       required: ['action', 'entity_type', 'action_timestamp'],
       
       properties: {
-        id: { type: ['integer','string'] },
+        id: { type: 'string' },
         tenant_id: { type: ['integer', 'string', 'null'] },
         user_id: { type: ['integer', 'string', 'null'] },
         action: { type: 'string', maxLength: 50 }, // CREATE, READ, UPDATE, DELETE, LOGIN, LOGOUT, etc.

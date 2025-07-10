@@ -1,6 +1,7 @@
 const PaymentService = require('../services/PaymentService');
 const { validationResult } = require('express-validator');
 const BankAccount = require('../models/BankAccount');
+const Payment = require('../models/Payment');
 
 class PaymentController {
   /**
@@ -441,7 +442,7 @@ class PaymentController {
         updated_by: req.user.id
       };
       delete accountData.id;
-      
+
       const existingAccount = await BankAccount.query().findById(id);
       if (!existingAccount || existingAccount.tenant_id !== req.user.tenant_id) {
         return res.status(404).json({
@@ -492,7 +493,10 @@ class PaymentController {
       }
 
       // Check if there are any payments associated with this bank account
+      console.log('Vérification 11111 des paiements associés pour le compte bancaire ID:', id);
       const associatedPayments = await Payment.query().where('bank_account_id', id).first();
+      console.log('Vérification 22222 des paiements associés pour le compte bancaire ID:', id);
+
       if (associatedPayments) {
         return res.status(400).json({
           success: false,

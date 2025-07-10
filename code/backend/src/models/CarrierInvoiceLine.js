@@ -11,8 +11,8 @@ class CarrierInvoiceLine extends BaseModel {
       type: 'object',
       required: ['carrier_invoice_id', 'description', 'quantity', 'unit_price', 'line_total'],
       properties: {
-        id: { type: ['integer','string'] },
-        carrier_invoice_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        carrier_invoice_id: { type: 'string' },
         
         // Description du service
         description: { type: 'string', minLength: 1 },
@@ -44,11 +44,11 @@ class CarrierInvoiceLine extends BaseModel {
         },
         
         // Références
-        shipment_id: { type: ['integer','string'] },
-        segment_id: { type: ['integer','string'] },
-        rate_id: { type: ['integer','string'] },
-        surcharge_id: { type: ['integer','string'] },
-        contract_line_id: { type: ['integer','string'] },
+        shipment_id: { type: 'string' },
+        segment_id: { type: 'string' },
+        rate_id: { type: 'string' },
+        surcharge_id: { type: 'string' },
+        contract_line_id: { type: 'string' },
         
         // Informations de transport
         origin: { type: 'string' },
@@ -113,7 +113,7 @@ class CarrierInvoiceLine extends BaseModel {
         reference_number: { type: 'string' },
         
         // Relations
-        tenant_id: { type: ['integer','string'] },
+        tenant_id: { type: 'string' },
         
         // Audit
         created_by: { type: ['integer','string'] },

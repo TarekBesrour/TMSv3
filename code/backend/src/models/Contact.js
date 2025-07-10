@@ -21,8 +21,8 @@ class Contact extends Model {
       required: ['partner_id', 'first_name', 'last_name'],
       
       properties: {
-        id: { type: ['integer','string'] },
-        partner_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        partner_id: { type: 'string' },
         first_name: { type: 'string', maxLength: 100 },
         last_name: { type: 'string', maxLength: 100 },
         position: { type: ['string', 'null'], maxLength: 100 },
@@ -38,8 +38,8 @@ class Contact extends Model {
         },
         created_at: { type: 'string', format: 'date-time' },
         updated_at: { type: 'string', format: 'date-time' },
-        created_by: { type: ['integer', 'null'] },
-        updated_by: { type: ['integer', 'null'] }
+        created_by: { type: 'string' },
+        updated_by: { type: 'string' }
       }
     };
   }

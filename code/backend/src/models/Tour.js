@@ -14,8 +14,8 @@ class Tour extends Model {
       type: 'object',
       required: ['tour_name', 'planned_date', 'status', 'tenant_id'],
       properties: {
-        id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
+        id: { type: 'string' },
+        tenant_id: { type: 'string' },
         tour_name: { type: 'string', minLength: 1, maxLength: 255 },
         tour_number: { type: 'string', maxLength: 50 },
         planned_date: { type: 'string', format: 'date' },
@@ -25,8 +25,8 @@ class Tour extends Model {
           type: 'string', 
           enum: ['planned', 'in_progress', 'completed', 'cancelled'] 
         },
-        vehicle_id: { type: ['integer','string'] },
-        driver_id: { type: ['integer','string'] },
+        vehicle_id: { type: 'string' },
+        driver_id: { type: 'string' },
         total_distance: { type: 'number' },
         estimated_duration: { type: 'integer' }, // in minutes
         actual_duration: { type: 'integer' }, // in minutes

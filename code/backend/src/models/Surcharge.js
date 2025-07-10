@@ -11,7 +11,7 @@ class Surcharge extends BaseModel {
       type: 'object',
       required: ['name', 'surcharge_type', 'calculation_method', 'value', 'currency'],
       properties: {
-        id: { type: ['integer','string'] },
+        id: { type: 'string' },
         name: { type: 'string', minLength: 1, maxLength: 255 },
         description: { type: 'string' },
         
@@ -92,10 +92,10 @@ class Surcharge extends BaseModel {
         priority: { type: 'integer', minimum: 1, maximum: 10, default: 5 },
         
         // Relations
-        rate_id: { type: ['integer','string'] },
-        contract_id: { type: ['integer','string'] },
-        partner_id: { type: ['integer','string'] },
-        tenant_id: { type: ['integer','string'] },
+        rate_id: { type: 'string' },
+        contract_id: { type: 'string' },
+        partner_id: { type: 'string' },
+        tenant_id: { type: 'string' },
         
         // Audit
         created_by: { type: ['integer','string'] },
